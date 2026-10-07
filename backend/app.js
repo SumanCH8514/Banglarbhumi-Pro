@@ -5,6 +5,7 @@ const apiRoutes = require('./routes/api.routes')
 const frontendDir = path.join(__dirname, '..', 'frontend')
 const landingHtmlPath = path.join(frontendDir, 'index.html')
 const appHtmlPath = path.join(frontendDir, 'app.html')
+const aboutHtmlPath = path.join(frontendDir, 'about_project.html')
 
 const mimeTypes = {
   '.html': 'text/html; charset=UTF-8',
@@ -60,6 +61,28 @@ async function buildApp(fastify, opts = {}) {
     reply.header('Expires', '0')
     if (fs.existsSync(appHtmlPath)) {
       return fs.readFileSync(appHtmlPath, 'utf8')
+    }
+    return fs.readFileSync(landingHtmlPath, 'utf8')
+  })
+
+  fastify.get('/about', async (req, reply) => {
+    reply.type('text/html; charset=UTF-8')
+    reply.header('Cache-Control', 'no-cache, no-store, must-revalidate')
+    reply.header('Pragma', 'no-cache')
+    reply.header('Expires', '0')
+    if (fs.existsSync(aboutHtmlPath)) {
+      return fs.readFileSync(aboutHtmlPath, 'utf8')
+    }
+    return fs.readFileSync(landingHtmlPath, 'utf8')
+  })
+
+  fastify.get('/about_project', async (req, reply) => {
+    reply.type('text/html; charset=UTF-8')
+    reply.header('Cache-Control', 'no-cache, no-store, must-revalidate')
+    reply.header('Pragma', 'no-cache')
+    reply.header('Expires', '0')
+    if (fs.existsSync(aboutHtmlPath)) {
+      return fs.readFileSync(aboutHtmlPath, 'utf8')
     }
     return fs.readFileSync(landingHtmlPath, 'utf8')
   })
