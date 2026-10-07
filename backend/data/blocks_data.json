@@ -1,0 +1,1792 @@
+{
+  "10": [
+    {
+      "bcode": "26",
+      "name": "CHANDROKONA-I",
+      "text": "[ 26 ] CHANDROKONA-I"
+    },
+    {
+      "bcode": "25",
+      "name": "CHANDROKONA-II",
+      "text": "[ 25 ] CHANDROKONA-II"
+    },
+    {
+      "bcode": "28",
+      "name": "DASPUR-I",
+      "text": "[ 28 ] DASPUR-I"
+    },
+    {
+      "bcode": "29",
+      "name": "DASPUR-II",
+      "text": "[ 29 ] DASPUR-II"
+    },
+    {
+      "bcode": "13",
+      "name": "DATAN-I",
+      "text": "[ 13 ] DATAN-I"
+    },
+    {
+      "bcode": "14",
+      "name": "DATAN-II",
+      "text": "[ 14 ] DATAN-II"
+    },
+    {
+      "bcode": "18",
+      "name": "DEBRA",
+      "text": "[ 18 ] DEBRA"
+    },
+    {
+      "bcode": "19",
+      "name": "GARHBETA-I",
+      "text": "[ 19 ] GARHBETA-I"
+    },
+    {
+      "bcode": "20",
+      "name": "GARHBETA-II",
+      "text": "[ 20 ] GARHBETA-II"
+    },
+    {
+      "bcode": "21",
+      "name": "GARHBETA-III",
+      "text": "[ 21 ] GARHBETA-III"
+    },
+    {
+      "bcode": "27",
+      "name": "GHATAL",
+      "text": "[ 27 ] GHATAL"
+    },
+    {
+      "bcode": "11",
+      "name": "KESHIARI",
+      "text": "[ 11 ] KESHIARI"
+    },
+    {
+      "bcode": "23",
+      "name": "KESHPUR",
+      "text": "[ 23 ] KESHPUR"
+    },
+    {
+      "bcode": "09",
+      "name": "KHARGAPUR-I",
+      "text": "[ 09 ] KHARGAPUR-I"
+    },
+    {
+      "bcode": "10",
+      "name": "KHARGAPUR-II",
+      "text": "[ 10 ] KHARGAPUR-II"
+    },
+    {
+      "bcode": "24",
+      "name": "MEDINIPUR SADAR",
+      "text": "[ 24 ] MEDINIPUR SADAR"
+    },
+    {
+      "bcode": "15",
+      "name": "MOHANPUR",
+      "text": "[ 15 ] MOHANPUR"
+    },
+    {
+      "bcode": "12",
+      "name": "NARAYANGARH",
+      "text": "[ 12 ] NARAYANGARH"
+    },
+    {
+      "bcode": "16",
+      "name": "PINGLA",
+      "text": "[ 16 ] PINGLA"
+    },
+    {
+      "bcode": "17",
+      "name": "SABANG",
+      "text": "[ 17 ] SABANG"
+    },
+    {
+      "bcode": "22",
+      "name": "SALBONI",
+      "text": "[ 22 ] SALBONI"
+    }
+  ],
+  "11": [
+    {
+      "bcode": "18",
+      "name": "BHAGABANPUR-1",
+      "text": "[ 18 ] BHAGABANPUR-1"
+    },
+    {
+      "bcode": "19",
+      "name": "BHAGABANPUR-2",
+      "text": "[ 19 ] BHAGABANPUR-2"
+    },
+    {
+      "bcode": "23",
+      "name": "CONTAI-1",
+      "text": "[ 23 ] CONTAI-1"
+    },
+    {
+      "bcode": "22",
+      "name": "CONTAI-2",
+      "text": "[ 22 ] CONTAI-2"
+    },
+    {
+      "bcode": "24",
+      "name": "CONTAI-3",
+      "text": "[ 24 ] CONTAI-3"
+    },
+    {
+      "bcode": "27",
+      "name": "EGRA-1",
+      "text": "[ 27 ] EGRA-1"
+    },
+    {
+      "bcode": "28",
+      "name": "EGRA-2",
+      "text": "[ 28 ] EGRA-2"
+    },
+    {
+      "bcode": "20",
+      "name": "KHEJURI-1",
+      "text": "[ 20 ] KHEJURI-1"
+    },
+    {
+      "bcode": "21",
+      "name": "KHEJURI-2",
+      "text": "[ 21 ] KHEJURI-2"
+    },
+    {
+      "bcode": "11",
+      "name": "MAHISHADAL",
+      "text": "[ 11 ] MAHISHADAL"
+    },
+    {
+      "bcode": "10",
+      "name": "MOYNA",
+      "text": "[ 10 ] MOYNA"
+    },
+    {
+      "bcode": "12",
+      "name": "NANDAKUMAR",
+      "text": "[ 12 ] NANDAKUMAR"
+    },
+    {
+      "bcode": "15",
+      "name": "NANDIGRAM-1",
+      "text": "[ 15 ] NANDIGRAM-1"
+    },
+    {
+      "bcode": "16",
+      "name": "NANDIGRAM-2",
+      "text": "[ 16 ] NANDIGRAM-2"
+    },
+    {
+      "bcode": "17",
+      "name": "NANDIGRAM-3",
+      "text": "[ 17 ] NANDIGRAM-3"
+    },
+    {
+      "bcode": "06",
+      "name": "PANSHKURA-1",
+      "text": "[ 06 ] PANSHKURA-1"
+    },
+    {
+      "bcode": "07",
+      "name": "PANSHKURA-2",
+      "text": "[ 07 ] PANSHKURA-2"
+    },
+    {
+      "bcode": "25",
+      "name": "PATASHPUR-1",
+      "text": "[ 25 ] PATASHPUR-1"
+    },
+    {
+      "bcode": "26",
+      "name": "PATASHPUR-2",
+      "text": "[ 26 ] PATASHPUR-2"
+    },
+    {
+      "bcode": "29",
+      "name": "RAMNAGAR-1",
+      "text": "[ 29 ] RAMNAGAR-1"
+    },
+    {
+      "bcode": "30",
+      "name": "RAMNAGAR-2",
+      "text": "[ 30 ] RAMNAGAR-2"
+    },
+    {
+      "bcode": "08",
+      "name": "SAHID MATANGINI(TAMLUK-2)",
+      "text": "[ 08 ] SAHID MATANGINI(TAMLUK-2)"
+    },
+    {
+      "bcode": "13",
+      "name": "SUTAHATA-1",
+      "text": "[ 13 ] SUTAHATA-1"
+    },
+    {
+      "bcode": "14",
+      "name": "SUTAHATA-2",
+      "text": "[ 14 ] SUTAHATA-2"
+    },
+    {
+      "bcode": "09",
+      "name": "TAMLUK-1",
+      "text": "[ 09 ] TAMLUK-1"
+    }
+  ],
+  "12": [
+    {
+      "bcode": "01",
+      "name": "BELDANGA - I",
+      "text": "[ 01 ] BELDANGA - I"
+    },
+    {
+      "bcode": "02",
+      "name": "BELDANGA - II",
+      "text": "[ 02 ] BELDANGA - II"
+    },
+    {
+      "bcode": "03",
+      "name": "BERHAMPUR SADAR",
+      "text": "[ 03 ] BERHAMPUR SADAR"
+    },
+    {
+      "bcode": "04",
+      "name": "BHAGABANGOLA - I",
+      "text": "[ 04 ] BHAGABANGOLA - I"
+    },
+    {
+      "bcode": "05",
+      "name": "BHAGABANGOLA - II",
+      "text": "[ 05 ] BHAGABANGOLA - II"
+    },
+    {
+      "bcode": "06",
+      "name": "BHARATPUR - I",
+      "text": "[ 06 ] BHARATPUR - I"
+    },
+    {
+      "bcode": "07",
+      "name": "BHARATPUR - II",
+      "text": "[ 07 ] BHARATPUR - II"
+    },
+    {
+      "bcode": "08",
+      "name": "BURWAN",
+      "text": "[ 08 ] BURWAN"
+    },
+    {
+      "bcode": "09",
+      "name": "DOMKAL",
+      "text": "[ 09 ] DOMKAL"
+    },
+    {
+      "bcode": "10",
+      "name": "FARAKKA",
+      "text": "[ 10 ] FARAKKA"
+    },
+    {
+      "bcode": "11",
+      "name": "HARIHARPARA",
+      "text": "[ 11 ] HARIHARPARA"
+    },
+    {
+      "bcode": "12",
+      "name": "JALANGI",
+      "text": "[ 12 ] JALANGI"
+    },
+    {
+      "bcode": "13",
+      "name": "KANDI",
+      "text": "[ 13 ] KANDI"
+    },
+    {
+      "bcode": "14",
+      "name": "KHARGRAM",
+      "text": "[ 14 ] KHARGRAM"
+    },
+    {
+      "bcode": "15",
+      "name": "LALGOLA",
+      "text": "[ 15 ] LALGOLA"
+    },
+    {
+      "bcode": "16",
+      "name": "MURSHIDABAD JIAGANJ",
+      "text": "[ 16 ] MURSHIDABAD JIAGANJ"
+    },
+    {
+      "bcode": "17",
+      "name": "NABAGRAM",
+      "text": "[ 17 ] NABAGRAM"
+    },
+    {
+      "bcode": "18",
+      "name": "NOWDA",
+      "text": "[ 18 ] NOWDA"
+    },
+    {
+      "bcode": "19",
+      "name": "RAGHNATHGUNJ - I",
+      "text": "[ 19 ] RAGHNATHGUNJ - I"
+    },
+    {
+      "bcode": "20",
+      "name": "RAGHNATHGUNJ - II",
+      "text": "[ 20 ] RAGHNATHGUNJ - II"
+    },
+    {
+      "bcode": "21",
+      "name": "RANINAGAR - I",
+      "text": "[ 21 ] RANINAGAR - I"
+    },
+    {
+      "bcode": "22",
+      "name": "RANINAGAR - II",
+      "text": "[ 22 ] RANINAGAR - II"
+    },
+    {
+      "bcode": "23",
+      "name": "SAGARDIGHI",
+      "text": "[ 23 ] SAGARDIGHI"
+    },
+    {
+      "bcode": "24",
+      "name": "SAMSERGANJ",
+      "text": "[ 24 ] SAMSERGANJ"
+    },
+    {
+      "bcode": "25",
+      "name": "SUTI - I",
+      "text": "[ 25 ] SUTI - I"
+    },
+    {
+      "bcode": "26",
+      "name": "SUTI - II",
+      "text": "[ 26 ] SUTI - II"
+    }
+  ],
+  "13": [
+    {
+      "bcode": "01",
+      "name": "CHAKDAHA",
+      "text": "[ 01 ] CHAKDAHA"
+    },
+    {
+      "bcode": "02",
+      "name": "CHAPRA",
+      "text": "[ 02 ] CHAPRA"
+    },
+    {
+      "bcode": "03",
+      "name": "HANSKHALI",
+      "text": "[ 03 ] HANSKHALI"
+    },
+    {
+      "bcode": "04",
+      "name": "HARINGHATA",
+      "text": "[ 04 ] HARINGHATA"
+    },
+    {
+      "bcode": "05",
+      "name": "KALIGUNJ",
+      "text": "[ 05 ] KALIGUNJ"
+    },
+    {
+      "bcode": "06",
+      "name": "KARIMPUR - I",
+      "text": "[ 06 ] KARIMPUR - I"
+    },
+    {
+      "bcode": "07",
+      "name": "KARIMPUR - II",
+      "text": "[ 07 ] KARIMPUR - II"
+    },
+    {
+      "bcode": "08",
+      "name": "KRISHNAGUNJ",
+      "text": "[ 08 ] KRISHNAGUNJ"
+    },
+    {
+      "bcode": "09",
+      "name": "KRISHNANAGAR - I",
+      "text": "[ 09 ] KRISHNANAGAR - I"
+    },
+    {
+      "bcode": "10",
+      "name": "KRISHNANAGAR - II",
+      "text": "[ 10 ] KRISHNANAGAR - II"
+    },
+    {
+      "bcode": "11",
+      "name": "NABADWIP",
+      "text": "[ 11 ] NABADWIP"
+    },
+    {
+      "bcode": "12",
+      "name": "NAKASHIPARA",
+      "text": "[ 12 ] NAKASHIPARA"
+    },
+    {
+      "bcode": "13",
+      "name": "RANAGHAT - I",
+      "text": "[ 13 ] RANAGHAT - I"
+    },
+    {
+      "bcode": "14",
+      "name": "RANAGHAT - II",
+      "text": "[ 14 ] RANAGHAT - II"
+    },
+    {
+      "bcode": "15",
+      "name": "SANTIPUR",
+      "text": "[ 15 ] SANTIPUR"
+    },
+    {
+      "bcode": "16",
+      "name": "TEHATTA - I",
+      "text": "[ 16 ] TEHATTA - I"
+    },
+    {
+      "bcode": "17",
+      "name": "TEHATTA - II",
+      "text": "[ 17 ] TEHATTA - II"
+    }
+  ],
+  "14": [
+    {
+      "bcode": "08",
+      "name": "ARSHA",
+      "text": "[ 08 ] ARSHA"
+    },
+    {
+      "bcode": "10",
+      "name": "BAGMUNDI",
+      "text": "[ 10 ] BAGMUNDI"
+    },
+    {
+      "bcode": "09",
+      "name": "BALARAMPUR",
+      "text": "[ 09 ] BALARAMPUR"
+    },
+    {
+      "bcode": "07",
+      "name": "BANDWAN",
+      "text": "[ 07 ] BANDWAN"
+    },
+    {
+      "bcode": "11",
+      "name": "BARABAZAR",
+      "text": "[ 11 ] BARABAZAR"
+    },
+    {
+      "bcode": "03",
+      "name": "HURA",
+      "text": "[ 03 ] HURA"
+    },
+    {
+      "bcode": "12",
+      "name": "JAYPUR",
+      "text": "[ 12 ] JAYPUR"
+    },
+    {
+      "bcode": "13",
+      "name": "JHALDA-I",
+      "text": "[ 13 ] JHALDA-I"
+    },
+    {
+      "bcode": "14",
+      "name": "JHALDA-II",
+      "text": "[ 14 ] JHALDA-II"
+    },
+    {
+      "bcode": "18",
+      "name": "KASHIPUR",
+      "text": "[ 18 ] KASHIPUR"
+    },
+    {
+      "bcode": "05",
+      "name": "MANBAZAR-I",
+      "text": "[ 05 ] MANBAZAR-I"
+    },
+    {
+      "bcode": "06",
+      "name": "MANBAZAR-II",
+      "text": "[ 06 ] MANBAZAR-II"
+    },
+    {
+      "bcode": "19",
+      "name": "NETURIA",
+      "text": "[ 19 ] NETURIA"
+    },
+    {
+      "bcode": "17",
+      "name": "PARA",
+      "text": "[ 17 ] PARA"
+    },
+    {
+      "bcode": "04",
+      "name": "PUNCHA",
+      "text": "[ 04 ] PUNCHA"
+    },
+    {
+      "bcode": "01",
+      "name": "PURULIA-I",
+      "text": "[ 01 ] PURULIA-I"
+    },
+    {
+      "bcode": "02",
+      "name": "PURULIA-II",
+      "text": "[ 02 ] PURULIA-II"
+    },
+    {
+      "bcode": "15",
+      "name": "RAGHUNATHPUR-I",
+      "text": "[ 15 ] RAGHUNATHPUR-I"
+    },
+    {
+      "bcode": "16",
+      "name": "RAGHUNATHPUR-II",
+      "text": "[ 16 ] RAGHUNATHPUR-II"
+    },
+    {
+      "bcode": "20",
+      "name": "SANTURI",
+      "text": "[ 20 ] SANTURI"
+    }
+  ],
+  "15": [
+    {
+      "bcode": "01",
+      "name": "AMDANGA",
+      "text": "[ 01 ] AMDANGA"
+    },
+    {
+      "bcode": "10",
+      "name": "BADURIA",
+      "text": "[ 10 ] BADURIA"
+    },
+    {
+      "bcode": "21",
+      "name": "BAGDA",
+      "text": "[ 21 ] BAGDA"
+    },
+    {
+      "bcode": "20",
+      "name": "BANGA",
+      "text": "[ 20 ] BANGA"
+    },
+    {
+      "bcode": "02",
+      "name": "BARASAT-1",
+      "text": "[ 02 ] BARASAT-1"
+    },
+    {
+      "bcode": "03",
+      "name": "BARASAT-2",
+      "text": "[ 03 ] BARASAT-2"
+    },
+    {
+      "bcode": "08",
+      "name": "BARRACKPUR-1",
+      "text": "[ 08 ] BARRACKPUR-1"
+    },
+    {
+      "bcode": "09",
+      "name": "BARRACKPUR-2",
+      "text": "[ 09 ] BARRACKPUR-2"
+    },
+    {
+      "bcode": "11",
+      "name": "BASIRHAT-1",
+      "text": "[ 11 ] BASIRHAT-1"
+    },
+    {
+      "bcode": "12",
+      "name": "BASIRHAT-2",
+      "text": "[ 12 ] BASIRHAT-2"
+    },
+    {
+      "bcode": "04",
+      "name": "DEGANGA",
+      "text": "[ 04 ] DEGANGA"
+    },
+    {
+      "bcode": "22",
+      "name": "GAIGHATA",
+      "text": "[ 22 ] GAIGHATA"
+    },
+    {
+      "bcode": "05",
+      "name": "HABRA-1",
+      "text": "[ 05 ] HABRA-1"
+    },
+    {
+      "bcode": "06",
+      "name": "HABRA-2",
+      "text": "[ 06 ] HABRA-2"
+    },
+    {
+      "bcode": "13",
+      "name": "HAROA",
+      "text": "[ 13 ] HAROA"
+    },
+    {
+      "bcode": "14",
+      "name": "HASNABAD",
+      "text": "[ 14 ] HASNABAD"
+    },
+    {
+      "bcode": "15",
+      "name": "HINGALGANJ",
+      "text": "[ 15 ] HINGALGANJ"
+    },
+    {
+      "bcode": "16",
+      "name": "MINAKHAN",
+      "text": "[ 16 ] MINAKHAN"
+    },
+    {
+      "bcode": "07",
+      "name": "RAJARHAT",
+      "text": "[ 07 ] RAJARHAT"
+    },
+    {
+      "bcode": "17",
+      "name": "SANDESHKHALI-1",
+      "text": "[ 17 ] SANDESHKHALI-1"
+    },
+    {
+      "bcode": "18",
+      "name": "SANDESHKHALI-2",
+      "text": "[ 18 ] SANDESHKHALI-2"
+    },
+    {
+      "bcode": "19",
+      "name": "SWARUPNAGAR",
+      "text": "[ 19 ] SWARUPNAGAR"
+    }
+  ],
+  "16": [
+    {
+      "bcode": "01",
+      "name": "BARUIPUR",
+      "text": "[ 01 ] BARUIPUR"
+    },
+    {
+      "bcode": "08",
+      "name": "BASANTI",
+      "text": "[ 08 ] BASANTI"
+    },
+    {
+      "bcode": "02",
+      "name": "BHANGAR-I",
+      "text": "[ 02 ] BHANGAR-I"
+    },
+    {
+      "bcode": "03",
+      "name": "BHANGAR-II",
+      "text": "[ 03 ] BHANGAR-II"
+    },
+    {
+      "bcode": "04",
+      "name": "BISHNUPUR-I",
+      "text": "[ 04 ] BISHNUPUR-I"
+    },
+    {
+      "bcode": "05",
+      "name": "BISHNUPUR-II",
+      "text": "[ 05 ] BISHNUPUR-II"
+    },
+    {
+      "bcode": "06",
+      "name": "BUDGE-BUDGE-I",
+      "text": "[ 06 ] BUDGE-BUDGE-I"
+    },
+    {
+      "bcode": "07",
+      "name": "BUDGE-BUDGE-II",
+      "text": "[ 07 ] BUDGE-BUDGE-II"
+    },
+    {
+      "bcode": "09",
+      "name": "CANNING-I",
+      "text": "[ 09 ] CANNING-I"
+    },
+    {
+      "bcode": "10",
+      "name": "CANNING-II",
+      "text": "[ 10 ] CANNING-II"
+    },
+    {
+      "bcode": "17",
+      "name": "DIAMOND HARBOUR-I",
+      "text": "[ 17 ] DIAMOND HARBOUR-I"
+    },
+    {
+      "bcode": "18",
+      "name": "DIAMOND HARBOUR-II",
+      "text": "[ 18 ] DIAMOND HARBOUR-II"
+    },
+    {
+      "bcode": "16",
+      "name": "GOSABA",
+      "text": "[ 16 ] GOSABA"
+    },
+    {
+      "bcode": "11",
+      "name": "JAYNAGAR-I",
+      "text": "[ 11 ] JAYNAGAR-I"
+    },
+    {
+      "bcode": "12",
+      "name": "JAYNAGAR-II",
+      "text": "[ 12 ] JAYNAGAR-II"
+    },
+    {
+      "bcode": "26",
+      "name": "KAKDWIP",
+      "text": "[ 26 ] KAKDWIP"
+    },
+    {
+      "bcode": "30",
+      "name": "Kolkata",
+      "text": "[ 30 ] Kolkata"
+    },
+    {
+      "bcode": "25",
+      "name": "KULPI",
+      "text": "[ 25 ] KULPI"
+    },
+    {
+      "bcode": "13",
+      "name": "KULTALI",
+      "text": "[ 13 ] KULTALI"
+    },
+    {
+      "bcode": "22",
+      "name": "MAGRAHAT-II",
+      "text": "[ 22 ] MAGRAHAT-II"
+    },
+    {
+      "bcode": "14",
+      "name": "MAHESHTALA",
+      "text": "[ 14 ] MAHESHTALA"
+    },
+    {
+      "bcode": "23",
+      "name": "MANDIRBAZAR",
+      "text": "[ 23 ] MANDIRBAZAR"
+    },
+    {
+      "bcode": "19",
+      "name": "MATHURAPUR-I",
+      "text": "[ 19 ] MATHURAPUR-I"
+    },
+    {
+      "bcode": "20",
+      "name": "MATHURAPUR-II",
+      "text": "[ 20 ] MATHURAPUR-II"
+    },
+    {
+      "bcode": "21",
+      "name": "MOGRAHAT-I",
+      "text": "[ 21 ] MOGRAHAT-I"
+    },
+    {
+      "bcode": "24",
+      "name": "NAMKHANA",
+      "text": "[ 24 ] NAMKHANA"
+    },
+    {
+      "bcode": "27",
+      "name": "PATHARPRATIMA",
+      "text": "[ 27 ] PATHARPRATIMA"
+    },
+    {
+      "bcode": "28",
+      "name": "PHALTA",
+      "text": "[ 28 ] PHALTA"
+    },
+    {
+      "bcode": "29",
+      "name": "SAGAR",
+      "text": "[ 29 ] SAGAR"
+    },
+    {
+      "bcode": "15",
+      "name": "SONARPUR",
+      "text": "[ 15 ] SONARPUR"
+    }
+  ],
+  "17": [
+    {
+      "bcode": "01",
+      "name": "BALURGHAT",
+      "text": "[ 01 ] BALURGHAT"
+    },
+    {
+      "bcode": "06",
+      "name": "BANSHIHARI",
+      "text": "[ 06 ] BANSHIHARI"
+    },
+    {
+      "bcode": "05",
+      "name": "GANGARAMPUR",
+      "text": "[ 05 ] GANGARAMPUR"
+    },
+    {
+      "bcode": "07",
+      "name": "HARIRAMPUR",
+      "text": "[ 07 ] HARIRAMPUR"
+    },
+    {
+      "bcode": "02",
+      "name": "HILI",
+      "text": "[ 02 ] HILI"
+    },
+    {
+      "bcode": "03",
+      "name": "KUMARGANJ",
+      "text": "[ 03 ] KUMARGANJ"
+    },
+    {
+      "bcode": "08",
+      "name": "KUSHMUNDI",
+      "text": "[ 08 ] KUSHMUNDI"
+    },
+    {
+      "bcode": "04",
+      "name": "TAPAN",
+      "text": "[ 04 ] TAPAN"
+    }
+  ],
+  "18": [
+    {
+      "bcode": "01",
+      "name": "CHOPRA",
+      "text": "[ 01 ] CHOPRA"
+    },
+    {
+      "bcode": "03",
+      "name": "GOALPOKHAR-I",
+      "text": "[ 03 ] GOALPOKHAR-I"
+    },
+    {
+      "bcode": "04",
+      "name": "GOALPOKHAR-II",
+      "text": "[ 04 ] GOALPOKHAR-II"
+    },
+    {
+      "bcode": "07",
+      "name": "HEMTABAD",
+      "text": "[ 07 ] HEMTABAD"
+    },
+    {
+      "bcode": "02",
+      "name": "ISLAMPUR",
+      "text": "[ 02 ] ISLAMPUR"
+    },
+    {
+      "bcode": "09",
+      "name": "ITAHAR",
+      "text": "[ 09 ] ITAHAR"
+    },
+    {
+      "bcode": "08",
+      "name": "KALIAGANJ",
+      "text": "[ 08 ] KALIAGANJ"
+    },
+    {
+      "bcode": "05",
+      "name": "KARANDIGHI",
+      "text": "[ 05 ] KARANDIGHI"
+    },
+    {
+      "bcode": "06",
+      "name": "RAIGANJ",
+      "text": "[ 06 ] RAIGANJ"
+    }
+  ],
+  "19": [],
+  "20": [
+    {
+      "bcode": "04",
+      "name": "ALIPURDUAR-1",
+      "text": "[ 04 ] ALIPURDUAR-1"
+    },
+    {
+      "bcode": "05",
+      "name": "ALIPURDUAR-2",
+      "text": "[ 05 ] ALIPURDUAR-2"
+    },
+    {
+      "bcode": "03",
+      "name": "KALCHINI",
+      "text": "[ 03 ] KALCHINI"
+    },
+    {
+      "bcode": "06",
+      "name": "KUMARGRAM",
+      "text": "[ 06 ] KUMARGRAM"
+    },
+    {
+      "bcode": "02",
+      "name": "MADARIHAT",
+      "text": "[ 02 ] MADARIHAT"
+    },
+    {
+      "bcode": "01",
+      "name": "PHALAKATA",
+      "text": "[ 01 ] PHALAKATA"
+    }
+  ],
+  "21": [
+    {
+      "bcode": "01",
+      "name": "KALIMPONG-I",
+      "text": "[ 01 ] KALIMPONG-I"
+    },
+    {
+      "bcode": "02",
+      "name": "KALIMPONG-II",
+      "text": "[ 02 ] KALIMPONG-II"
+    },
+    {
+      "bcode": "03",
+      "name": "KALIMPONG-III",
+      "text": "[ 03 ] KALIMPONG-III"
+    }
+  ],
+  "22": [
+    {
+      "bcode": "07",
+      "name": "BINPUR-I",
+      "text": "[ 07 ] BINPUR-I"
+    },
+    {
+      "bcode": "08",
+      "name": "BINPUR-II",
+      "text": "[ 08 ] BINPUR-II"
+    },
+    {
+      "bcode": "02",
+      "name": "GOPIBALLAVPUR-I",
+      "text": "[ 02 ] GOPIBALLAVPUR-I"
+    },
+    {
+      "bcode": "03",
+      "name": "GOPIBALLAVPUR-II",
+      "text": "[ 03 ] GOPIBALLAVPUR-II"
+    },
+    {
+      "bcode": "06",
+      "name": "JAMBONI",
+      "text": "[ 06 ] JAMBONI"
+    },
+    {
+      "bcode": "05",
+      "name": "JHARGRAM",
+      "text": "[ 05 ] JHARGRAM"
+    },
+    {
+      "bcode": "01",
+      "name": "NAYAGRAM",
+      "text": "[ 01 ] NAYAGRAM"
+    },
+    {
+      "bcode": "04",
+      "name": "SANKRAIL",
+      "text": "[ 04 ] SANKRAIL"
+    }
+  ],
+  "23": [
+    {
+      "bcode": "11",
+      "name": "ADDITIONAL FARIDPUR-DURGAPUR",
+      "text": "[ 11 ] ADDITIONAL FARIDPUR-DURGAPUR"
+    },
+    {
+      "bcode": "01",
+      "name": "ANDAL",
+      "text": "[ 01 ] ANDAL"
+    },
+    {
+      "bcode": "05",
+      "name": "ASANSOLE",
+      "text": "[ 05 ] ASANSOLE"
+    },
+    {
+      "bcode": "06",
+      "name": "BARABONI",
+      "text": "[ 06 ] BARABONI"
+    },
+    {
+      "bcode": "02",
+      "name": "FARIDPUR-DURGAPUR",
+      "text": "[ 02 ] FARIDPUR-DURGAPUR"
+    },
+    {
+      "bcode": "07",
+      "name": "JAMURIA",
+      "text": "[ 07 ] JAMURIA"
+    },
+    {
+      "bcode": "03",
+      "name": "KANKSA",
+      "text": "[ 03 ] KANKSA"
+    },
+    {
+      "bcode": "08",
+      "name": "KULTI",
+      "text": "[ 08 ] KULTI"
+    },
+    {
+      "bcode": "04",
+      "name": "PANDABESWAR",
+      "text": "[ 04 ] PANDABESWAR"
+    },
+    {
+      "bcode": "09",
+      "name": "RANIGANJ",
+      "text": "[ 09 ] RANIGANJ"
+    },
+    {
+      "bcode": "10",
+      "name": "SALANPUR",
+      "text": "[ 10 ] SALANPUR"
+    }
+  ],
+  "01": [
+    {
+      "bcode": "01",
+      "name": "BANKURA - I",
+      "text": "[ 01 ] BANKURA - I"
+    },
+    {
+      "bcode": "02",
+      "name": "BANKURA - II",
+      "text": "[ 02 ] BANKURA - II"
+    },
+    {
+      "bcode": "07",
+      "name": "BARJORA",
+      "text": "[ 07 ] BARJORA"
+    },
+    {
+      "bcode": "17",
+      "name": "BISHNUPUR",
+      "text": "[ 17 ] BISHNUPUR"
+    },
+    {
+      "bcode": "03",
+      "name": "CHATNA",
+      "text": "[ 03 ] CHATNA"
+    },
+    {
+      "bcode": "06",
+      "name": "GANGAJALGHATI",
+      "text": "[ 06 ] GANGAJALGHATI"
+    },
+    {
+      "bcode": "12",
+      "name": "HIRBANDH",
+      "text": "[ 12 ] HIRBANDH"
+    },
+    {
+      "bcode": "13",
+      "name": "INDPUR",
+      "text": "[ 13 ] INDPUR"
+    },
+    {
+      "bcode": "22",
+      "name": "INDUS",
+      "text": "[ 22 ] INDUS"
+    },
+    {
+      "bcode": "18",
+      "name": "JOYPUR",
+      "text": "[ 18 ] JOYPUR"
+    },
+    {
+      "bcode": "11",
+      "name": "KHATRA",
+      "text": "[ 11 ] KHATRA"
+    },
+    {
+      "bcode": "19",
+      "name": "KOTOLPUR",
+      "text": "[ 19 ] KOTOLPUR"
+    },
+    {
+      "bcode": "05",
+      "name": "MEJHIA",
+      "text": "[ 05 ] MEJHIA"
+    },
+    {
+      "bcode": "08",
+      "name": "ONDA",
+      "text": "[ 08 ] ONDA"
+    },
+    {
+      "bcode": "21",
+      "name": "PATRASHYAR",
+      "text": "[ 21 ] PATRASHYAR"
+    },
+    {
+      "bcode": "14",
+      "name": "RAIPUR - I",
+      "text": "[ 14 ] RAIPUR - I"
+    },
+    {
+      "bcode": "15",
+      "name": "RAIPUR - II",
+      "text": "[ 15 ] RAIPUR - II"
+    },
+    {
+      "bcode": "16",
+      "name": "RANIBANDH",
+      "text": "[ 16 ] RANIBANDH"
+    },
+    {
+      "bcode": "04",
+      "name": "SALTORA",
+      "text": "[ 04 ] SALTORA"
+    },
+    {
+      "bcode": "10",
+      "name": "SIMLAPAL",
+      "text": "[ 10 ] SIMLAPAL"
+    },
+    {
+      "bcode": "20",
+      "name": "SONAMUKHI",
+      "text": "[ 20 ] SONAMUKHI"
+    },
+    {
+      "bcode": "09",
+      "name": "TALDANGRA",
+      "text": "[ 09 ] TALDANGRA"
+    }
+  ],
+  "03": [
+    {
+      "bcode": "11",
+      "name": "BOLPUR",
+      "text": "[ 11 ] BOLPUR"
+    },
+    {
+      "bcode": "14",
+      "name": "DUBRAJPUR",
+      "text": "[ 14 ] DUBRAJPUR"
+    },
+    {
+      "bcode": "15",
+      "name": "ELAMBAZAR",
+      "text": "[ 15 ] ELAMBAZAR"
+    },
+    {
+      "bcode": "19",
+      "name": "KHAYRASOL",
+      "text": "[ 19 ] KHAYRASOL"
+    },
+    {
+      "bcode": "12",
+      "name": "LAVPUR",
+      "text": "[ 12 ] LAVPUR"
+    },
+    {
+      "bcode": "05",
+      "name": "MAYURESWAR - I",
+      "text": "[ 05 ] MAYURESWAR - I"
+    },
+    {
+      "bcode": "06",
+      "name": "MAYURESWAR - II",
+      "text": "[ 06 ] MAYURESWAR - II"
+    },
+    {
+      "bcode": "09",
+      "name": "MD. BAZAR",
+      "text": "[ 09 ] MD. BAZAR"
+    },
+    {
+      "bcode": "03",
+      "name": "MURARI - I",
+      "text": "[ 03 ] MURARI - I"
+    },
+    {
+      "bcode": "04",
+      "name": "MURARI - II",
+      "text": "[ 04 ] MURARI - II"
+    },
+    {
+      "bcode": "01",
+      "name": "NALHATI - I",
+      "text": "[ 01 ] NALHATI - I"
+    },
+    {
+      "bcode": "02",
+      "name": "NALHATI - II",
+      "text": "[ 02 ] NALHATI - II"
+    },
+    {
+      "bcode": "13",
+      "name": "NANOOR",
+      "text": "[ 13 ] NANOOR"
+    },
+    {
+      "bcode": "16",
+      "name": "RAJNAGAR",
+      "text": "[ 16 ] RAJNAGAR"
+    },
+    {
+      "bcode": "07",
+      "name": "RAMPURHAT - I",
+      "text": "[ 07 ] RAMPURHAT - I"
+    },
+    {
+      "bcode": "08",
+      "name": "RAMPURHAT - II",
+      "text": "[ 08 ] RAMPURHAT - II"
+    },
+    {
+      "bcode": "10",
+      "name": "SAINTHIA",
+      "text": "[ 10 ] SAINTHIA"
+    },
+    {
+      "bcode": "17",
+      "name": "SURI - I",
+      "text": "[ 17 ] SURI - I"
+    },
+    {
+      "bcode": "18",
+      "name": "SURI - II",
+      "text": "[ 18 ] SURI - II"
+    }
+  ],
+  "08": [
+    {
+      "bcode": "01",
+      "name": "Cooch Behar-1",
+      "text": "[ 01 ] Cooch Behar-1"
+    },
+    {
+      "bcode": "02",
+      "name": "Cooch Behar-2",
+      "text": "[ 02 ] Cooch Behar-2"
+    },
+    {
+      "bcode": "05",
+      "name": "DINHATA - I",
+      "text": "[ 05 ] DINHATA - I"
+    },
+    {
+      "bcode": "06",
+      "name": "DINHATA - II",
+      "text": "[ 06 ] DINHATA - II"
+    },
+    {
+      "bcode": "08",
+      "name": "HALDIBARI",
+      "text": "[ 08 ] HALDIBARI"
+    },
+    {
+      "bcode": "10",
+      "name": "MATHABANGA - I",
+      "text": "[ 10 ] MATHABANGA - I"
+    },
+    {
+      "bcode": "11",
+      "name": "MATHABANGA - II",
+      "text": "[ 11 ] MATHABANGA - II"
+    },
+    {
+      "bcode": "09",
+      "name": "MEKHLIGANJ",
+      "text": "[ 09 ] MEKHLIGANJ"
+    },
+    {
+      "bcode": "07",
+      "name": "SITAI",
+      "text": "[ 07 ] SITAI"
+    },
+    {
+      "bcode": "12",
+      "name": "SITALKUCHI",
+      "text": "[ 12 ] SITALKUCHI"
+    },
+    {
+      "bcode": "03",
+      "name": "TUFANGANJ - I",
+      "text": "[ 03 ] TUFANGANJ - I"
+    },
+    {
+      "bcode": "04",
+      "name": "TUFANGANJ - II",
+      "text": "[ 04 ] TUFANGANJ - II"
+    }
+  ],
+  "04": [
+    {
+      "bcode": "10",
+      "name": "BIJONBARI (DARJEELING SADAR)",
+      "text": "[ 10 ] BIJONBARI (DARJEELING SADAR)"
+    },
+    {
+      "bcode": "13",
+      "name": "BIJONBARI (PULBAZAR)",
+      "text": "[ 13 ] BIJONBARI (PULBAZAR)"
+    },
+    {
+      "bcode": "08",
+      "name": "KARSEONG",
+      "text": "[ 08 ] KARSEONG"
+    },
+    {
+      "bcode": "04",
+      "name": "KHARIBARI",
+      "text": "[ 04 ] KHARIBARI"
+    },
+    {
+      "bcode": "01",
+      "name": "MATIGARA",
+      "text": "[ 01 ] MATIGARA"
+    },
+    {
+      "bcode": "09",
+      "name": "MIRIK",
+      "text": "[ 09 ] MIRIK"
+    },
+    {
+      "bcode": "02",
+      "name": "NAXALBARI",
+      "text": "[ 02 ] NAXALBARI"
+    },
+    {
+      "bcode": "03",
+      "name": "PHANSIDEWA",
+      "text": "[ 03 ] PHANSIDEWA"
+    },
+    {
+      "bcode": "11",
+      "name": "RANGLI RANGLIOT",
+      "text": "[ 11 ] RANGLI RANGLIOT"
+    },
+    {
+      "bcode": "05",
+      "name": "SILIGURI TOWN",
+      "text": "[ 05 ] SILIGURI TOWN"
+    },
+    {
+      "bcode": "12",
+      "name": "SUKHIAPOKHRI",
+      "text": "[ 12 ] SUKHIAPOKHRI"
+    }
+  ],
+  "06": [
+    {
+      "bcode": "15",
+      "name": "ARAMBAGH",
+      "text": "[ 15 ] ARAMBAGH"
+    },
+    {
+      "bcode": "05",
+      "name": "BALAGARH",
+      "text": "[ 05 ] BALAGARH"
+    },
+    {
+      "bcode": "10",
+      "name": "CHANDITALA - I",
+      "text": "[ 10 ] CHANDITALA - I"
+    },
+    {
+      "bcode": "11",
+      "name": "CHANDITALA - II",
+      "text": "[ 11 ] CHANDITALA - II"
+    },
+    {
+      "bcode": "03",
+      "name": "DHANIAKHALI",
+      "text": "[ 03 ] DHANIAKHALI"
+    },
+    {
+      "bcode": "13",
+      "name": "GOGHAT - I",
+      "text": "[ 13 ] GOGHAT - I"
+    },
+    {
+      "bcode": "14",
+      "name": "GOGHAT - II",
+      "text": "[ 14 ] GOGHAT - II"
+    },
+    {
+      "bcode": "07",
+      "name": "HARIPAL",
+      "text": "[ 07 ] HARIPAL"
+    },
+    {
+      "bcode": "12",
+      "name": "JANGIPARA",
+      "text": "[ 12 ] JANGIPARA"
+    },
+    {
+      "bcode": "16",
+      "name": "KHANAKUL - I",
+      "text": "[ 16 ] KHANAKUL - I"
+    },
+    {
+      "bcode": "17",
+      "name": "KHANAKUL - II",
+      "text": "[ 17 ] KHANAKUL - II"
+    },
+    {
+      "bcode": "01",
+      "name": "MOGRA CHINSURA",
+      "text": "[ 01 ] MOGRA CHINSURA"
+    },
+    {
+      "bcode": "04",
+      "name": "PANDUA",
+      "text": "[ 04 ] PANDUA"
+    },
+    {
+      "bcode": "02",
+      "name": "POLBA - DADPUR",
+      "text": "[ 02 ] POLBA - DADPUR"
+    },
+    {
+      "bcode": "18",
+      "name": "PURSHURA",
+      "text": "[ 18 ] PURSHURA"
+    },
+    {
+      "bcode": "09",
+      "name": "SHRIRAMPUR",
+      "text": "[ 09 ] SHRIRAMPUR"
+    },
+    {
+      "bcode": "06",
+      "name": "SINGUR",
+      "text": "[ 06 ] SINGUR"
+    },
+    {
+      "bcode": "19",
+      "name": "Singur (Khalisani)",
+      "text": "[ 19 ] Singur (Khalisani)"
+    },
+    {
+      "bcode": "08",
+      "name": "TARAKESWAR",
+      "text": "[ 08 ] TARAKESWAR"
+    }
+  ],
+  "05": [
+    {
+      "bcode": "06",
+      "name": "AMTA-I",
+      "text": "[ 06 ] AMTA-I"
+    },
+    {
+      "bcode": "07",
+      "name": "AMTA-II",
+      "text": "[ 07 ] AMTA-II"
+    },
+    {
+      "bcode": "08",
+      "name": "BAGNAN-I",
+      "text": "[ 08 ] BAGNAN-I"
+    },
+    {
+      "bcode": "09",
+      "name": "BAGNAN-II",
+      "text": "[ 09 ] BAGNAN-II"
+    },
+    {
+      "bcode": "03",
+      "name": "BALI-JAGACHA",
+      "text": "[ 03 ] BALI-JAGACHA"
+    },
+    {
+      "bcode": "01",
+      "name": "DOMJUR",
+      "text": "[ 01 ] DOMJUR"
+    },
+    {
+      "bcode": "15",
+      "name": "HAORA TOWN SURVEY UNIT",
+      "text": "[ 15 ] HAORA TOWN SURVEY UNIT"
+    },
+    {
+      "bcode": "02",
+      "name": "JAGATBALLAVPUR",
+      "text": "[ 02 ] JAGATBALLAVPUR"
+    },
+    {
+      "bcode": "05",
+      "name": "PANCHLA",
+      "text": "[ 05 ] PANCHLA"
+    },
+    {
+      "bcode": "04",
+      "name": "SANKRAIL",
+      "text": "[ 04 ] SANKRAIL"
+    },
+    {
+      "bcode": "13",
+      "name": "SHYAMPUR-I",
+      "text": "[ 13 ] SHYAMPUR-I"
+    },
+    {
+      "bcode": "14",
+      "name": "SHYAMPUR-II",
+      "text": "[ 14 ] SHYAMPUR-II"
+    },
+    {
+      "bcode": "10",
+      "name": "UDAYNARAYANPUR",
+      "text": "[ 10 ] UDAYNARAYANPUR"
+    },
+    {
+      "bcode": "11",
+      "name": "ULUBERIA-I",
+      "text": "[ 11 ] ULUBERIA-I"
+    },
+    {
+      "bcode": "12",
+      "name": "ULUBERIA-II",
+      "text": "[ 12 ] ULUBERIA-II"
+    }
+  ],
+  "07": [
+    {
+      "bcode": "04",
+      "name": "DHUPGURI",
+      "text": "[ 04 ] DHUPGURI"
+    },
+    {
+      "bcode": "02",
+      "name": "JALPAIGURI SADAR",
+      "text": "[ 02 ] JALPAIGURI SADAR"
+    },
+    {
+      "bcode": "05",
+      "name": "MALBAZAR",
+      "text": "[ 05 ] MALBAZAR"
+    },
+    {
+      "bcode": "06",
+      "name": "METIALI",
+      "text": "[ 06 ] METIALI"
+    },
+    {
+      "bcode": "03",
+      "name": "MOYNAGURI",
+      "text": "[ 03 ] MOYNAGURI"
+    },
+    {
+      "bcode": "07",
+      "name": "NAGRAKATA",
+      "text": "[ 07 ] NAGRAKATA"
+    },
+    {
+      "bcode": "01",
+      "name": "RAJGANJ",
+      "text": "[ 01 ] RAJGANJ"
+    }
+  ],
+  "09": [
+    {
+      "bcode": "10",
+      "name": "BAMANGOLA",
+      "text": "[ 10 ] BAMANGOLA"
+    },
+    {
+      "bcode": "03",
+      "name": "CHANCHAL-I",
+      "text": "[ 03 ] CHANCHAL-I"
+    },
+    {
+      "bcode": "04",
+      "name": "CHANCHAL-II",
+      "text": "[ 04 ] CHANCHAL-II"
+    },
+    {
+      "bcode": "12",
+      "name": "ENGLISHBAZAR",
+      "text": "[ 12 ] ENGLISHBAZAR"
+    },
+    {
+      "bcode": "09",
+      "name": "GAZOLE",
+      "text": "[ 09 ] GAZOLE"
+    },
+    {
+      "bcode": "11",
+      "name": "HABIBPUR",
+      "text": "[ 11 ] HABIBPUR"
+    },
+    {
+      "bcode": "01",
+      "name": "HARISHCHANDRAPUR-1",
+      "text": "[ 01 ] HARISHCHANDRAPUR-1"
+    },
+    {
+      "bcode": "02",
+      "name": "HARISHCHANDRAPUR-2",
+      "text": "[ 02 ] HARISHCHANDRAPUR-2"
+    },
+    {
+      "bcode": "13",
+      "name": "KALIACHAK-1",
+      "text": "[ 13 ] KALIACHAK-1"
+    },
+    {
+      "bcode": "15",
+      "name": "KALIACHAK-3",
+      "text": "[ 15 ] KALIACHAK-3"
+    },
+    {
+      "bcode": "14",
+      "name": "KALIACHAK-II",
+      "text": "[ 14 ] KALIACHAK-II"
+    },
+    {
+      "bcode": "07",
+      "name": "MANIKCHAK",
+      "text": "[ 07 ] MANIKCHAK"
+    },
+    {
+      "bcode": "08",
+      "name": "OLD MALDA",
+      "text": "[ 08 ] OLD MALDA"
+    },
+    {
+      "bcode": "06",
+      "name": "RATUA-2",
+      "text": "[ 06 ] RATUA-2"
+    },
+    {
+      "bcode": "05",
+      "name": "RATUA-I",
+      "text": "[ 05 ] RATUA-I"
+    }
+  ],
+  "02": [
+    {
+      "bcode": "09",
+      "name": "AUSHGRAM-I",
+      "text": "[ 09 ] AUSHGRAM-I"
+    },
+    {
+      "bcode": "10",
+      "name": "AUSHGRAM-II",
+      "text": "[ 10 ] AUSHGRAM-II"
+    },
+    {
+      "bcode": "01",
+      "name": "BARDHAMAN-1",
+      "text": "[ 01 ] BARDHAMAN-1"
+    },
+    {
+      "bcode": "18",
+      "name": "BARDHAMAN-II",
+      "text": "[ 18 ] BARDHAMAN-II"
+    },
+    {
+      "bcode": "08",
+      "name": "BHATAR",
+      "text": "[ 08 ] BHATAR"
+    },
+    {
+      "bcode": "12",
+      "name": "GOLSI-I",
+      "text": "[ 12 ] GOLSI-I"
+    },
+    {
+      "bcode": "11",
+      "name": "GOLSI-II",
+      "text": "[ 11 ] GOLSI-II"
+    },
+    {
+      "bcode": "04",
+      "name": "JAMALPUR",
+      "text": "[ 04 ] JAMALPUR"
+    },
+    {
+      "bcode": "29",
+      "name": "KALNA-I",
+      "text": "[ 29 ] KALNA-I"
+    },
+    {
+      "bcode": "30",
+      "name": "KALNA-II",
+      "text": "[ 30 ] KALNA-II"
+    },
+    {
+      "bcode": "24",
+      "name": "KATOA-I",
+      "text": "[ 24 ] KATOA-I"
+    },
+    {
+      "bcode": "25",
+      "name": "KATOA-II",
+      "text": "[ 25 ] KATOA-II"
+    },
+    {
+      "bcode": "26",
+      "name": "KETUGRAM-1",
+      "text": "[ 26 ] KETUGRAM-1"
+    },
+    {
+      "bcode": "27",
+      "name": "KETUGRAM-II",
+      "text": "[ 27 ] KETUGRAM-II"
+    },
+    {
+      "bcode": "07",
+      "name": "KHANDOGHOSH",
+      "text": "[ 07 ] KHANDOGHOSH"
+    },
+    {
+      "bcode": "33",
+      "name": "MANTESWAR",
+      "text": "[ 33 ] MANTESWAR"
+    },
+    {
+      "bcode": "02",
+      "name": "MEMARI-I",
+      "text": "[ 02 ] MEMARI-I"
+    },
+    {
+      "bcode": "03",
+      "name": "MEMARI-II",
+      "text": "[ 03 ] MEMARI-II"
+    },
+    {
+      "bcode": "28",
+      "name": "MONGALKOT",
+      "text": "[ 28 ] MONGALKOT"
+    },
+    {
+      "bcode": "31",
+      "name": "PURBASHALI-I",
+      "text": "[ 31 ] PURBASHALI-I"
+    },
+    {
+      "bcode": "32",
+      "name": "PURBASHALI-II",
+      "text": "[ 32 ] PURBASHALI-II"
+    },
+    {
+      "bcode": "06",
+      "name": "RAINA-2",
+      "text": "[ 06 ] RAINA-2"
+    },
+    {
+      "bcode": "05",
+      "name": "RAINA-I",
+      "text": "[ 05 ] RAINA-I"
+    }
+  ]
+}

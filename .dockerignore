@@ -1,0 +1,15 @@
+.git
+.github
+node_modules
+.banglarbhumi-browser
+brain
+scratch
+.idea
+.vscode
+.env
+.env.*
+*.log
+logs
+backend/data/citizen_session.json
+citizen_session.json
+instructions.md

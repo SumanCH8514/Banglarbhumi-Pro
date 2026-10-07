@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BanglarBhumi Pro • West Bengal Digital Land Records &amp; Khatian Portal</title>
+  <meta name="description"
+    content="Official digital portal for West Bengal land records, cadastral maps, bargadar verification and certified schedules.">
+  <link rel="canonical" href="https://wblandrecord.sumanonline.com/">
+  <meta property="og:url" content="https://wblandrecord.sumanonline.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BanglarBhumi Pro • West Bengal Digital Land Records">
+  <meta property="og:description"
+    content="Official digital portal for West Bengal land records, cadastral maps, bargadar verification and certified schedules.">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="css/landing.css?v=2.6.5">
+</head>
+
+<body>
+
+  <aside class="gov-top-bar">
+    <div class="portal-container gov-top-bar-inner">
+      <div class="gov-top-left">
+        <div class="gov-top-line1">
+          <span data-i18n="top_gov">Government of West Bengal • পশ্চিমবঙ্গ সরকার</span>
+        </div>
+        <div class="gov-top-line2">
+          <span data-i18n="top_dept">Department of Land &amp; Land Reforms • Land Records &amp;
+            Surveys</span>
+        </div>
+      </div>
+      <div class="gov-top-right">
+        <span class="gov-sep-desk">•</span>
+        <div class="gov-top-actions">
+          <a href="/app?action=login" class="gov-link-signin" title="Citizen Sign In">
+            <svg class="gov-signin-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+              <polyline points="10 17 15 12 10 7" />
+              <line x1="15" y1="12" x2="3" y2="12" />
+            </svg>
+            <span data-i18n="top_signin">Citizen Sign In</span>
+          </a>
+          <span class="gov-sep-desk">•</span>
+          <div class="lang-selector-wrap" aria-label="Language selection">
+            <button type="button" class="lang-toggle-btn active" id="btnLangEn"
+              onclick="setPortalLanguage('en')">English</button>
+            <span class="lang-sep">|</span>
+            <button type="button" class="lang-toggle-btn" id="btnLangBn"
+              onclick="setPortalLanguage('bn')">বাংলা</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <header class="portal-official-banner-wrap">
+    <div class="portal-container banner-inner-container">
+      <a href="/" title="BanglarBhumi Pro - Land Records &amp; Surveys Portal">
+        <img src="images/header_image.png"
+          alt="Department of Land &amp; Land Reforms and Refugee Relief &amp; Rehabilitation - BanglarBhumi Pro"
+          class="banner-img-element">
+      </a>
+    </div>
+  </header>
+
+  <nav class="portal-menu-bar" aria-label="Portal Navigation">
+    <div class="portal-container menu-bar-inner">
+      <a href="/" class="mobile-brand-title" title="BanglarBhumi Pro">
+        <span class="mobile-brand-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </span>
+        <div class="mobile-brand-text-group">
+          <span class="mobile-brand-text" data-i18n="mobile_brand">BanglarBhumi Pro</span>
+          <span class="mobile-brand-tagline" data-i18n="mobile_tagline">a SumanOnline Project</span>
+        </div>
+      </a>
+      <ul class="menu-items-list">
+        <li><a href="#search-widget" class="menu-item-link active" data-i18n="nav_search">Search Records</a></li>
+        <li><a href="#services" class="menu-item-link" data-i18n="nav_services">Citizen Services</a></li>
+        <li><a href="#portal-stats" class="menu-item-link" data-i18n="nav_stats">Portal Stats</a></li>
+        <li><a href="#verification-guide" class="menu-item-link" data-i18n="nav_guide">Due Diligence Guide</a></li>
+        <li><a href="#classifications" class="menu-item-link" data-i18n="nav_classes">Land Classes</a></li>
+        <li><a href="#barga-law" class="menu-item-link" data-i18n="nav_barga">Bargadar Rights</a></li>
+        <li><a href="#mouza-presets" class="menu-item-link" data-i18n="nav_presets">Sample Records</a></li>
+        <li><a href="#faq-section" class="menu-item-link" data-i18n="nav_faq">FAQs</a></li>
+      </ul>
+
+      <div class="menu-actions-right">
+        <button type="button" class="btn-menu-mobile" id="btnMenuMobile" aria-label="Toggle Navigation Menu">
+          <span data-i18n="mobile_menu_btn">☰ Menu</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-nav-panel" id="mobileNavPanel">
+      <ul class="mobile-nav-list">
+        <li><a href="#search-widget" data-i18n="nav_search">Search Records</a></li>
+        <li><a href="#services" data-i18n="nav_services">Citizen Services</a></li>
+        <li><a href="#portal-stats" data-i18n="nav_stats">Portal Stats</a></li>
+        <li><a href="#verification-guide" data-i18n="nav_guide">Due Diligence Guide</a></li>
+        <li><a href="#classifications" data-i18n="nav_classes">Land Classes</a></li>
+        <li><a href="#barga-law" data-i18n="nav_barga">Bargadar Rights</a></li>
+        <li><a href="#mouza-presets" data-i18n="nav_presets">Sample Records</a></li>
+        <li><a href="#faq-section" data-i18n="nav_faq">FAQs</a></li>
+      </ul>
+      <a href="/app" class="btn-open-search-tool" style="width:100%; justify-content:center;">
+        <span data-i18n="nav_portal_jump">Open Search Portal Directly</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="bulletin-marquee-bar">
+    <div class="portal-container bulletin-flex">
+      <span class="bulletin-badge" data-i18n="bulletin_badge">IMPORTANT NOTICE</span>
+      <marquee class="bulletin-marquee-text" id="bulletinMarquee" behavior="scroll" direction="left" scrollamount="6"
+        onmouseover="this.stop();" onmouseout="this.start();" data-i18n="bulletin_text">
+        Under West Bengal Land Reforms Act 1955, cadastral maps, bargadar possessor records and certified schedules are
+        available online across all districts. • Contact your local BL&amp;LRO office for conversion (Section 4C) and
+        mutation. • Citizen Helpline: 1800-345-5555 (Toll Free).
+      </marquee>
+    </div>
+  </div>
+
+  <main>
+    <section class="portal-hero-section" id="search-widget">
+      <div class="portal-container hero-dashboard-grid">
+
+        <div class="portal-search-widget-card">
+          <h2 class="widget-header-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <span data-i18n="widget_title">Know Your Property</span>
+          </h2>
+          <div class="widget-header-sub" data-i18n="widget_sub">Search digital land records directly by Khatian or Plot
+            Number</div>
+
+          <div class="widget-mode-selector">
+            <button type="button" class="btn-mode-toggle active" id="btnToggleKhatian"
+              onclick="setWidgetMode('khatian')" data-i18n="btn_khatian">
+              By Khatian No.
+            </button>
+            <button type="button" class="btn-mode-toggle" id="btnTogglePlot" onclick="setWidgetMode('plot')"
+              data-i18n="btn_plot">
+              By Plot No.
+            </button>
+          </div>
+
+          <form id="widgetQuickForm" onsubmit="handleWidgetSubmit(event); return false;">
+            <div class="widget-form-group">
+              <label class="widget-label" for="widgetDistrict" data-i18n="lbl_dist">District:</label>
+              <select id="widgetDistrict" class="widget-select" onchange="onWidgetDistrictChange()">
+                <option value="01" selected>[ 01 ] Bankura (BANKURA)</option>
+                <option value="06">[ 06 ] Hooghly (HOOGHLY)</option>
+                <option value="16">[ 16 ] South 24 Parganas (SOUTH 24 PGS)</option>
+                <option value="03">[ 03 ] Birbhum (BIRBHUM)</option>
+                <option value="05">[ 05 ] Howrah (HOWRAH)</option>
+              </select>
+            </div>
+
+            <div class="widget-form-group">
+              <label class="widget-label" for="widgetBlock" data-i18n="lbl_block">Block / Thana:</label>
+              <select id="widgetBlock" class="widget-select">
+                <option value="19" selected>[ 19 ] Kotulpur</option>
+                <option value="01">[ 01 ] Bankura Sadar (Bankura-I)</option>
+                <option value="03">[ 03 ] Bishnupur</option>
+                <option value="04">[ 04 ] Onda</option>
+              </select>
+            </div>
+
+            <div class="widget-form-group">
+              <label class="widget-label" for="widgetMouza" data-i18n="lbl_mouza">Mouza &amp; J.L.:</label>
+              <select id="widgetMouza" class="widget-select">
+                <option value="089" selected>Karakbere (JL 089)</option>
+                <option value="110">Kotulpur (JL 110)</option>
+                <option value="055">Lego (JL 055)</option>
+              </select>
+            </div>
+
+            <div class="widget-form-group" id="groupKhatianInput">
+              <label class="widget-label" for="widgetKhatianNum" data-i18n="lbl_khatian_num">Khatian Number:</label>
+              <input type="text" id="widgetKhatianNum" class="widget-input mono" value="101"
+                placeholder="e.g., 101 or 101/A (Demo)" data-i18n-ph="ph_khatian" required>
+            </div>
+
+            <div class="widget-form-group" id="groupPlotInput" style="display:none;">
+              <label class="widget-label" for="widgetPlotNum" data-i18n="lbl_plot_num">Plot Number (Dag No):</label>
+              <input type="text" id="widgetPlotNum" class="widget-input mono" value="205"
+                placeholder="e.g., 205 or 205/1 (Demo)" data-i18n-ph="ph_plot">
+            </div>
+
+            <button type="submit" class="btn-widget-search">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+              <span data-i18n="btn_search">Search Records</span>
+            </button>
+          </form>
+        </div>
+
+        <div class="hero-featured-display-card">
+          <div class="display-header-strip">
+            <div>
+              <h2 data-i18n="feat_title">Sample Mouza Record • Kotulpur (JL 089)</h2>
+              <div class="display-mouza-meta" data-i18n="feat_meta">Demo Khatian No: <strong>101/A</strong> • 4 Plots
+                Sample Schedule (Demonstration)</div>
+            </div>
+            <span class="display-sample-badge" data-i18n="feat_verified_badge">Demo Sample Record</span>
+          </div>
+
+          <table class="real-record-summary-table">
+            <tbody>
+              <tr>
+                <td class="lbl" data-i18n="feat_rayat_lbl">Rayat Name:</td>
+                <td class="val" data-i18n="feat_rayat_val">Demo Citizen (Sample Rayat)</td>
+                <td class="lbl" data-i18n="feat_father_lbl">Father/Husband:</td>
+                <td class="val" data-i18n="feat_father_val">Demo Guardian / Father</td>
+              </tr>
+              <tr>
+                <td class="lbl" data-i18n="feat_owner_lbl">Ownership Type:</td>
+                <td class="val" data-i18n="feat_owner_val">Individual Ownership (Byakti - Demo)</td>
+                <td class="lbl" data-i18n="feat_area_lbl">Total Land Area:</td>
+                <td class="val" style="color:#047857; font-weight:700;" data-i18n="feat_area_val">0.36 Acre (Sample
+                  Area)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="mobile-table-scroll-hint">
+            <span data-i18n="scroll_hint">↔ Scroll horizontally to view full schedule</span>
+          </div>
+
+          <div class="featured-table-scroll">
+            <table class="portal-data-table">
+              <thead>
+                <tr>
+                  <th data-i18n="th_dag">Plot No (Dag)</th>
+                  <th data-i18n="th_class">Land Class</th>
+                  <th data-i18n="th_share">Share</th>
+                  <th data-i18n="th_area">Area (Acre)</th>
+                  <th data-i18n="th_barga">Possessor / Barga Status</th>
+                  <th data-i18n="th_remarks">Remarks &amp; Section</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <strong>101</strong>
+                      <span class="badge-map-btn-clean" data-i18n="btn_map">Map</span>
+                    </div>
+                  </td>
+                  <td data-i18n="cl_shale_val">Shale (শালি)</td>
+                  <td class="mono">0.1429</td>
+                  <td class="mono font-semibold">0.0200 Acre</td>
+                  <td>
+                    <span class="badge-barga-human-red">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                      <span data-i18n="badge_anumati">Permission (Anumati)</span>
+                    </span>
+                  </td>
+                  <td style="color:#64748b;">Nil</td>
+                </tr>
+                <tr style="background:#fef2f2;">
+                  <td>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <strong style="color:#b91c1c;">102</strong>
+                      <span class="badge-map-btn-clean" data-i18n="btn_map">Map</span>
+                    </div>
+                  </td>
+                  <td>Do (ডু)</td>
+                  <td class="mono">0.0714</td>
+                  <td class="mono font-semibold">0.0100 Acre</td>
+                  <td>
+                    <span class="badge-barga-human-red">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                      <span data-i18n="badge_barga">Bargadar (Barga)</span>
+                    </span>
+                  </td>
+                  <td style="color:#64748b;">Nil</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <strong style="color:#b91c1c;">103</strong>
+                      <span class="badge-map-btn-clean" data-i18n="btn_map">Map</span>
+                    </div>
+                  </td>
+                  <td>Do (ডু)</td>
+                  <td class="mono">0.0476</td>
+                  <td class="mono font-semibold">0.0200 Acre</td>
+                  <td>
+                    <span class="badge-barga-human-red">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                      <span data-i18n="badge_barga">Bargadar (Barga)</span>
+                    </span>
+                  </td>
+                  <td style="color:#64748b;">Nil</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <strong>104</strong>
+                      <span class="badge-map-btn-clean" data-i18n="btn_map">Map</span>
+                    </div>
+                  </td>
+                  <td data-i18n="cl_shale_val">Shale (শালি)</td>
+                  <td class="mono">0.0714</td>
+                  <td class="mono font-semibold">0.0100 Acre</td>
+                  <td style="color:#64748b;">Nil</td>
+                  <td style="color:#7e22ce; font-weight:600;" data-i18n="sec5_remark">Section 5(1) Remarks</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="display-card-actions">
+            <div class="display-notice-text" data-i18n="feat_notice">
+              * Demonstration record with simulated data for citizen privacy. Plots with red badge indicate Bargadar or
+              permissive possessor.
+            </div>
+            <a href="/app?autoDist=01&autoBlock=19&autoMouza=089&autoNum=101&autoMode=khatian&autoP2=A"
+              class="btn-open-full-schedule">
+              <span data-i18n="btn_full_sched">Open Sample Schedule in Search Portal →</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="portal-section-block" id="services">
+      <div class="portal-container">
+        <div class="section-title-bar">
+          <h2 data-i18n="services_heading">Citizen Services &amp; Record Inspection Modules</h2>
+          <span class="sub-note" data-i18n="services_sub">Modern digital land governance services of Government of West
+            Bengal</span>
+        </div>
+
+        <div class="services-cards-grid">
+          <div class="service-card">
+            <div class="service-card-header">
+              <div class="service-icon-box bg-navy">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+              </div>
+              <h3 data-i18n="serv1_title">Record of Rights (RoR / Khatian Search)</h3>
+            </div>
+            <p data-i18n="serv1_desc">
+              Search by Khatian number to view owner's full legal name, father or husband's name, address, and all plots
+              owned under the Mouza.
+            </p>
+            <a href="/app?autoMode=khatian" class="service-card-link">
+              <span data-i18n="serv1_link">Start Khatian Search →</span>
+            </a>
+          </div>
+
+          <div class="service-card">
+            <div class="service-card-header">
+              <div class="service-icon-box bg-green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                  <line x1="8" y1="2" x2="8" y2="18"></line>
+                  <line x1="16" y1="6" x2="16" y2="22"></line>
+                </svg>
+              </div>
+              <h3 data-i18n="serv2_title">Cadastral Plot Map (Mouza Naksha)</h3>
+            </div>
+            <p data-i18n="serv2_desc">
+              Interactive cadastral vector parcel map displaying boundary pillars, adjacent survey plots, north compass
+              orientation, and right-of-way roads.
+            </p>
+            <a href="/app?autoDist=01&autoBlock=19&autoMouza=089&autoNum=101&autoMode=plot" class="service-card-link">
+              <span data-i18n="serv2_link">Inspect Parcel Map →</span>
+            </a>
+          </div>
+
+          <div class="service-card">
+            <div class="service-card-header">
+              <div class="service-icon-box bg-red">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+              <h3 data-i18n="serv3_title">Bargadar &amp; Possessor Verification</h3>
+            </div>
+            <p data-i18n="serv3_desc">
+              Instant detection of recorded Bargadars or permissive possessors with prominent red alert badges and
+              Section 50/51 statutory right auditing.
+            </p>
+            <a href="#barga-law" class="service-card-link">
+              <span data-i18n="serv3_link">Read Barga Statutory Rules →</span>
+            </a>
+          </div>
+
+          <div class="service-card">
+            <div class="service-card-header">
+              <div class="service-icon-box bg-orange">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                  <rect width="12" height="8" x="6" y="14"></rect>
+                </svg>
+              </div>
+              <h3 data-i18n="serv4_title">Certified Schedule &amp; Print Copy</h3>
+            </div>
+            <p data-i18n="serv4_desc">
+              Official government revenue format with bilingual column headers, digital department seal, watermark, and
+              one-click print/PDF download.
+            </p>
+            <a href="/app?autoDist=01&autoBlock=19&autoMouza=089&autoNum=101&autoMode=khatian&autoP2=A"
+              class="service-card-link">
+              <span data-i18n="serv4_link">Certified Copy Layout →</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section-block" id="portal-stats">
+      <div class="portal-container">
+        <div class="section-title-bar">
+          <h2 data-i18n="stats_heading">West Bengal Land Records Digitization Statistics</h2>
+          <span class="sub-note" data-i18n="stats_sub">Overview of state-wide revenue administration and mouza database
+            coverage</span>
+        </div>
+
+        <div class="stats-counter-grid">
+          <div class="stat-counter-card">
+            <div class="stat-count-num mono" data-i18n="stat1_num">23</div>
+            <div class="stat-count-label" data-i18n="stat1_lbl">Administrative Districts</div>
+            <div class="stat-count-desc" data-i18n="stat1_desc">From Darjeeling to South 24 Parganas fully digitized
+            </div>
+          </div>
+          <div class="stat-counter-card">
+            <div class="stat-count-num mono" data-i18n="stat2_num">342</div>
+            <div class="stat-count-label" data-i18n="stat2_lbl">Revenue Blocks &amp; BL&amp;LRO Offices</div>
+            <div class="stat-count-desc" data-i18n="stat2_desc">Block Land &amp; Land Reforms Officer revenue
+              jurisdictions</div>
+          </div>
+          <div class="stat-counter-card">
+            <div class="stat-count-num mono" data-i18n="stat3_num">42,048</div>
+            <div class="stat-count-label" data-i18n="stat3_lbl">Digitized Mouza Maps</div>
+            <div class="stat-count-desc" data-i18n="stat3_desc">Vector cadastral parcels preserved with survey
+              coordinates</div>
+          </div>
+          <div class="stat-counter-card">
+            <div class="stat-count-num mono" data-i18n="stat4_num">3.7+ Crore</div>
+            <div class="stat-count-label" data-i18n="stat4_lbl">Digitized RoR Records</div>
+            <div class="stat-count-desc" data-i18n="stat4_desc">Searchable in real-time on live database</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section-block" id="verification-guide">
+      <div class="portal-container">
+        <div class="section-title-bar">
+          <h2 data-i18n="guide_heading">Citizen &amp; Surveyor Due-Diligence: 3 Essential Steps</h2>
+          <span class="sub-note" data-i18n="guide_sub">Critical verification procedure prior to land purchase,
+            registration, or title transfer</span>
+        </div>
+
+        <div class="steps-flow-grid">
+          <div class="step-guide-card">
+            <div class="step-num-pill" data-i18n="step1_pill">STEP 01</div>
+            <h3 data-i18n="step1_title">Verify Khatian &amp; Rayat Ownership</h3>
+            <p data-i18n="step1_desc">
+              Search by Mouza and Khatian number to confirm the owner's legal name, father or husband's name, and total
+              land share. Cross-reference the seller's deed spelling against active revenue records.
+            </p>
+          </div>
+
+          <div class="step-guide-card highlight-step">
+            <div class="step-num-pill" style="background:#dc2626; color:#ffffff;" data-i18n="step2_pill">STEP 02</div>
+            <h3 style="color:#991b1b;" data-i18n="step2_title">Inspect Bargadar &amp; Possessor Column</h3>
+            <p data-i18n="step2_desc">
+              Examine whether any plot contains a red-badged 'Barga' or 'Permission' entry. If a Bargadar is recorded,
+              under Sections 50/51 of the WBLR Act they cannot be evicted and their cultivation rights are hereditary.
+            </p>
+          </div>
+
+          <div class="step-guide-card">
+            <div class="step-num-pill" data-i18n="step3_pill">STEP 03</div>
+            <h3 data-i18n="step3_title">Inspect Boundaries on Cadastral Map</h3>
+            <p data-i18n="step3_desc">
+              Click the 'Map' button beside the plot to view parcel geometry, survey boundary pillars, adjacent survey
+              numbers, and physical access road or water drainage on the ground.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section-block" id="classifications">
+      <div class="portal-container">
+        <div class="section-title-bar">
+          <h2 data-i18n="class_heading">West Bengal Land Classification &amp; Revenue Rules Guide</h2>
+          <span class="sub-note" data-i18n="class_sub">Land nature definitions and conversion guidelines under Section
+            4C (WBLR Act 1955)</span>
+        </div>
+
+        <div class="classification-desktop-table-wrap">
+          <table class="class-table">
+            <thead>
+              <tr>
+                <th style="width:16%;" data-i18n="th_cl_class">Classification</th>
+                <th style="width:28%;" data-i18n="th_cl_nature">Nature of Land &amp; Use</th>
+                <th style="width:34%;" data-i18n="th_cl_rule">Statutory Rule &amp; Practical Implication</th>
+                <th style="width:22%;" data-i18n="th_cl_conv">Conversion (Sec 4C)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong data-i18n="cl1_name">Bastu (বাস্তু)</strong></td>
+                <td data-i18n="cl1_desc">Land designated for homestead, residential building, or dwelling.</td>
+                <td data-i18n="cl1_rule">Subject to building codes if converted to non-residential or commercial
+                  purposes.</td>
+                <td data-i18n="cl1_conv">Not Applicable (already recorded residential)</td>
+              </tr>
+              <tr>
+                <td><strong data-i18n="cl2_name">Shale (শালি)</strong></td>
+                <td data-i18n="cl2_desc">Single-crop agricultural land, predominantly monsoon rain-fed cultivation.</td>
+                <td data-i18n="cl2_rule">Prior approval from BL&amp;LRO required before putting land to non-agricultural
+                  use.</td>
+                <td data-i18n="cl2_conv">Subject to permission under Section 4C</td>
+              </tr>
+              <tr>
+                <td><strong data-i18n="cl3_name">Dhani / Suna (ধানি / সুনা)</strong></td>
+                <td data-i18n="cl3_desc">Fertile multi-crop farmland producing paddy and rotational staple harvests.
+                </td>
+                <td data-i18n="cl3_rule">Strict statutory restrictions applied to protect agricultural food security.
+                </td>
+                <td data-i18n="cl3_conv">Conversion severely restricted except special projects</td>
+              </tr>
+              <tr>
+                <td><strong data-i18n="cl4_name">Danga (ডাঙা)</strong></td>
+                <td data-i18n="cl4_desc">Elevated, arid, or semi-cultivated terrain.</td>
+                <td data-i18n="cl4_rule">Well-suited for horticulture, agro-forestry, or conversion to residential
+                  homestead.</td>
+                <td data-i18n="cl4_conv">Subject to BL&amp;LRO statutory approval</td>
+              </tr>
+              <tr>
+                <td><strong data-i18n="cl5_name">Bagan (বাগান)</strong></td>
+                <td data-i18n="cl5_desc">Fruit orchard, bamboo grove, or tree plantation land.</td>
+                <td data-i18n="cl5_rule">Specific permissions from Forest Dept and Revenue Dept required for felling
+                  trees.</td>
+                <td data-i18n="cl5_conv">Subject to statutory permission</td>
+              </tr>
+              <tr>
+                <td><strong data-i18n="cl6_name">Pukur / Waterbody (পুকুর)</strong></td>
+                <td data-i18n="cl6_desc">Permanent pond, reservoir, lake, or inland fishery wetland.</td>
+                <td data-i18n="cl6_rule">Under West Bengal Inland Fisheries Act, filling or draining water bodies is a
+                  criminal offense.</td>
+                <td><strong style="color:#b91c1c;" data-i18n="cl6_conv">Filling &amp; Conversion Strictly
+                    Prohibited</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="classification-mobile-cards-wrap">
+          <div class="class-mobile-card">
+            <div class="class-card-top">
+              <span class="class-name-badge" data-i18n="cl1_name">Bastu (বাস্তু)</span>
+              <span class="class-type-tag" data-i18n="cl1_tag">Residential</span>
+            </div>
+            <div class="class-desc-line" data-i18n="cl1_desc">Land designated for homestead, residential building, or
+              dwelling.</div>
+            <div class="class-rule-line" data-i18n="cl1_rule">Subject to building codes if converted to non-residential
+              or commercial purposes.</div>
+            <div class="class-conv-line" data-i18n="cl1_conv_short">Conversion: Not Applicable (residential)</div>
+          </div>
+
+          <div class="class-mobile-card">
+            <div class="class-card-top">
+              <span class="class-name-badge" data-i18n="cl2_name">Shale (শালি)</span>
+              <span class="class-type-tag" style="background:#e0f2fe; color:#0369a1;" data-i18n="cl2_tag">Mono-Crop
+                Agri</span>
+            </div>
+            <div class="class-desc-line" data-i18n="cl2_desc">Single-crop agricultural land, predominantly monsoon
+              rain-fed cultivation.</div>
+            <div class="class-rule-line" data-i18n="cl2_rule">Prior approval from BL&amp;LRO required before putting
+              land to non-agricultural use.</div>
+            <div class="class-conv-line" data-i18n="cl2_conv_short">Conversion: Under Section 4C approval</div>
+          </div>
+
+          <div class="class-mobile-card">
+            <div class="class-card-top">
+              <span class="class-name-badge" data-i18n="cl3_name">Dhani / Suna (ধানি / সুনা)</span>
+              <span class="class-type-tag" style="background:#dcfce7; color:#15803d;" data-i18n="cl3_tag">Multi-Crop
+                Fertile</span>
+            </div>
+            <div class="class-desc-line" data-i18n="cl3_desc">Fertile multi-crop farmland producing paddy and rotational
+              staple harvests.</div>
+            <div class="class-rule-line" data-i18n="cl3_rule">Strict statutory restrictions applied to protect
+              agricultural food security.</div>
+            <div class="class-conv-line" data-i18n="cl3_conv_short">Conversion: Severely restricted</div>
+          </div>
+
+          <div class="class-mobile-card">
+            <div class="class-card-top">
+              <span class="class-name-badge" data-i18n="cl4_name">Danga (ডাঙা)</span>
+              <span class="class-type-tag" style="background:#fef3c7; color:#92400e;" data-i18n="cl4_tag">High /
+                Arid</span>
+            </div>
+            <div class="class-desc-line" data-i18n="cl4_desc">Elevated, arid, or semi-cultivated terrain.</div>
+            <div class="class-rule-line" data-i18n="cl4_rule">Well-suited for horticulture, agro-forestry, or conversion
+              to residential homestead.</div>
+            <div class="class-conv-line" data-i18n="cl4_conv_short">Conversion: Subject to BL&amp;LRO approval</div>
+          </div>
+
+          <div class="class-mobile-card">
+            <div class="class-card-top">
+              <span class="class-name-badge" data-i18n="cl5_name">Bagan (বাগান)</span>
+              <span class="class-type-tag" style="background:#f3e8ff; color:#7e22ce;" data-i18n="cl5_tag">Orchard /
+                Plantation</span>
+            </div>
+            <div class="class-desc-line" data-i18n="cl5_desc">Fruit orchard, bamboo grove, or tree plantation land.
+            </div>
+            <div class="class-rule-line" data-i18n="cl5_rule">Specific permissions from Forest Dept and Revenue Dept
+              required for felling trees.</div>
+            <div class="class-conv-line" data-i18n="cl5_conv_short">Conversion: Subject to permission</div>
+          </div>
+
+          <div class="class-mobile-card danger-card">
+            <div class="class-card-top">
+              <span class="class-name-badge" style="background:#fee2e2; color:#b91c1c;" data-i18n="cl6_name">Pukur /
+                Waterbody (পুকুর)</span>
+              <span class="class-type-tag" style="background:#dc2626; color:#ffffff;" data-i18n="cl6_tag">Filling
+                Strictly Banned</span>
+            </div>
+            <div class="class-desc-line" data-i18n="cl6_desc">Permanent pond, reservoir, lake, or inland fishery
+              wetland.</div>
+            <div class="class-rule-line" data-i18n="cl6_rule">Under West Bengal Inland Fisheries Act, filling or
+              draining water bodies is a criminal offense.</div>
+            <div class="class-conv-line" style="color:#b91c1c; font-weight:700;" data-i18n="cl6_conv_short">Conversion:
+              Strictly Prohibited &amp; Criminal Offense</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section-block" id="barga-law">
+      <div class="portal-container">
+        <div class="barga-statutory-card">
+          <div class="barga-statutory-inner">
+            <div class="barga-icon-large">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                </path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <div class="barga-text-block">
+              <h3 data-i18n="barga_title">Statutory Barga Warning: Essential Due-Diligence Prior to Land Acquisition
+              </h3>
+              <p data-i18n="barga_text">
+                Under Sections 50 &amp; 51 of the West Bengal Land Reforms Act 1955, the cultivation rights and crop
+                share of recorded Bargadars are legally protected and hereditary. Even if the land title transfers to a
+                new buyer, the Bargadar cannot be evicted from possession. Inspecting the possessor column for Barga
+                entries prior to any deed registration is mandatory. BanglarBhumi Pro identifies every recorded Barga
+                parcel with prominent red indicator badges.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section-block" id="mouza-presets">
+      <div class="portal-container">
+        <div class="section-title-bar">
+          <h2 data-i18n="presets_heading">Verified Sample Mouzas &amp; Test Records</h2>
+          <span class="sub-note" data-i18n="presets_sub">Load pre-verified revenue parcels instantly with one
+            click</span>
+        </div>
+
+        <div class="preset-mouzas-grid">
+          <div class="preset-mouza-card">
+            <div class="preset-card-head">
+              <span class="preset-dist-title" data-i18n="p1_dist">Bankura</span>
+              <span class="preset-tag-verified" data-i18n="p1_tag">Sample Barga</span>
+            </div>
+            <div class="preset-block-text" data-i18n="p1_block">Block: Kotulpur • Mouza: Karakbere (089)</div>
+            <div class="preset-target-pill">
+              <span data-i18n="p1_pill_khatian">Demo Khatian: 101/A</span>
+              <span style="color:#047857;" data-i18n="p1_pill_plots">4 Plots (Demo)</span>
+            </div>
+            <button type="button" class="btn-run-preset"
+              onclick="launchPresetTarget('01', '19', '089', '101', 'khatian', 'A')">
+              <span data-i18n="p1_btn">Load Record →</span>
+            </button>
+          </div>
+
+          <div class="preset-mouza-card">
+            <div class="preset-card-head">
+              <span class="preset-dist-title" data-i18n="p2_dist">Bankura</span>
+              <span class="preset-tag-verified" data-i18n="p2_tag">Sample Plot</span>
+            </div>
+            <div class="preset-block-text" data-i18n="p2_block">Block: Bankura Sadar • Mouza: Sanbandha (182)</div>
+            <div class="preset-target-pill">
+              <span data-i18n="p2_pill_dag">Plot No: 101 (Demo)</span>
+              <span style="color:#0284c7;" data-i18n="p2_pill_class">Shale Class</span>
+            </div>
+            <button type="button" class="btn-run-preset" onclick="launchPresetTarget('01', '01', '182', '101', 'plot')">
+              <span data-i18n="p2_btn">Load Record →</span>
+            </button>
+          </div>
+
+          <div class="preset-mouza-card">
+            <div class="preset-card-head">
+              <span class="preset-dist-title" data-i18n="p3_dist">Hooghly</span>
+              <span class="preset-tag-verified" data-i18n="p3_tag">Sample Farmland</span>
+            </div>
+            <div class="preset-block-text" data-i18n="p3_block">Block: Singur • Mouza: Singur (045)</div>
+            <div class="preset-target-pill">
+              <span data-i18n="p3_pill_dag">Plot No: 101 (Demo)</span>
+              <span style="color:#047857;" data-i18n="p3_pill_class">Agri Parcel</span>
+            </div>
+            <button type="button" class="btn-run-preset" onclick="launchPresetTarget('06', '01', '045', '101', 'plot')">
+              <span data-i18n="p3_btn">Load Record →</span>
+            </button>
+          </div>
+
+          <div class="preset-mouza-card">
+            <div class="preset-card-head">
+              <span class="preset-dist-title" data-i18n="p4_dist">South 24 Parganas</span>
+              <span class="preset-tag-verified" data-i18n="p4_tag">Sample Parcel</span>
+            </div>
+            <div class="preset-block-text" data-i18n="p4_block">Block: Bhangar-I • Mouza: Bhangar (012)</div>
+            <div class="preset-target-pill">
+              <span data-i18n="p4_pill_dag">Plot No: 101 (Demo)</span>
+              <span style="color:#0284c7;" data-i18n="p4_pill_class">Revenue Schedule</span>
+            </div>
+            <button type="button" class="btn-run-preset" onclick="launchPresetTarget('16', '01', '012', '101', 'plot')">
+              <span data-i18n="p4_btn">Load Record →</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section-block" id="faq-section">
+      <div class="portal-container">
+        <div class="section-title-bar">
+          <h2 data-i18n="faq_heading">Frequently Asked Questions (FAQs)</h2>
+          <span class="sub-note" data-i18n="faq_sub">Common citizen queries regarding West Bengal land records</span>
+        </div>
+
+        <div class="faq-card-container">
+          <details class="faq-disclosure" name="portal-faq" open>
+            <summary class="faq-summary-heading">
+              <span data-i18n="q1_title">1. What is the fundamental difference between Plot Search and Khatian
+                Search?</span>
+              <svg class="faq-chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="faq-answer-content" data-i18n="q1_ans">
+              <strong>Plot Search (দাগের তথ্য):</strong> Reveals all co-sharers in a specific survey plot, their exact
+              ownership share and acreage, and whether any Bargadar is recorded on that plot.<br><br>
+              <strong>Khatian Search (খতিয়ানের তথ্য):</strong> Displays the complete ownership ledger of an individual
+              owner (Rayat) in that mouza, showing the consolidated schedule of all plots owned by that rayat.
+            </div>
+          </details>
+
+          <details class="faq-disclosure" name="portal-faq">
+            <summary class="faq-summary-heading">
+              <span data-i18n="q2_title">2. Can land be sold or purchased if a Bargadar is recorded on it?</span>
+              <svg class="faq-chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="faq-answer-content" data-i18n="q2_ans">
+              Yes, land ownership can be sold or transferred, but the Bargadar's cultivation rights and physical
+              possession remain legally protected under Sections 50 &amp; 51 of the WBLR Act 1955. The new purchaser
+              cannot evict the Bargadar. Therefore, verifying the possessor column before purchasing is essential.
+            </div>
+          </details>
+
+          <details class="faq-disclosure" name="portal-faq">
+            <summary class="faq-summary-heading">
+              <span data-i18n="q3_title">3. What is a Bata Plot (বাটা দাগ) and how do you search for it?</span>
+              <svg class="faq-chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="faq-answer-content" data-i18n="q3_ans">
+              When an original survey plot is subdivided after the survey settlement, a fractional Bata Plot is created
+              (such as 165/1 or 522/2). You can enter '165/1' directly or place '165' as the main number and '1' in the
+              fractional input.
+            </div>
+          </details>
+
+          <details class="faq-disclosure" name="portal-faq">
+            <summary class="faq-summary-heading">
+              <span data-i18n="q4_title">4. How does the Cadastral Plot Map function?</span>
+              <svg class="faq-chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="faq-answer-content" data-i18n="q4_ans">
+              Clicking the 'Map' button beside any plot loads the digital cadastral vector map. It reveals parcel
+              boundaries, adjacent plot numbers, boundary pillars, north direction orientation, and road connectivity.
+            </div>
+          </details>
+
+          <details class="faq-disclosure" name="portal-faq">
+            <summary class="faq-summary-heading">
+              <span data-i18n="q5_title">5. How to download or print Certified Schedule copies?</span>
+              <svg class="faq-chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="faq-answer-content" data-i18n="q5_ans">
+              Once search results appear, click 'Print Schedule' or 'Download PDF' to generate an official government
+              format A4-sized printable PDF with digital seal and watermark.
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="portal-bottom-footer">
+    <div class="portal-container">
+      <div class="footer-columns-grid">
+        <div>
+          <div class="footer-dept-name" data-i18n="ft_dept">Directorate of Land Records &amp; Surveys</div>
+          <div class="footer-dept-desc" data-i18n="ft_desc">
+            Department of Land &amp; Land Reforms and Refugee Relief &amp; Rehabilitation, Government of West
+            Bengal.<br>
+            Survey Building, 35 Gopal Nagar Road, Alipore, Kolkata - 700027.
+          </div>
+          <div style="margin-top:12px; color:#10b981; font-weight:700; font-size:12px;" data-i18n="ft_connected">
+            ● Connected to all 23 District Land Revenue Databases
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title" data-i18n="ft_nav_title">Navigation</div>
+          <ul class="footer-nav-list">
+            <li><a href="#search-widget" data-i18n="nav_search">Search Records</a></li>
+            <li><a href="/app" data-i18n="nav_portal_jump">Open Search Portal Directly</a></li>
+            <li><a href="#services" data-i18n="nav_services">Citizen Services</a></li>
+            <li><a href="#portal-stats" data-i18n="nav_stats">Portal Stats</a></li>
+            <li><a href="#verification-guide" data-i18n="nav_guide">Due Diligence Guide</a></li>
+            <li><a href="#classifications" data-i18n="nav_classes">Land Classes</a></li>
+            <li><a href="#barga-law" data-i18n="nav_barga">Bargadar Rights</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-col-title" data-i18n="ft_samples_title">Sample Districts</div>
+          <ul class="footer-nav-list">
+            <li><a href="/app?autoDist=01&autoBlock=19&autoMouza=089&autoNum=101&autoMode=khatian&autoP2=A"
+                onclick="launchPresetTarget('01', '19', '089', '101', 'khatian', 'A')">Bankura (Kotulpur)</a></li>
+            <li><a href="/app?autoDist=06&autoBlock=01&autoMouza=045&autoNum=101&autoMode=plot"
+                onclick="launchPresetTarget('06', '01', '045', '101', 'plot')">Hooghly (Singur)</a></li>
+            <li><a href="/app?autoDist=16&autoBlock=01&autoMouza=012&autoNum=101&autoMode=plot"
+                onclick="launchPresetTarget('16', '01', '012', '101', 'plot')">South 24 Parganas (Bhangar)</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-col-title" data-i18n="ft_notice_title">Statutory Notice</div>
+          <div class="footer-disclaimer-box" data-i18n="ft_disclaimer">
+            Information displayed on this portal is retrieved in real-time from the official Land Records &amp; Surveys
+            database of the Government of West Bengal. For clerical rectifications, the order of the competent
+            BL&amp;LRO is final.
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-legal-bar">
+        <div data-i18n="ft_copy">
+          <b>© 2026 BanglarBhumi Pro</b>
+        </div>
+        <div data-i18n="ft_audience">
+          A SumanOnline Platform • All rights reserved.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/landing.js?v=2.5.0"></script>
+</body>
+
+</html>

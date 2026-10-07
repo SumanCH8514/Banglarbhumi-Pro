@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BanglarBhumi Pro | Real-Time Land Record Portal</title>
+  <link rel="canonical" href="https://wblandrecord.sumanonline.com/app">
+  <meta property="og:url" content="https://wblandrecord.sumanonline.com/app">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BanglarBhumi Pro | Real-Time Land Record Portal">
+  <meta property="og:description" content="West Bengal Land Records, Khatian schedules, and Cadastral Map Visualizer.">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="css/app.css?v=2.2.1">
+</head>
+
+<body>
+
+  <div class="top-gov-strip">
+    <div class="top-gov-left">
+      <span class="flag-emblem">Government of West Bengal • পশ্চিমবঙ্গ সরকার</span>
+      <span class="top-gov-sep" style="color:#94a3b8;">|</span>
+      <span class="top-gov-sub">A SumanOnline Website</span>
+    </div>
+    <div class="top-gov-right">
+      <a href="/" class="btn-top-landing" title="Project Overview & Landing Page">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        </svg>
+        <span>Overview / ল্যান্ডিং পেজ</span>
+      </a>
+      <button type="button" id="btnCitizenAuth" class="btn-citizen-auth" onclick="openCitizenLoginModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+        <span id="citizenAuthLabel">Citizen Sign In / নাগরিক সাইন ইন</span>
+      </button>
+      <div id="citizenUserBadge" class="citizen-logged-badge" style="display:none;">
+        <span class="user-dot"></span>
+        <span id="citizenUserName" class="citizen-user-name">Citizen</span>
+        <button type="button" class="btn-logout" onclick="performLogout()">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="main-dept-header">
+    <div class="header-image-banner">
+      <a href="/" title="BanglarBhumi Pro - Land Records &amp; Surveys Portal">
+        <img src="images/header_image.png"
+          alt="বাংলারভূমি - Land & Land Reforms and Refugee Relief and Rehabilitation Department - Government of West Bengal"
+          class="header-banner-img" />
+      </a>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+
+    <div class="reference-bar">
+      <div class="reference-title">Sample Reference:</div>
+      <button type="button" class="ref-btn verified" onclick="applyPresetLocation('01', '01', '182', '165', 'plot')">
+        Bankura • Krishnagar (J.L. 182) • Plot 165
+      </button>
+      <button type="button" class="ref-btn verified"
+        onclick="applyPresetLocation('01', '19', '089', '539', 'khatian', '1')">
+        Bankura • Kotulpur • Karakbere • Khatian 539/1
+      </button>
+      <button type="button" class="ref-btn verified" onclick="applyPresetLocation('01', '01', '182', '12', 'khatian')">
+        Bankura • Khatian 12
+      </button>
+      <button type="button" class="ref-btn" onclick="applyPresetLocation('01', '01', '182', '166', 'plot')">
+        Plot 166 (Bankura)
+      </button>
+      <button type="button" class="ref-btn" onclick="applyPresetLocation('01', '01', '182', '160', 'plot')">
+        Plot 160 (Bankura)
+      </button>
+      <button type="button" class="ref-btn" onclick="applyPresetLocation('16', '01', '12', '12', 'plot')">
+        South 24 Pgs • Bhangar-I • Plot 12
+      </button>
+      <button type="button" class="ref-btn" onclick="applyPresetLocation('06', '01', '45', '45', 'plot')">
+        Hooghly • Singur • Plot 45
+      </button>
+    </div>
+
+    <div class="query-card">
+      <div class="query-card-header">
+        <div class="query-card-title">
+          <span>Know Your Property / <span class="bn">আপনার সম্পত্তি জানুন</span></span>
+        </div>
+
+        <div class="query-mode-group">
+          <button type="button" id="tabPlotMode" class="query-mode-btn active" onclick="setSearchMode('plot')">
+            Search by Plot (দাগ)
+          </button>
+          <button type="button" id="tabKhatianMode" class="query-mode-btn" onclick="setSearchMode('khatian')">
+            Search by Khatian (খতিয়ান)
+          </button>
+        </div>
+      </div>
+
+      <div class="query-form-body">
+        <form id="scrapeForm" onsubmit="executeScrape(event); return false;">
+          <div class="form-row-3col">
+            <div class="control-group">
+              <label class="control-label" for="lstDistrictCode1">
+                <span>District / <span class="bn-label bn">জেলা</span></span>
+                <span class="req">*</span>
+              </label>
+              <div class="custom-select-box" id="csbDistrict">
+                <div class="custom-select-trigger" id="csbTriggerDistrict" tabindex="0">
+                  <span class="custom-select-label" id="csbLabelDistrict">--- Select District ---</span>
+                  <svg class="custom-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </div>
+                <div class="custom-select-dropdown" id="csbDropdownDistrict">
+                  <div class="custom-select-search-wrap">
+                    <svg class="custom-select-search-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2">
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    <input type="text" class="custom-select-search-field" id="csbSearchDistrict"
+                      placeholder="Search District (e.g. Bankura)..." autocomplete="off" />
+                  </div>
+                  <div class="custom-select-options-list" id="csbOptionsDistrict"></div>
+                </div>
+                <select id="lstDistrictCode1" class="visually-hidden-select" onchange="onDistrictChange()" required>
+                  <option value="-1">--- Select District ---</option>
+                  <option value="20">[ 20 ] ALIPURDUAR</option>
+                  <option value="01">[ 01 ] BANKURA</option>
+                  <option value="03">[ 03 ] BIRBHUM</option>
+                  <option value="08">[ 08 ] Cooch Behar</option>
+                  <option value="17">[ 17 ] DAKSHIN DINAJPUR</option>
+                  <option value="04">[ 04 ] DARJEELING</option>
+                  <option value="06">[ 06 ] HOOGHLY</option>
+                  <option value="05">[ 05 ] HOWRAH</option>
+                  <option value="07">[ 07 ] JALPAIGURI</option>
+                  <option value="22">[ 22 ] JHARGRAM</option>
+                  <option value="21">[ 21 ] KALIMPONG</option>
+                  <option value="19">[ 19 ] Kolkata</option>
+                  <option value="09">[ 09 ] MALDA</option>
+                  <option value="12">[ 12 ] MURSHIDABAD</option>
+                  <option value="13">[ 13 ] NADIA</option>
+                  <option value="15">[ 15 ] NORTH 24 PARGANAS</option>
+                  <option value="23">[ 23 ] PASCHIM BARDHAMAN</option>
+                  <option value="10">[ 10 ] PASCHIM MEDINIPUR</option>
+                  <option value="02">[ 02 ] PURBA BARDHAMAN</option>
+                  <option value="11">[ 11 ] PURBA MEDINIPUR</option>
+                  <option value="14">[ 14 ] PURULIA</option>
+                  <option value="16">[ 16 ] SOUTH 24 PARGANAS</option>
+                  <option value="18">[ 18 ] UTTAR DINAJPUR</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="lstBlockCode1">
+                <span>Block / <span class="bn-label bn">ব্লক</span></span>
+                <span class="req">*</span>
+              </label>
+              <div class="custom-select-box" id="csbBlock">
+                <div class="custom-select-trigger is-disabled" id="csbTriggerBlock" tabindex="0">
+                  <span class="custom-select-label" id="csbLabelBlock">--- Select Block ---</span>
+                  <svg class="custom-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </div>
+                <div class="custom-select-dropdown" id="csbDropdownBlock">
+                  <div class="custom-select-search-wrap">
+                    <svg class="custom-select-search-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2">
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    <input type="text" class="custom-select-search-field" id="csbSearchBlock"
+                      placeholder="Search Block..." autocomplete="off" />
+                  </div>
+                  <div class="custom-select-options-list" id="csbOptionsBlock"></div>
+                </div>
+                <select id="lstBlockCode1" class="visually-hidden-select" onchange="onBlockChange()" required>
+                  <option value="-1">--- Select Block ---</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="lstMouzaList">
+                <span>Mouza / <span class="bn-label bn">মৌজা</span></span>
+                <span class="req">*</span>
+              </label>
+              <div class="custom-select-box" id="csbMouza">
+                <div class="custom-select-trigger is-disabled" id="csbTriggerMouza" tabindex="0">
+                  <span class="custom-select-label" id="csbLabelMouza">--- Select Mouza ---</span>
+                  <svg class="custom-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </div>
+                <div class="custom-select-dropdown" id="csbDropdownMouza">
+                  <div class="custom-select-search-wrap">
+                    <svg class="custom-select-search-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2">
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    <input type="text" class="custom-select-search-field" id="csbSearchMouza"
+                      placeholder="Search Mouza name or J.L. No..." autocomplete="off" />
+                  </div>
+                  <div class="custom-select-options-list" id="csbOptionsMouza"></div>
+                </div>
+                <select id="lstMouzaList" class="visually-hidden-select" required>
+                  <option value="-1">--- Select Mouza ---</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row-2col">
+            <div class="control-group" id="plotInputGroup">
+              <label class="control-label" for="txtPlotNo">
+                <span>Plot Number / <span class="bn-label bn">দাগ নম্বর ও বাটা</span></span>
+                <span class="req">*</span>
+              </label>
+              <div class="plot-inputs-flex">
+                <input type="text" id="txtPlotNo" class="input-style mono" placeholder="Plot No. (e.g. 165)" required>
+                <span class="slash">/</span>
+                <input type="text" id="txtBataPlotNo" class="input-style mono" placeholder="Bata (optional)"
+                  style="max-width:140px;">
+              </div>
+            </div>
+
+            <div class="control-group" id="khatianInputGroup" style="display:none;">
+              <label class="control-label" for="txtKhatian1">
+                <span>Khatian Number / <span class="bn-label bn">খতিয়ান নম্বর</span></span>
+                <span class="req">*</span>
+              </label>
+              <div class="plot-inputs-flex">
+                <input type="text" id="txtKhatian1" class="input-style mono" placeholder="Khatian No.">
+                <span class="slash">/</span>
+                <input type="text" id="txtKhatian2" class="input-style mono" placeholder="Part (optional)"
+                  style="max-width:140px;">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">
+                <span>Security Code / ক্যাপচা</span>
+                <span class="captcha-verified-tag">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  Verified
+                </span>
+              </label>
+              <div class="captcha-row">
+                <div class="captcha-box">
+                  <span id="captchaDisplay" class="captcha-text">7 R 8 M 2</span>
+                  <button type="button" class="btn-captcha-regen" onclick="generateCaptcha()" title="Refresh Code">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                    </svg>
+                  </button>
+                </div>
+                <input type="text" id="captchaInput" class="input-style mono" style="max-width:140px;" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-submit-row">
+            <div class="data-disclaimer">
+              <span>This reflects digital records maintained by the Directorate of Land Records &amp; Surveys.</span>
+            </div>
+
+            <button type="button" id="viewBtn" onclick="executeScrape(event)" class="btn-query-submit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <span id="btnText">View Record / রেকর্ড দেখুন</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="loadingStatusCard" class="searching-indicator">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span id="loadingMessage" style="font-weight:700; color:var(--gov-navy);">Connecting to Central Land Record
+          Database...</span>
+        <span id="timerText" class="mono" style="font-size:13px; font-weight:700; color:#64748b;">0s</span>
+      </div>
+      <div class="searching-bar-bg">
+        <div id="loadingProgressFill" class="searching-bar-fill"></div>
+      </div>
+      <div style="font-size:12px; color:#64748b;">Retrieving certified revenue schedule...</div>
+    </div>
+
+    <div id="resultsCard" class="results-wrapper">
+      <div class="ledger-stats-grid">
+        <div class="stat-card">
+          <span class="stat-label" id="lblStat1">Dag / Plot No (দাগ নম্বর)</span>
+          <span class="stat-value mono" id="resDagNo">-</span>
+        </div>
+        <div class="stat-card accent">
+          <span class="stat-label" id="lblStat2">Classification (শ্রেণি)</span>
+          <span class="stat-value bn" id="resClassification">-</span>
+        </div>
+        <div class="stat-card green">
+          <span class="stat-label" id="lblStat3">Total Area (মোট পরিমাণ)</span>
+          <div class="stat-value mono">
+            <span id="resTotalArea">-</span>
+            <span class="stat-unit" id="resAreaUnit">Acre</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label" id="lblStat4">Total Rayats / অংশীদার</span>
+          <span class="stat-value mono" id="resHoldersCount">0</span>
+        </div>
+      </div>
+
+      <div class="ledger-table-card">
+        <div class="ledger-table-header">
+          <div class="ledger-title">
+            <span id="resLedgerTitle">Land Ownership Schedule (খতিয়ান ও দাগের তথ্য)</span>
+          </div>
+          <span id="resLiveBadge" class="as-on-timestamp">Live Record</span>
+        </div>
+
+        <div class="view-switcher-bar">
+          <div class="view-tabs-group">
+            <button type="button" id="btnModernView" class="btn-view-tab active" onclick="switchView('modern')">Standard
+              Tabular View</button>
+            <button type="button" id="btnOfficialView" class="btn-view-tab" onclick="switchView('official')">Original
+              Portal Format</button>
+          </div>
+
+          <div class="table-tool-actions">
+            <button type="button" class="btn-tool" onclick="toggleRawJson()">Raw Data</button>
+            <button type="button" class="btn-tool" onclick="downloadCsv()">Download CSV</button>
+            <button type="button" class="btn-tool" onclick="printOwnershipSchedule()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9" />
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                <rect width="12" height="8" x="6" y="14" />
+              </svg>
+              <span>Print Schedule</span>
+            </button>
+            <button type="button" class="btn-tool btn-pdf-export" onclick="exportOwnershipSchedulePdf()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Download PDF</span>
+            </button>
+            <button type="button" class="btn-tool btn-map-tool" id="btnOpenPlotMap" onclick="triggerDagerMapClick()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+                <line x1="8" y1="2" x2="8" y2="18" />
+                <line x1="16" y1="6" x2="16" y2="22" />
+              </svg>
+              <span>Map</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="rawJsonPanel" class="raw-json-viewer"></div>
+
+        <div id="modernTableView">
+          <div class="table-search-row">
+            <div class="table-search-input-box">
+              <svg class="table-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input type="text" id="holderTableSearch" placeholder="Search owner name, khatian, father..."
+                oninput="filterHoldersTable()">
+            </div>
+            <div style="font-size:12px; color:#64748b;" id="filterCountDisplay">Showing all records</div>
+          </div>
+
+          <div class="mobile-table-swipe-hint">
+            <span>↔ সম্পূর্ণ তফসিল দেখতে পাশে স্ক্রোল করুন (Swipe to view full schedule)</span>
+          </div>
+
+          <div class="records-table-container">
+            <table class="gov-record-table">
+              <thead>
+                <tr id="recordsTableHeadRow">
+                  <th>
+                    <span class="th-title-en">Khatian No</span>
+                    <span class="th-title-bn bn">(খতিয়ান নম্বর)</span>
+                  </th>
+                  <th>
+                    <span class="th-title-en">Rayat / Owner Name</span>
+                    <span class="th-title-bn bn">(রায়তের নাম)</span>
+                  </th>
+                  <th>
+                    <span class="th-title-en">Father / Husband</span>
+                    <span class="th-title-bn bn">(পিতা/স্বামী)</span>
+                  </th>
+                  <th>
+                    <span class="th-title-en">Share</span>
+                    <span class="th-title-bn bn">(অংশ)</span>
+                  </th>
+                  <th>
+                    <span class="th-title-en">Share Area</span>
+                    <span class="th-title-bn bn">(অংশ পরিমাণ)</span>
+                  </th>
+                  <th>
+                    <span class="th-title-en">Dakhaldar</span>
+                    <span class="th-title-bn bn">(দখলদার)</span>
+                  </th>
+                  <th>
+                    <span class="th-title-en">Remarks</span>
+                    <span class="th-title-bn bn">(মন্তব্য)</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="holdersTbody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="officialHtmlView" class="raw-official-html-wrapper">
+          <div id="officialHtmlContent"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="app-site-footer">
+    <div>BanglarBhumi Pro</div>
+    <div>Directorate of Land Records &amp; Surveys • Government of West Bengal</div>
+    <div style="margin-top:4px; color:#64748b;">Land &amp; Land Reforms and Refugee Relief and Rehabilitation Department
+      • Citizen Records Portal</div>
+  </footer>
+
+  <div id="citizenLoginModal" class="login-modal-backdrop" style="display:none;"
+    onclick="handleModalBackdropClick(event)">
+    <div class="login-modal-box" onclick="event.stopPropagation()">
+      <div class="login-modal-header">
+        <button type="button" class="btn-modal-close" onclick="closeCitizenLoginModal()" aria-label="Close">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <div id="modalStepPill" class="modal-step-indicator">Step 1 of 2</div>
+        <h2 class="modal-title" id="modalTitleText">
+          <span class="modal-title-en">Citizen Sign In</span>
+          <span class="modal-title-sep">•</span>
+          <span class="modal-title-bn bn">নাগরিক সাইন ইন</span>
+        </h2>
+      </div>
+
+      <div class="login-modal-body">
+        <div id="modalNoticeBox" class="modal-notice-box" style="display:none;"></div>
+
+        <div id="loginStep1">
+          <div class="user-type-selector">
+            <label class="user-type-option">
+              <input type="radio" name="authModalUserType" value="2" checked onchange="onUserTypeChange()">
+              <span class="user-type-text">Citizen / নাগরিক</span>
+            </label>
+            <label class="user-type-option">
+              <input type="radio" name="authModalUserType" value="1" onchange="onUserTypeChange()">
+              <span class="user-type-text">Departmental / বিভাগীয়</span>
+            </label>
+          </div>
+
+          <form id="authLoginForm" onsubmit="submitSendOtp(event); return false;">
+            <div class="form-group-modal">
+              <label for="authUsername" class="modal-label">
+                <span>Username / Registered Mobile No <span class="modal-label-bn">(ব্যবহারকারীর নাম /
+                    মোবাইল)</span></span>
+                <span class="req">*</span>
+              </label>
+              <input type="text" id="authUsername" class="modal-input" placeholder="e.g. 9876543210 or Username"
+                maxlength="14" autocomplete="username" required>
+            </div>
+
+            <div class="form-group-modal">
+              <label for="authPassword" class="modal-label">
+                <span>Password <span class="modal-label-bn">(পাসওয়ার্ড)</span></span>
+                <span class="req">*</span>
+              </label>
+              <div class="password-input-wrap">
+                <input type="password" id="authPassword" class="modal-input" placeholder="Enter portal password"
+                  maxlength="30" autocomplete="current-password" required>
+                <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility()"
+                  title="Show/Hide Password">
+                  <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group-modal">
+              <label class="modal-label">
+                <span>Security CAPTCHA <span class="modal-label-bn">(ক্যাপচা যাচাইকরণ)</span></span>
+                <span class="req">*</span>
+              </label>
+              <div class="portal-captcha-row">
+                <div class="captcha-img-container">
+                  <img id="modalCaptchaImg" src="" alt="Portal Captcha" class="modal-captcha-image">
+                  <div id="captchaLoadingOverlay" class="captcha-loading" style="display:none;">Loading...</div>
+                </div>
+                <button type="button" class="btn-refresh-captcha" onclick="refreshAuthCaptcha()"
+                  title="Refresh Captcha">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                  </svg>
+                  <span>Refresh</span>
+                </button>
+              </div>
+              <input type="text" id="authCaptchaInput" class="modal-input" placeholder="Enter characters shown above"
+                maxlength="6" autocomplete="off" required>
+            </div>
+
+            <div class="form-check-modal">
+              <label class="custom-checkbox-label" for="authRememberUsername">
+                <input type="checkbox" id="authRememberUsername" class="custom-checkbox-input" checked>
+                <span class="custom-checkbox-text">
+                  <span>Remember Mobile No.</span>
+                  <span class="bn-hint bn">(মোবাইল নম্বর মনে রাখুন)</span>
+                </span>
+              </label>
+            </div>
+
+            <div class="modal-actions">
+              <button type="submit" id="btnSendOtp" class="btn-primary-modal">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+                <span id="btnSendOtpText">Generate &amp; Send OTP / ওটিপি পাঠান</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div id="loginStep2" style="display:none;">
+          <div class="otp-channel-banner">
+            <div class="otp-channel-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#007749" stroke-width="2">
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </div>
+            <div class="otp-channel-details">
+              <div class="otp-channel-heading">Security Verification Code Sent</div>
+              <div class="otp-channel-subtext">Banglarbhumi portal dispatched a 4-digit code to mobile <strong
+                  id="otpMaskedRecipient" class="masked-num">******</strong> &amp; registered email.</div>
+            </div>
+          </div>
+
+          <form id="authOtpForm" onsubmit="submitVerifyOtp(event); return false;">
+            <div class="otp-input-section">
+              <label class="otp-field-label">
+                <span>Enter 4-Digit OTP (৪-সংখ্যার ওটিপি লিখুন)</span>
+                <span class="req">*</span>
+              </label>
+
+              <div class="otp-segment-container">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" class="otp-pin-box" id="otpBox1" maxlength="1"
+                  autocomplete="one-time-code" oninput="onOtpDigitInput(1, event)"
+                  onkeydown="onOtpDigitKeydown(1, event)" onpaste="onOtpPaste(event)">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" class="otp-pin-box" id="otpBox2" maxlength="1"
+                  oninput="onOtpDigitInput(2, event)" onkeydown="onOtpDigitKeydown(2, event)">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" class="otp-pin-box" id="otpBox3" maxlength="1"
+                  oninput="onOtpDigitInput(3, event)" onkeydown="onOtpDigitKeydown(3, event)">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" class="otp-pin-box" id="otpBox4" maxlength="1"
+                  oninput="onOtpDigitInput(4, event)" onkeydown="onOtpDigitKeydown(4, event)">
+              </div>
+              <input type="hidden" id="authOtpInput">
+            </div>
+
+            <div class="otp-meta-strip">
+              <div id="otpCountdownWrap" class="otp-timer-badge">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Resend OTP in <strong id="otpTimerValue">120</strong>s</span>
+              </div>
+              <button type="button" id="btnResendOtp" class="btn-resend-active" style="display:none;"
+                onclick="resendAuthOtp()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                </svg>
+                <span>Resend OTP / পুনরায় ওটিপি পাঠান</span>
+              </button>
+            </div>
+
+            <div class="modal-actions-dual">
+              <button type="button" class="btn-modal-back" onclick="backToStep1()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+                <span>Back / পূর্বে ফিরুন</span>
+              </button>
+              <button type="submit" id="btnVerifyOtp" class="btn-modal-verify">
+                <span id="btnVerifyOtpText">Verify &amp; Sign In / যাচাই ও সাইন ইন</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+      <div class="login-modal-footer">
+        <div class="gov-security-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          <span>End-to-End SSL Authenticated directly with WB Land Records Gateway</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="recordDetailModal" class="record-detail-modal-backdrop" style="display:none;"
+    onclick="handleRecordDetailBackdropClick(event)">
+    <div class="record-detail-modal-box" onclick="event.stopPropagation()">
+      <div class="record-detail-modal-header">
+        <div class="record-header-left">
+          <div class="record-header-emblem" id="recordDetailIcon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+              <line x1="8" y1="2" x2="8" y2="18"></line>
+              <line x1="16" y1="6" x2="16" y2="22"></line>
+            </svg>
+          </div>
+          <div class="record-header-info">
+            <h2 class="record-modal-heading" id="recordDetailTitle">দাগের ক্যাডাস্ট্রাল ম্যাপ নকশা</h2>
+            <div class="record-modal-subheading" id="recordDetailSubtitle">Directorate of Land Records &amp; Surveys • Government of West Bengal</div>
+          </div>
+        </div>
+        <div class="record-header-actions">
+          <button type="button" class="btn-sheet-quick-print" onclick="printRecordDetailModal()" title="Print / প্রিন্ট">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect width="12" height="8" x="6" y="14"></rect>
+            </svg>
+            <span class="btn-text-desktop">Print</span>
+          </button>
+          <button type="button" class="btn-sheet-close" onclick="closeRecordDetailModal()" aria-label="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="record-detail-modal-body" id="recordDetailBody">
+      </div>
+
+      <div class="record-detail-modal-footer">
+        <div class="sheet-footer-status">
+          <span class="status-indicator-dot"></span>
+          <span>Directorate of Land Records &amp; Surveys • GoWB</span>
+        </div>
+        <div class="sheet-footer-actions">
+          <button type="button" class="btn-detail-modal-close" onclick="closeRecordDetailModal()">
+            Close
+          </button>
+          <button type="button" class="btn-detail-modal-action" onclick="printRecordDetailModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect width="12" height="8" x="6" y="14"></rect>
+            </svg>
+            <span>Print Sheet</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="printableScheduleRoot" class="printable-schedule-root" style="display:none;"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="js/app.js?v=2.2.1"></script>
+</body>
+
+</html>
