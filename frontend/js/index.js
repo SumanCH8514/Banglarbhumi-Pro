@@ -760,34 +760,44 @@ let currentMouzas = [];
 
     function translateDakhaldar(val, lang) {
       if (!val) return lang === 'bn' ? '—' : 'Nil';
-      const trimmed = String(val).trim();
+      const trimmed = String(val).replace(/<[^>]+>/g, '').trim();
       const lower = trimmed.toLowerCase();
       if (lang === 'bn') {
-        if (lower === 'nil' || lower === '-' || lower === 'none') return '—';
-        if (lower === 'anumati') return 'অনুমতি';
-        if (lower === 'barga') return 'বর্গা';
-        if (lower === 'direct' || lower === 'nij') return 'নিজ দখল';
+        if (!trimmed || lower === 'nil' || lower === '-' || lower === 'none' || lower === '—') return '—';
+        if (lower.includes('sadharaner') || lower.includes('byabaharyya') || lower.includes('sadharan')) return 'সাধারণের ব্যবহার্য';
+        if (lower === 'anumati' || lower.includes('anumati')) return 'অনুমতি';
+        if (lower === 'barga' || lower.includes('barga')) return 'বর্গা';
+        if (lower === 'direct' || lower === 'nij' || lower.includes('direct')) return 'নিজ দখল';
         return transliterateToBengali(trimmed);
       }
       if (trimmed === '—' || trimmed === 'নেই') return 'Nil';
-      if (trimmed === 'অনুমতি') return 'Anumati';
-      if (trimmed === 'বর্গা') return 'Barga';
-      if (trimmed === 'নিজ দখল') return 'Direct';
+      if (trimmed === 'সাধারণের ব্যবহার্য' || lower.includes('sadharaner') || lower.includes('byabaharyya')) return 'Public Use';
+      if (trimmed === 'অনুমতি' || lower.includes('anumati')) return 'Anumati';
+      if (trimmed === 'বর্গা' || lower.includes('barga')) return 'Barga';
+      if (trimmed === 'নিজ দখল' || lower === 'direct' || lower === 'nij') return 'Direct';
       return trimmed;
     }
 
     function translateRemarks(val, lang) {
       if (!val) return lang === 'bn' ? '—' : 'Nil';
-      const trimmed = String(val).trim();
+      const trimmed = String(val).replace(/<[^>]+>/g, '').trim();
       const lower = trimmed.toLowerCase();
       if (lang === 'bn') {
-        if (lower === 'nil' || lower === '-' || lower === 'none') return '—';
+        if (!trimmed || lower === 'nil' || lower === '-' || lower === 'none' || lower === '—' || lower === 'nil remarks') return '—';
+        if (lower === 'remarks') return 'মন্তব্য';
         if (lower.includes('section 5(1)') || lower.includes('sec 5(1)')) return 'ধারা ৫(১)';
         if (lower.includes('section 4c') || lower.includes('sec 4c')) return 'ধারা ৪সি';
         if (lower.includes('court')) return 'আদালতের নির্দেশ';
+        if (lower.startsWith('nil ')) {
+          const rest = trimmed.slice(4).trim();
+          if (rest.toLowerCase() === 'remarks') return '—';
+          return transliterateToBengali(rest);
+        }
         return transliterateToBengali(trimmed);
       }
       if (trimmed === '—' || trimmed === 'নেই') return 'Nil';
+      if (lower === 'nil remarks' || (lower.startsWith('nil ') && lower.endsWith('remarks'))) return 'Nil';
+      if (trimmed === 'মন্তব্য' || lower === 'remarks') return 'Remarks';
       if (trimmed.includes('ধারা ৫(১)')) return 'Section 5(1)';
       if (trimmed.includes('ধারা ৪সি')) return 'Section 4C';
       return trimmed;
@@ -833,6 +843,34 @@ let currentMouzas = [];
       'bhattacharjee': 'ভট্টাচার্য',
       'chakraborty': 'চক্রবর্তী',
       'chakrabarti': 'চক্রবর্তী',
+      'chakrabarty': 'চক্রবর্তী',
+      'chakroborty': 'চক্রবর্তী',
+      'chakrabortty': 'চক্রবর্তী',
+      'chakrabartty': 'চক্রবর্তী',
+      'chakrabartti': 'চক্রবর্তী',
+      'chakrabortti': 'চক্রবর্তী',
+      'chakarabortti': 'চক্রবর্তী',
+      'chakarabartti': 'চক্রবর্তী',
+      'chakarabortty': 'চক্রবর্তী',
+      'chakaraborti': 'চক্রবর্তী',
+      'chokroborti': 'চক্রবর্তী',
+      'chokrobortti': 'চক্রবর্তী',
+      'chakravarti': 'চক্রবর্তী',
+      'chakravarty': 'চক্রবর্তী',
+      'chakravartti': 'চক্রবর্তী',
+      'manoj': 'মনোজ',
+      'monoj': 'মনোজ',
+      'ajit': 'অজিত',
+      'ajeet': 'অজিত',
+      'bankura': 'বাঁকুড়া',
+      'bancura': 'বাঁকুড়া',
+      'kotulpur': 'কোতুলপুর',
+      'katulpur': 'কোতুলপুর',
+      'karakbere': 'কারাকবেড়ে',
+      'karakberre': 'কারাকবেড়ে',
+      'karakberia': 'কারাকবেড়ে',
+      'nij': 'নিজ',
+      'nija': 'নিজ',
       'ghosh': 'ঘোষ',
       'bose': 'বসু',
       'basu': 'বসু',
@@ -973,6 +1011,12 @@ let currentMouzas = [];
       if (!word) return '';
       const clean = word.toLowerCase().trim();
       if (NAME_DICT[clean]) return NAME_DICT[clean];
+      if (/^ch[ao]k[ao]?r[ao]?[bv][ao]rt+(?:[iy]|ee)?$/i.test(clean)) return 'চক্রবর্তী';
+      if (/^m[ao]n[ao]j$/i.test(clean)) return 'মনোজ';
+      if (/^aj[ie]+t$/i.test(clean)) return 'অজিত';
+      if (/^b[ao]n[gk]ur[ao]$/i.test(clean)) return 'বাঁকুড়া';
+      if (/^k[ao]t[uo]lp[uo]r$/i.test(clean)) return 'কোতুলপুর';
+      if (/^k[ao]r[ao]kb[eai]r[eai]$/i.test(clean)) return 'কারাকবেড়ে';
       if (/^[\u0980-\u09FF\s]+$/.test(word)) return word;
 
       let s = clean;
@@ -1044,6 +1088,12 @@ let currentMouzas = [];
         if (/^[\u0980-\u09FF]+$/.test(w)) return w;
         const clean = w.toLowerCase().replace(/[^a-z]/g, '');
         if (NAME_DICT[clean]) return NAME_DICT[clean];
+        if (/^ch[ao]k[ao]?r[ao]?[bv][ao]rt+(?:[iy]|ee)?$/i.test(clean)) return 'চক্রবর্তী';
+        if (/^m[ao]n[ao]j$/i.test(clean)) return 'মনোজ';
+        if (/^aj[ie]+t$/i.test(clean)) return 'অজিত';
+        if (/^b[ao]n[gk]ur[ao]$/i.test(clean)) return 'বাঁকুড়া';
+        if (/^k[ao]t[uo]lp[uo]r$/i.test(clean)) return 'কোতুলপুর';
+        if (/^k[ao]r[ao]kb[eai]r[eai]$/i.test(clean)) return 'কারাকবেড়ে';
         return phoneticToBengali(clean) || w;
       }).join(' ');
     }
@@ -1326,7 +1376,7 @@ function renderTableHead(mode) {
           resLedgerTitle.innerText = isBn ? 'খতিয়ানভুক্ত দাগের বিবরণ ও পরিমাণ' : 'Schedule of Plots under Khatian';
         }
         if (tableSearchInput) {
-          tableSearchInput.placeholder = isBn ? '\u09a6\u09be\u0997 \u09a8\u09ae\u09cd\u09ac\u09b0 \u09ac\u09be \u099c\u09ae\u09bf\u09b0 \u09b6\u09cd\u09b0\u09c7\u09a3\u09bf \u09a6\u09bf\u09af\u09bc\u09c7 \u0996\u09c1\u0981\u099c\u09c1\u09a8\u0987' : 'Search by plot no or classification...';
+          tableSearchInput.placeholder = isBn ? '\u09a6\u09be\u0997 \u09a8\u09ae\u09cd\u09ac\u09b0 \u09ac\u09be \u099c\u09ae\u09bf\u09b0 \u09b6\u09cd\u09b0\u09c7\u09a3\u09bf \u09a6\u09bf\u09af\u09bc\u09c7 \u0996\u09c1\u0981\u099c\u09c1\u09a8...' : 'Search by plot no or classification...';
         }
 
         renderTableHead('khatian');
@@ -1464,7 +1514,7 @@ function renderTableHead(mode) {
         );
         renderPlotsTable(filtered);
         const isBnFilter = (currentScheduleLang === 'bn');
-        document.getElementById('filterCountDisplay').innerText = isBnFilter ? ("\u09ae\u09cb\u099f " + toBengaliDigits(plots.length) + "\u099f\u09bf\u09b0 \u09ae\u09a7\u09cd\u09af\u09c7 " + toBengaliDigits(filtered.length) + "\u099f\u09bf \u09b0\u0987\u0995\u09b0\u09cd\u09a1 \u09aa\u09cd\u09b0\u09a6\u09b0\u09cd\u09b6\u09bf\u09a4 \u09b9\u099a\u09cd\u099b\u09c7") : ("Filtered " + filtered.length + " of " + plots.length + " records");
+        document.getElementById('filterCountDisplay').innerText = isBnFilter ? ("\u09ae\u09cb\u099f " + toBengaliDigits(plots.length) + "\u099f\u09bf\u09b0 \u09ae\u09a7\u09cd\u09af\u09c7 " + toBengaliDigits(filtered.length) + "\u099f\u09bf \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 \u09aa\u09cd\u09b0\u09a6\u09b0\u09cd\u09b6\u09bf\u09a4 \u09b9\u099a\u09cd\u099b\u09c7") : ("Filtered " + filtered.length + " of " + plots.length + " records");
       } else {
         const holders = activeData.holders || [];
         const filtered = holders.filter(h =>
@@ -1474,7 +1524,7 @@ function renderTableHead(mode) {
         );
         renderHoldersTable(filtered);
         const isBnFilterH = (currentScheduleLang === 'bn');
-        document.getElementById('filterCountDisplay').innerText = isBnFilterH ? ("\u09ae\u09cb\u099f " + toBengaliDigits(holders.length) + "\u099f\u09bf\u09b0 \u09ae\u09a7\u09cd\u09af\u09c7 " + toBengaliDigits(filtered.length) + "\u099f\u09bf \u09b0\u0987\u0995\u09b0\u09cd\u09a1 \u09aa\u09cd\u09b0\u09a6\u09b0\u09cd\u09b6\u09bf\u09a4 \u09b9\u099a\u09cd\u099b\u09c7") : ("Filtered " + filtered.length + " of " + holders.length + " records");
+        document.getElementById('filterCountDisplay').innerText = isBnFilterH ? ("\u09ae\u09cb\u099f " + toBengaliDigits(holders.length) + "\u099f\u09bf\u09b0 \u09ae\u09a7\u09cd\u09af\u09c7 " + toBengaliDigits(filtered.length) + "\u099f\u09bf \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 \u09aa\u09cd\u09b0\u09a6\u09b0\u09cd\u09b6\u09bf\u09a4 \u09b9\u099a\u09cd\u099b\u09c7") : ("Filtered " + filtered.length + " of " + holders.length + " records");
       }
     }
 
@@ -1911,7 +1961,7 @@ function renderTableHead(mode) {
       let classificationLabel = typeTrim || 'Possessor Record';
       if (typeTrim.toLowerCase().includes('barga') || codeTrim === '03') {
         classificationLabel = 'Barga / Bargadar (বর্গাদার)';
-        statusDescription = 'বর্গাদার হিসেবে রেকর্ডভুক্ত। বর্গাদারের চাষের অধিকার ও অংশ আইনত সুরক্ষিত।';
+        statusDescription = 'বর্গাদার হিসেবে রেকর্ডভুক্ত। বর্গাদারের চাষের অধিকার ও ফসলের অংশ আইনত সুরক্ষিত।';
       } else if (typeTrim.toLowerCase().includes('anumati') || codeTrim === '02') {
         classificationLabel = 'Anumati (অনুমতিপ্রাপ্ত দখলদার)';
         statusDescription = 'অনুমতিপ্রাপ্ত দখলদার হিসেবে রাজস্ব নথিতে অন্তর্ভুক্তি অনুমোদিত।';
@@ -2305,7 +2355,7 @@ function renderTableHead(mode) {
         body: JSON.stringify({
           district: activeDist || getSafeInputValue('lstDistrictCode1') || '01',
           block: activeBlock || getSafeInputValue('lstBlockCode1') || '19',
-          mouza: displayMouza || getSafeInputValue('lstMouzaList') || '089',
+          mouza: activeMouza || getSafeInputValue('lstMouzaList') || '089',
           jlNo: activeJl || '',
           plotNo: plotNum,
           khatian: activeKh,
@@ -2823,14 +2873,20 @@ function renderTableHead(mode) {
       const cleanMouzaName = rawMouzaText.replace(/\s*\(\s*J\.?L\.?.*?\)/i, '').trim();
       const thanaName = data.thana || blockName.split('-')[0].trim();
 
-      const distDisplay = isBn ? transliterateToBengali(distName) : distName;
-      const blockDisplay = isBn ? transliterateToBengali(blockName) : blockName;
-      const mouzaDisplay = isBn ? (transliterateToBengali(cleanMouzaName) + ' (\u099c\u09c7.\u098f\u09b2. \u09a8\u0982 ' + toBengaliDigits(jlNo) + ')') : (cleanMouzaName + ' (J.L. ' + jlNo + ')');
-      const thanaDisplay = isBn ? transliterateToBengali(thanaName) : thanaName;
+      const distDisplay = isBn ? toBengaliDigits(transliterateToBengali(distName)) : distName;
+      const blockDisplay = isBn ? toBengaliDigits(transliterateToBengali(blockName)) : blockName;
+      const mouzaDisplay = isBn ? (toBengaliDigits(transliterateToBengali(cleanMouzaName)) + ' (\u099c\u09c7.\u098f\u09b2. \u09a8\u0982 ' + toBengaliDigits(jlNo) + ')') : (cleanMouzaName + ' (J.L. ' + jlNo + ')');
+      const thanaDisplay = isBn ? toBengaliDigits(transliterateToBengali(thanaName)) : thanaName;
 
       const now = new Date();
-      const rawDateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + now.toLocaleTimeString('en-GB');
-      const formattedGenTime = isBn ? toBengaliDigits(rawDateStr) : rawDateStr;
+      const BN_MONTHS = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+      const dayStr = String(now.getDate()).padStart(2, '0');
+      const monthStrEn = now.toLocaleDateString('en-GB', { month: 'short' });
+      const monthStrBn = BN_MONTHS[now.getMonth()];
+      const yearStr = String(now.getFullYear());
+      const timeStr = now.toLocaleTimeString('en-GB');
+      const rawDateStr = `${dayStr} ${monthStrEn} ${yearStr} ${timeStr}`;
+      const formattedGenTime = isBn ? `${toBengaliDigits(dayStr)} ${monthStrBn} ${toBengaliDigits(yearStr)}, ${toBengaliDigits(timeStr)}` : rawDateStr;
       const rawLive = (data.liveInfo || ('Live Portal Extract As On ' + rawDateStr)).replace(/Live\s*Portal\s*Extract\s*As\s*On\s*:?|Live\s*Data\s*As\s*On\s*:?/gi, '').trim();
       const liveInfoText = isBn ? ('\u09b8\u09b0\u09be\u09b8\u09b0\u09bf \u09a4\u09a5\u09cd\u09af: ' + toBengaliDigits(rawLive)) : ('Live Portal Extract As On ' + rawLive);
 
@@ -2981,11 +3037,11 @@ function renderTableHead(mode) {
                   </tr>
                 </thead>
                 <tbody>
-                  ${rowsHtml || `<tr><td colspan="7" class="print-col-center" style="padding:18px;">${isBn ? '\u098f\u0987 \u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8\u09c7\u09b0 \u0985\u09a7\u09c0\u09a8\u09c7 \u0995\u09cb\u09a8\u09cb \u09a6\u09be\u0997\u09c7\u09b0 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 \u09aa\u09be\u0993\u09af\u09bc\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0987' : 'No plot records found under this khatian.'}</td></tr>`}
+                  ${rowsHtml || `<tr><td colspan="7" class="print-col-center" style="padding:18px;">${isBn ? '\u098f\u0987 \u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8\u09c7\u09b0 \u0985\u09a7\u09c0\u09a8\u09c7 \u0995\u09cb\u09a8\u09cb \u09a6\u09be\u0997\u09c7\u09b0 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 \u09aa\u09be\u0993\u09af\u09bc\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964' : 'No plot records found under this khatian.'}</td></tr>`}
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td colspan="3" style="text-align:right;">${isBn ? '\u09ae\u09cb\u099f \u0985\u0982\u09b6 \u0993 \u09aa\u09b0\u09bf\u09ae\u09be\u09aa:' : 'Total Share & Calculated Area:'}</td>
+                    <td colspan="3" style="text-align:right;">${isBn ? '\u09ae\u09cb\u099f \u0985\u0982\u09b6 \u0993 \u09aa\u09b0\u09bf\u09ae\u09be\u09a3:' : 'Total Share & Calculated Area:'}</td>
                     <td class="print-col-right font-mono" style="color:#0f172a; font-weight:700;">${totalShareSumDisplay}</td>
                     <td class="print-col-right font-mono" style="color:#0f172a; font-weight:700;">${totalAreaSumDisplay}</td>
                     <td colspan="2" class="print-col-center" style="color:#1e3a8a; font-weight:700;">${isBn ? '\u09af\u09be\u099a\u09be\u0987\u0995\u09c3\u09a4 \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1' : 'Verified Digital Record'}</td>
@@ -2996,7 +3052,7 @@ function renderTableHead(mode) {
 
             <div class="print-footer-notice">
               <div class="print-disclaimer">
-                ${isBn ? '<strong>\u0985\u09ab\u09bf\u09b8\u09bf\u09af\u09bc\u09be\u09b2 \u09a4\u09a5\u09cd\u09af \u09ac\u09bf\u09ac\u09b0\u09a3\u09c0:</strong> \u098f\u0987 \u09a8\u09a5\u09bf\u099f\u09bf \u09aa\u09b6\u09cd\u099a\u09bf\u09ae\u09ac\u0999\u09cd\u0997 \u09b8\u09b0\u0995\u09be\u09b0\u09c7\u09b0 \u09ad\u09c2\u09ae\u09bf \u0993 \u09ad\u09c2\u09ae\u09bf \u09b8\u0982\u09b8\u09cd\u0995\u09be\u09b0 \u098f\u09ac\u0982 \u0989\u09a6\u09cd\u09ac\u09be\u09b8\u09cd\u09a4\u09c1 \u09a4\u09cd\u09b0\u09be\u09a3 \u0993 \u09aa\u09c1\u09a8\u09b0\u09cd\u09ac\u09be\u09b8\u09a8 \u09a6\u09aa\u09cd\u09a4\u09b0\u09c7\u09b0 \u09b8\u09c7\u09a8\u09cd\u099f\u09cd\u09b0\u09be\u09b2 \u09a1\u09be\u099f\u09be\u09ac\u09c7\u09b8 (\u09ac\u09be\u0982\u09b2\u09be\u09b0\u09ad\u09c2\u09ae\u09bf) \u09a5\u09c7\u0995\u09c7 \u09b8\u09b0\u09be\u09b8\u09b0\u09bf \u09b8\u0982\u0997\u09c3\u09b9\u09c0\u09a4 \u098f\u0995\u099f\u09bf \u09aa\u09cd\u09b0\u09be\u09ae\u09be\u09a3\u09cd\u09af \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u0993 \u09ae\u09be\u09b2\u09bf\u0995\u09be\u09a8\u09be \u09a4\u09ab\u09b8\u09bf\u09b2\u0987 \u09af\u09c7\u0995\u09cb\u09a8\u09cb \u09a4\u09a5\u09cd\u09af \u09b8\u0982\u09b6\u09cb\u09a7\u09a8 \u09ac\u09be \u09ac\u09bf\u09b7\u09af\u09bc\u09c7\u09b0 \u099c\u09a8\u09cd\u09af \u09b8\u09cd\u09a5\u09be\u09a8\u09c0\u09af\u09bc \u09ac\u09bf.\u098f\u09b2. \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1 \u098f\u09b2.\u0986\u09b0.\u0993. \u0985\u09ab\u09bf\u09b8\u09c7 \u09af\u09cb\u0997\u09be\u09af\u09cb\u0997 \u0995\u09b0\u09c1\u09a8\u0987' : '<strong>Official Revenue Disclaimer:</strong> This document represents a certified computer-generated Land Ownership Schedule extracted directly from the Directorate of Land Records & Surveys central database (Banglarbhumi), Government of West Bengal. Any clerical disputes or corrections must be registered with the jurisdictional B.L. & L.R. office.'}
+                ${isBn ? '<strong>\u0985\u09ab\u09bf\u09b8\u09bf\u09af\u09bc\u09be\u09b2 \u09a4\u09a5\u09cd\u09af \u09ac\u09bf\u09ac\u09b0\u09a3\u09c0:</strong> \u098f\u0987 \u09a8\u09a5\u09bf\u099f\u09bf \u09aa\u09b6\u09cd\u099a\u09bf\u09ae\u09ac\u0999\u09cd\u0997 \u09b8\u09b0\u0995\u09be\u09b0\u09c7\u09b0 \u09ad\u09c2\u09ae\u09bf \u0993 \u09ad\u09c2\u09ae\u09bf \u09b8\u0982\u09b8\u09cd\u0995\u09be\u09b0 \u098f\u09ac\u0982 \u0989\u09a6\u09cd\u09ac\u09be\u09b8\u09cd\u09a4\u09c1 \u09a4\u09cd\u09b0\u09be\u09a3 \u0993 \u09aa\u09c1\u09a8\u09b0\u09cd\u09ac\u09be\u09b8\u09a8 \u09a6\u09aa\u09cd\u09a4\u09b0\u09c7\u09b0 \u09b8\u09c7\u09a8\u09cd\u099f\u09cd\u09b0\u09be\u09b2 \u09a1\u09be\u099f\u09be\u09ac\u09c7\u09b8 (\u09ac\u09be\u0982\u09b2\u09be\u09b0\u09ad\u09c2\u09ae\u09bf) \u09a5\u09c7\u0995\u09c7 \u09b8\u09b0\u09be\u09b8\u09b0\u09bf \u09b8\u0982\u0997\u09c3\u09b9\u09c0\u09a4 \u098f\u0995\u099f\u09bf \u09aa\u09cd\u09b0\u09be\u09ae\u09be\u09a3\u09cd\u09af \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u0993 \u09ae\u09be\u09b2\u09bf\u0995\u09be\u09a8\u09be \u09a4\u09ab\u09b8\u09bf\u09b2\u0964 \u09af\u09c7\u0995\u09cb\u09a8\u09cb \u09a4\u09a5\u09cd\u09af \u09b8\u0982\u09b6\u09cb\u09a7\u09a8 \u09ac\u09be \u09ac\u09bf\u09b7\u09af\u09bc\u09c7\u09b0 \u099c\u09a8\u09cd\u09af \u09b8\u09cd\u09a5\u09be\u09a8\u09c0\u09af\u09bc \u09ac\u09bf.\u098f\u09b2. \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1 \u098f\u09b2.\u0986\u09b0.\u0993. \u0985\u09ab\u09bf\u09b8\u09c7 \u09af\u09cb\u0997\u09be\u09af\u09cb\u0997 \u0995\u09b0\u09c1\u09a8\u0964' : '<strong>Official Revenue Disclaimer:</strong> This document represents a certified computer-generated Land Ownership Schedule extracted directly from the Directorate of Land Records & Surveys central database (Banglarbhumi), Government of West Bengal. Any clerical disputes or corrections must be registered with the jurisdictional B.L. & L.R. office.'}
               </div>
               <div class="print-seal-block">
                 <div class="print-seal-stamp">
@@ -3151,11 +3207,11 @@ function renderTableHead(mode) {
                 </tr>
               </thead>
               <tbody>
-                ${rowsHtml || `<tr><td colspan="8" class="print-col-center" style="padding:18px;">${isBn ? '\u098f\u0987 \u09a6\u09be\u0997\u09c7\u09b0 \u0985\u09a7\u09c0\u09a8\u09c7 \u0995\u09cb\u09a8\u09cb \u09b0\u09be\u09af\u09bc\u09a4\u09c7\u09b0 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 \u09aa\u09be\u0993\u09af\u09bc\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0987' : 'No owner records found.'}</td></tr>`}
+                ${rowsHtml || `<tr><td colspan="8" class="print-col-center" style="padding:18px;">${isBn ? '\u098f\u0987 \u09a6\u09be\u0997\u09c7\u09b0 \u0985\u09a7\u09c0\u09a8\u09c7 \u0995\u09cb\u09a8\u09cb \u09b0\u09be\u09af\u09bc\u09a4\u09c7\u09b0 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 \u09aa\u09be\u0993\u09af\u09bc\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964' : 'No owner records found.'}</td></tr>`}
               </tbody>
               <tfoot>
                 <tr>
-                  <td colspan="4" style="text-align:right;">${isBn ? '\u09ae\u09cb\u099f \u0985\u0982\u09b6 \u0993 \u09aa\u09b0\u09bf\u09ae\u09be\u09aa:' : 'Total Share & Calculated Area:'}</td>
+                  <td colspan="4" style="text-align:right;">${isBn ? '\u09ae\u09cb\u099f \u0985\u0982\u09b6 \u0993 \u09aa\u09b0\u09bf\u09ae\u09be\u09a3:' : 'Total Share & Calculated Area:'}</td>
                   <td class="print-col-right font-mono" style="color:#0f172a; font-weight:700;">${totalShareSumDisplay}</td>
                   <td class="print-col-right font-mono" style="color:#0f172a; font-weight:700;">${totalAreaSumDisplay}</td>
                   <td colspan="2" class="print-col-center" style="color:#1e3a8a; font-weight:700;">${isBn ? '\u09af\u09be\u099a\u09be\u0987\u0995\u09c3\u09a4 \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1' : 'Verified Digital Record'}</td>
@@ -3166,7 +3222,7 @@ function renderTableHead(mode) {
 
           <div class="print-footer-notice">
             <div class="print-disclaimer">
-              ${isBn ? '<strong>\u0985\u09ab\u09bf\u09b8\u09bf\u09af\u09bc\u09be\u09b2 \u09a4\u09a5\u09cd\u09af \u09ac\u09bf\u09ac\u09b0\u09a3\u09c0:</strong> \u098f\u0987 \u09a8\u09a5\u09bf\u099f\u09bf \u09aa\u09b6\u09cd\u099a\u09bf\u09ae\u09ac\u0999\u09cd\u0997 \u09b8\u09b0\u0995\u09be\u09b0\u09c7\u09b0 \u09ad\u09c2\u09ae\u09bf \u0993 \u09ad\u09c2\u09ae\u09bf \u09b8\u0982\u09b8\u09cd\u0995\u09be\u09b0 \u098f\u09ac\u0982 \u0989\u09a6\u09cd\u09ac\u09be\u09b8\u09cd\u09a4\u09c1 \u09a4\u09cd\u09b0\u09be\u09a3 \u0993 \u09aa\u09c1\u09a8\u09b0\u09cd\u09ac\u09be\u09b8\u09a8 \u09a6\u09aa\u09cd\u09a4\u09b0\u09c7\u09b0 \u09b8\u09c7\u09a8\u09cd\u099f\u09cd\u09b0\u09be\u09b2 \u09a1\u09be\u099f\u09be\u09ac\u09c7\u09b8 (\u09ac\u09be\u0982\u09b2\u09be\u09b0\u09ad\u09c2\u09ae\u09bf) \u09a5\u09c7\u0995\u09c7 \u09b8\u09b0\u09be\u09b8\u09b0\u09bf \u09b8\u0982\u0997\u09c3\u09b9\u09c0\u09a4 \u098f\u0995\u099f\u09bf \u09aa\u09cd\u09b0\u09be\u09ae\u09be\u09a3\u09cd\u09af \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u0993 \u09ae\u09be\u09b2\u09bf\u0995\u09be\u09a8\u09be \u09a4\u09ab\u09b8\u09bf\u09b2\u0987 \u09af\u09c7\u0995\u09cb\u09a8\u09cb \u09a4\u09a5\u09cd\u09af \u09b8\u0982\u09b6\u09cb\u09a7\u09a8 \u09ac\u09be \u09ac\u09bf\u09b7\u09af\u09bc\u09c7\u09b0 \u099c\u09a8\u09cd\u09af \u09b8\u09cd\u09a5\u09be\u09a8\u09c0\u09af\u09bc \u09ac\u09bf.\u098f\u09b2. \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1 \u098f\u09b2.\u0986\u09b0.\u0993. \u0985\u09ab\u09bf\u09b8\u09c7 \u09af\u09cb\u0997\u09be\u09af\u09cb\u0997 \u0995\u09b0\u09c1\u09a8\u0987' : '<strong>Official Revenue Disclaimer:</strong> This document represents a certified computer-generated Land Ownership Schedule extracted directly from the Directorate of Land Records & Surveys central database (Banglarbhumi), Government of West Bengal. Any clerical disputes or corrections must be registered with the jurisdictional B.L. & L.R.O. office.'}
+              ${isBn ? '<strong>\u0985\u09ab\u09bf\u09b8\u09bf\u09af\u09bc\u09be\u09b2 \u09a4\u09a5\u09cd\u09af \u09ac\u09bf\u09ac\u09b0\u09a3\u09c0:</strong> \u098f\u0987 \u09a8\u09a5\u09bf\u099f\u09bf \u09aa\u09b6\u09cd\u099a\u09bf\u09ae\u09ac\u0999\u09cd\u0997 \u09b8\u09b0\u0995\u09be\u09b0\u09c7\u09b0 \u09ad\u09c2\u09ae\u09bf \u0993 \u09ad\u09c2\u09ae\u09bf \u09b8\u0982\u09b8\u09cd\u0995\u09be\u09b0 \u098f\u09ac\u0982 \u0989\u09a6\u09cd\u09ac\u09be\u09b8\u09cd\u09a4\u09c1 \u09a4\u09cd\u09b0\u09be\u09a3 \u0993 \u09aa\u09c1\u09a8\u09b0\u09cd\u09ac\u09be\u09b8\u09a8 \u09a6\u09aa\u09cd\u09a4\u09b0\u09c7\u09b0 \u09b8\u09c7\u09a8\u09cd\u099f\u09cd\u09b0\u09be\u09b2 \u09a1\u09be\u099f\u09be\u09ac\u09c7\u09b8 (\u09ac\u09be\u0982\u09b2\u09be\u09b0\u09ad\u09c2\u09ae\u09bf) \u09a5\u09c7\u0995\u09c7 \u09b8\u09b0\u09be\u09b8\u09b0\u09bf \u09b8\u0982\u0997\u09c3\u09b9\u09c0\u09a4 \u098f\u0995\u099f\u09bf \u09aa\u09cd\u09b0\u09be\u09ae\u09be\u09a3\u09cd\u09af \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u0993 \u09ae\u09be\u09b2\u09bf\u0995\u09be\u09a8\u09be \u09a4\u09ab\u09b8\u09bf\u09b2\u0964 \u09af\u09c7\u0995\u09cb\u09a8\u09cb \u09a4\u09a5\u09cd\u09af \u09b8\u0982\u09b6\u09cb\u09a7\u09a8 \u09ac\u09be \u09ac\u09bf\u09b7\u09af\u09bc\u09c7\u09b0 \u099c\u09a8\u09cd\u09af \u09b8\u09cd\u09a5\u09be\u09a8\u09c0\u09af\u09bc \u09ac\u09bf.\u098f\u09b2. \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1 \u098f\u09b2.\u0986\u09b0.\u0993. \u0985\u09ab\u09bf\u09b8\u09c7 \u09af\u09cb\u0997\u09be\u09af\u09cb\u0997 \u0995\u09b0\u09c1\u09a8\u0964' : '<strong>Official Revenue Disclaimer:</strong> This document represents a certified computer-generated Land Ownership Schedule extracted directly from the Directorate of Land Records & Surveys central database (Banglarbhumi), Government of West Bengal. Any clerical disputes or corrections must be registered with the jurisdictional B.L. & L.R.O. office.'}
             </div>
             <div class="print-seal-block">
               <div class="print-seal-stamp">
