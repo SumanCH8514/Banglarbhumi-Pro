@@ -6,13 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BanglarBhumi Pro • West Bengal Digital Land Records &amp; Khatian Portal</title>
   <meta name="description"
-    content="Official digital portal for West Bengal land records, cadastral maps, bargadar verification and certified schedules.">
+    content="Official digital portal for West Bengal land records, cadastral maps, khatian verification and certified schedules.">
   <link rel="canonical" href="https://wblandrecord.sumanonline.com/">
   <meta property="og:url" content="https://wblandrecord.sumanonline.com/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="BanglarBhumi Pro • West Bengal Digital Land Records">
   <meta property="og:description"
-    content="Official digital portal for West Bengal land records, cadastral maps, bargadar verification and certified schedules.">
+    content="Official digital portal for West Bengal land records, cadastral maps, khatian verification and certified schedules.">
   <link rel="icon" type="image/png" href="images/favicon.png">
   <link rel="apple-touch-icon" href="images/favicon.png">
 
@@ -95,7 +95,6 @@
         <li><a href="#portal-stats" class="menu-item-link" data-i18n="nav_stats">Portal Stats</a></li>
         <li><a href="#verification-guide" class="menu-item-link" data-i18n="nav_guide">Due Diligence Guide</a></li>
         <li><a href="#classifications" class="menu-item-link" data-i18n="nav_classes">Land Classes</a></li>
-        <li><a href="#barga-law" class="menu-item-link" data-i18n="nav_barga">Bargadar Rights</a></li>
         <li><a href="#mouza-presets" class="menu-item-link" data-i18n="nav_presets">Sample Records</a></li>
         <li><a href="#faq-section" class="menu-item-link" data-i18n="nav_faq">FAQs</a></li>
         <li><a href="/about_project" class="menu-item-link" data-i18n="nav_about" style="color: #2563eb; font-weight: 600;">About Project</a></li>
@@ -115,7 +114,6 @@
         <li><a href="#portal-stats" data-i18n="nav_stats">Portal Stats</a></li>
         <li><a href="#verification-guide" data-i18n="nav_guide">Due Diligence Guide</a></li>
         <li><a href="#classifications" data-i18n="nav_classes">Land Classes</a></li>
-        <li><a href="#barga-law" data-i18n="nav_barga">Bargadar Rights</a></li>
         <li><a href="#mouza-presets" data-i18n="nav_presets">Sample Records</a></li>
         <li><a href="#faq-section" data-i18n="nav_faq">FAQs</a></li>
         <li><a href="/about_project" data-i18n="nav_about" style="color: #2563eb; font-weight: 600;">About Project</a></li>
@@ -131,7 +129,7 @@
       <span class="bulletin-badge" data-i18n="bulletin_badge">IMPORTANT NOTICE</span>
       <marquee class="bulletin-marquee-text" id="bulletinMarquee" behavior="scroll" direction="left" scrollamount="6"
         onmouseover="this.stop();" onmouseout="this.start();" data-i18n="bulletin_text">
-        Under West Bengal Land Reforms Act 1955, cadastral maps, bargadar possessor records and certified schedules are
+        Under West Bengal Land Reforms Act 1955, cadastral maps, land ownership records and certified schedules are
         available online across all districts. • Contact your local BL&amp;LRO office for conversion (Section 4C) and
         mutation. • Citizen Helpline: 1800-345-5555 (Toll Free).
       </marquee>
@@ -171,29 +169,47 @@
               <label class="widget-label" for="widgetDistrict" data-i18n="lbl_dist">District:</label>
               <select id="widgetDistrict" class="widget-select" onchange="onWidgetDistrictChange()">
                 <option value="01" selected>[ 01 ] Bankura (BANKURA)</option>
-                <option value="06">[ 06 ] Hooghly (HOOGHLY)</option>
-                <option value="16">[ 16 ] South 24 Parganas (SOUTH 24 PGS)</option>
+                <option value="02">[ 02 ] Purba Bardhaman (PURBA BARDHAMAN)</option>
                 <option value="03">[ 03 ] Birbhum (BIRBHUM)</option>
+                <option value="04">[ 04 ] Darjeeling (DARJEELING)</option>
                 <option value="05">[ 05 ] Howrah (HOWRAH)</option>
+                <option value="06">[ 06 ] Hooghly (HOOGHLY)</option>
+                <option value="07">[ 07 ] Jalpaiguri (JALPAIGURI)</option>
+                <option value="08">[ 08 ] Cooch Behar (COOCH BEHAR)</option>
+                <option value="09">[ 09 ] Malda (MALDA)</option>
+                <option value="10">[ 10 ] Paschim Medinipur (PASCHIM MEDINIPUR)</option>
+                <option value="11">[ 11 ] Purba Medinipur (PURBA MEDINIPUR)</option>
+                <option value="12">[ 12 ] Murshidabad (MURSHIDABAD)</option>
+                <option value="13">[ 13 ] Nadia (NADIA)</option>
+                <option value="14">[ 14 ] Purulia (PURULIA)</option>
+                <option value="15">[ 15 ] North 24 Parganas (NORTH 24 PGS)</option>
+                <option value="16">[ 16 ] South 24 Parganas (SOUTH 24 PGS)</option>
+                <option value="17">[ 17 ] Dakshin Dinajpur (DAKSHIN DINAJPUR)</option>
+                <option value="18">[ 18 ] Uttar Dinajpur (UTTAR DINAJPUR)</option>
+                <option value="19">[ 19 ] Kolkata (KOLKATA)</option>
+                <option value="20">[ 20 ] Alipurduar (ALIPURDUAR)</option>
+                <option value="21">[ 21 ] Kalimpong (KALIMPONG)</option>
+                <option value="22">[ 22 ] Jhargram (JHARGRAM)</option>
+                <option value="23">[ 23 ] Paschim Bardhaman (PASCHIM BARDHAMAN)</option>
               </select>
             </div>
 
             <div class="widget-form-group">
               <label class="widget-label" for="widgetBlock" data-i18n="lbl_block">Block / Thana:</label>
               <select id="widgetBlock" class="widget-select">
-                <option value="19" selected>[ 19 ] Kotulpur</option>
                 <option value="01">[ 01 ] Bankura Sadar (Bankura-I)</option>
                 <option value="03">[ 03 ] Bishnupur</option>
                 <option value="04">[ 04 ] Onda</option>
+                <option value="19" selected>[ 19 ] Kotulpur</option>
               </select>
             </div>
 
             <div class="widget-form-group">
               <label class="widget-label" for="widgetMouza" data-i18n="lbl_mouza">Mouza &amp; J.L.:</label>
               <select id="widgetMouza" class="widget-select">
-                <option value="089" selected>Karakbere (JL 089)</option>
-                <option value="110">Kotulpur (JL 110)</option>
-                <option value="055">Lego (JL 055)</option>
+                <option value="055">[ 055 ] Lego</option>
+                <option value="089" selected>[ 089 ] Karakbere</option>
+                <option value="110">[ 110 ] Kotulpur</option>
               </select>
             </div>
 
@@ -259,7 +275,7 @@
                   <th data-i18n="th_class">Land Class</th>
                   <th data-i18n="th_share">Share</th>
                   <th data-i18n="th_area">Area (Acre)</th>
-                  <th data-i18n="th_barga">Possessor / Barga Status</th>
+                  <th data-i18n="th_possessor">Possession / Occupant Status</th>
                   <th data-i18n="th_remarks">Remarks &amp; Section</th>
                 </tr>
               </thead>
@@ -275,35 +291,8 @@
                   <td class="mono">0.1429</td>
                   <td class="mono font-semibold">0.0200 Acre</td>
                   <td>
-                    <span class="badge-barga-human-red">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
+                    <span class="badge-status-neutral">
                       <span data-i18n="badge_anumati">Permission (Anumati)</span>
-                    </span>
-                  </td>
-                  <td style="color:#64748b;">Nil</td>
-                </tr>
-                <tr style="background:#fef2f2;">
-                  <td>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <strong style="color:#b91c1c;">102</strong>
-                      <span class="badge-map-btn-clean" data-i18n="btn_map">Map</span>
-                    </div>
-                  </td>
-                  <td>Do (ডু)</td>
-                  <td class="mono">0.0714</td>
-                  <td class="mono font-semibold">0.0100 Acre</td>
-                  <td>
-                    <span class="badge-barga-human-red">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
-                      <span data-i18n="badge_barga">Bargadar (Barga)</span>
                     </span>
                   </td>
                   <td style="color:#64748b;">Nil</td>
@@ -311,7 +300,22 @@
                 <tr>
                   <td>
                     <div style="display:flex; align-items:center; gap:6px;">
-                      <strong style="color:#b91c1c;">103</strong>
+                      <strong>102</strong>
+                      <span class="badge-map-btn-clean" data-i18n="btn_map">Map</span>
+                    </div>
+                  </td>
+                  <td>Do (ডু)</td>
+                  <td class="mono">0.0714</td>
+                  <td class="mono font-semibold">0.0100 Acre</td>
+                  <td>
+                    <span class="badge-status-neutral" data-i18n="status_direct">Direct Possession (Nij)</span>
+                  </td>
+                  <td style="color:#64748b;">Nil</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <strong>103</strong>
                       <span class="badge-map-btn-clean" data-i18n="btn_map">Map</span>
                     </div>
                   </td>
@@ -319,14 +323,7 @@
                   <td class="mono">0.0476</td>
                   <td class="mono font-semibold">0.0200 Acre</td>
                   <td>
-                    <span class="badge-barga-human-red">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
-                      <span data-i18n="badge_barga">Bargadar (Barga)</span>
-                    </span>
+                    <span class="badge-status-neutral" data-i18n="status_direct">Direct Possession (Nij)</span>
                   </td>
                   <td style="color:#64748b;">Nil</td>
                 </tr>
@@ -349,8 +346,7 @@
 
           <div class="display-card-actions">
             <div class="display-notice-text" data-i18n="feat_notice">
-              * Demonstration record with simulated data for citizen privacy. Plots with red badge indicate Bargadar or
-              permissive possessor.
+              * Demonstration record with simulated data for citizen privacy. Detailed schedule includes plot classification, area share and possessor remarks.
             </div>
             <a href="/app?autoDist=01&autoBlock=19&autoMouza=089&autoNum=101&autoMode=khatian&autoP2=A"
               class="btn-open-full-schedule">
@@ -423,14 +419,13 @@
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
               </div>
-              <h3 data-i18n="serv3_title">Bargadar &amp; Possessor Verification</h3>
+              <h3 data-i18n="serv3_title">Plot Possession &amp; Occupancy Verification</h3>
             </div>
             <p data-i18n="serv3_desc">
-              Instant detection of recorded Bargadars or permissive possessors with prominent red alert badges and
-              Section 50/51 statutory right auditing.
+              Instant audit of recorded possessor entries, permissive tenancy, legal status and Section 50/51 occupancy records.
             </p>
-            <a href="#barga-law" class="service-card-link">
-              <span data-i18n="serv3_link">Read Barga Statutory Rules →</span>
+            <a href="/app" class="service-card-link">
+              <span data-i18n="serv3_link">Check Occupancy Status →</span>
             </a>
           </div>
 
@@ -513,11 +508,10 @@
           </div>
 
           <div class="step-guide-card highlight-step">
-            <div class="step-num-pill" style="background:#dc2626; color:#ffffff;" data-i18n="step2_pill">STEP 02</div>
-            <h3 style="color:#991b1b;" data-i18n="step2_title">Inspect Bargadar &amp; Possessor Column</h3>
+            <div class="step-num-pill" style="background:#0284c7; color:#ffffff;" data-i18n="step2_pill">STEP 02</div>
+            <h3 style="color:#0369a1;" data-i18n="step2_title">Verify Land Classification &amp; Occupancy</h3>
             <p data-i18n="step2_desc">
-              Examine whether any plot contains a red-badged 'Barga' or 'Permission' entry. If a Bargadar is recorded,
-              under Sections 50/51 of the WBLR Act they cannot be evicted and their cultivation rights are hereditary.
+              Check official revenue classification (Shale, Danga, Bastu, Pukur) and recorded occupant status on each plot schedule before entering into any sale deed or title transfer.
             </p>
           </div>
 
@@ -682,34 +676,6 @@
       </div>
     </section>
 
-    <section class="portal-section-block" id="barga-law">
-      <div class="portal-container">
-        <div class="barga-statutory-card">
-          <div class="barga-statutory-inner">
-            <div class="barga-icon-large">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
-                </path>
-                <line x1="12" y1="9" x2="12" y2="13"></line>
-                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-              </svg>
-            </div>
-            <div class="barga-text-block">
-              <h3 data-i18n="barga_title">Statutory Barga Warning: Essential Due-Diligence Prior to Land Acquisition
-              </h3>
-              <p data-i18n="barga_text">
-                Under Sections 50 &amp; 51 of the West Bengal Land Reforms Act 1955, the cultivation rights and crop
-                share of recorded Bargadars are legally protected and hereditary. Even if the land title transfers to a
-                new buyer, the Bargadar cannot be evicted from possession. Inspecting the possessor column for Barga
-                entries prior to any deed registration is mandatory. BanglarBhumi Pro identifies every recorded Barga
-                parcel with prominent red indicator badges.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="portal-section-block" id="mouza-presets">
       <div class="portal-container">
         <div class="section-title-bar">
@@ -722,7 +688,7 @@
           <div class="preset-mouza-card">
             <div class="preset-card-head">
               <span class="preset-dist-title" data-i18n="p1_dist">Bankura</span>
-              <span class="preset-tag-verified" data-i18n="p1_tag">Sample Barga</span>
+              <span class="preset-tag-verified" data-i18n="p1_tag">Verified Schedule</span>
             </div>
             <div class="preset-block-text" data-i18n="p1_block">Block: Kotulpur • Mouza: Karakbere (089)</div>
             <div class="preset-target-pill">
@@ -801,7 +767,7 @@
             </summary>
             <div class="faq-answer-content" data-i18n="q1_ans">
               <strong>Plot Search (দাগের তথ্য):</strong> Reveals all co-sharers in a specific survey plot, their exact
-              ownership share and acreage, and whether any Bargadar is recorded on that plot.<br><br>
+              ownership share and acreage, and recorded possessor details on that plot.<br><br>
               <strong>Khatian Search (খতিয়ানের তথ্য):</strong> Displays the complete ownership ledger of an individual
               owner (Rayat) in that mouza, showing the consolidated schedule of all plots owned by that rayat.
             </div>
@@ -809,15 +775,13 @@
 
           <details class="faq-disclosure" name="portal-faq">
             <summary class="faq-summary-heading">
-              <span data-i18n="q2_title">2. Can land be sold or purchased if a Bargadar is recorded on it?</span>
+              <span data-i18n="q2_title">2. What is Section 4C Land Conversion and why is it required?</span>
               <svg class="faq-chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </summary>
             <div class="faq-answer-content" data-i18n="q2_ans">
-              Yes, land ownership can be sold or transferred, but the Bargadar's cultivation rights and physical
-              possession remain legally protected under Sections 50 &amp; 51 of the WBLR Act 1955. The new purchaser
-              cannot evict the Bargadar. Therefore, verifying the possessor column before purchasing is essential.
+              Under Section 4C of the West Bengal Land Reforms Act 1955, changing the recorded character or use of land (such as agricultural Shale or Danga to Bastu or Commercial) requires prior written permission from the competent BL&amp;LRO. Converting waterbodies or agricultural land without sanction is strictly unlawful.
             </div>
           </details>
 
@@ -889,7 +853,6 @@
             <li><a href="#portal-stats" data-i18n="nav_stats">Portal Stats</a></li>
             <li><a href="#verification-guide" data-i18n="nav_guide">Due Diligence Guide</a></li>
             <li><a href="#classifications" data-i18n="nav_classes">Land Classes</a></li>
-            <li><a href="#barga-law" data-i18n="nav_barga">Bargadar Rights</a></li>
             <li><a href="/about_project" style="color: #60a5fa; font-weight:600;">About Project (v1.1.0)</a></li>
           </ul>
         </div>

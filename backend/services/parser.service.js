@@ -50,9 +50,16 @@ function parsePlotMsgShow(msgHtml) {
         cells.push(cellText)
       }
       if (cells.length >= 5) {
+        let ownerVal = cells[1] || ''
+        let ownerTypeVal = 'Byakti'
+        if (/byakti/i.test(ownerVal)) {
+          ownerTypeVal = 'Byakti'
+          ownerVal = ownerVal.replace(/\bbyakti\b/gi, '').trim()
+        }
         result.holders.push({
           khatianNo: cells[0] || '',
-          ownerName: cells[1] || '',
+          ownerName: ownerVal,
+          ownerType: ownerTypeVal,
           fatherOrHusband: cells[2] || '',
           share: cells[3] || '',
           shareArea: cells[4] || '',

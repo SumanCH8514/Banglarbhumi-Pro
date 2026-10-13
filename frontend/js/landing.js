@@ -1,49 +1,84 @@
-const DISTRICT_DATA = {
-  '01': {
-    name_bn: '[ ০১ ] বাঁকুড়া (BANKURA)',
-    name_en: '[ 01 ] Bankura (BANKURA)',
-    blocks: [
-      { id: '19', name_bn: '[ ১৯ ] কোতুলপুর (Kotulpur)', name_en: '[ 19 ] Kotulpur', mouzas: [{ id: '089', name_bn: 'কারকবেড়ে (Karakbere - JL 089)', name_en: 'Karakbere (JL 089)' }, { id: '110', name_bn: 'কোতুলপুর (Kotulpur - JL 110)', name_en: 'Kotulpur (JL 110)' }, { id: '055', name_bn: 'লেগো (Lego - JL 055)', name_en: 'Lego (JL 055)' }] },
-      { id: '01', name_bn: '[ ০১ ] বাঁকুড়া সদর (Bankura-I)', name_en: '[ 01 ] Bankura Sadar (Bankura-I)', mouzas: [{ id: '182', name_bn: 'সানবাঁধা (Sanbandha - JL 182)', name_en: 'Sanbandha (JL 182)' }, { id: '020', name_bn: 'আঁধারথোল (Andharthol - JL 020)', name_en: 'Andharthol (JL 020)' }] },
-      { id: '03', name_bn: '[ ০৩ ] বিষ্ণুপুর (Bishnupur)', name_en: '[ 03 ] Bishnupur', mouzas: [{ id: '032', name_bn: 'দ্বারিকা (Dwarika - JL 032)', name_en: 'Dwarika (JL 032)' }, { id: '045', name_bn: 'মড়ার (Morar - JL 045)', name_en: 'Morar (JL 045)' }] },
-      { id: '04', name_bn: '[ ০৪ ] ওন্দা (Onda)', name_en: '[ 04 ] Onda', mouzas: [{ id: '015', name_bn: 'রতনপুর (Ratanpur - JL 015)', name_en: 'Ratanpur (JL 015)' }, { id: '068', name_bn: 'নিকুঞ্জপুর (Nikunjapur - JL 068)', name_en: 'Nikunjapur (JL 068)' }] }
-    ]
-  },
-  '06': {
-    name_bn: '[ ০৬ ] হুগলি (HOOGHLY)',
-    name_en: '[ 06 ] Hooghly (HOOGHLY)',
-    blocks: [
-      { id: '01', name_bn: '[ ০১ ] সিঙ্গুর (Singur)', name_en: '[ 01 ] Singur', mouzas: [{ id: '045', name_bn: 'সিঙ্গুর (Singur - JL 045)', name_en: 'Singur (JL 045)' }, { id: '052', name_bn: 'রতনপুর (Ratanpur - JL 052)', name_en: 'Ratanpur (JL 052)' }, { id: '061', name_bn: 'গোপালনগড় (Gopalnagar - JL 061)', name_en: 'Gopalnagar (JL 061)' }] },
-      { id: '02', name_bn: '[ ০২ ] চন্দননগর (Chandannagar)', name_en: '[ 02 ] Chandannagar', mouzas: [{ id: '010', name_bn: 'মানকুণ্ডু (Mankundu - JL 010)', name_en: 'Mankundu (JL 010)' }, { id: '018', name_bn: 'খলিসানী (Khalisani - JL 018)', name_en: 'Khalisani (JL 018)' }] },
-      { id: '04', name_bn: '[ ০৪ ] তারকেশ্বর (Tarakeswar)', name_en: '[ 04 ] Tarakeswar', mouzas: [{ id: '008', name_bn: 'তারকেশ্বর (Tarakeswar - JL 008)', name_en: 'Tarakeswar (JL 008)' }, { id: '024', name_bn: 'সন্তোষপুর (Santoshpur - JL 024)', name_en: 'Santoshpur (JL 024)' }] }
-    ]
-  },
-  '16': {
-    name_bn: '[ ১৬ ] দক্ষিণ ২৪ পরগনা (SOUTH 24 PGS)',
-    name_en: '[ 16 ] South 24 Parganas (SOUTH 24 PGS)',
-    blocks: [
-      { id: '01', name_bn: '[ ০১ ] ভাঙড়-১ (Bhangar-I)', name_en: '[ 01 ] Bhangar-I', mouzas: [{ id: '012', name_bn: 'ভাঙড় (Bhangar - JL 012)', name_en: 'Bhangar (JL 012)' }, { id: '028', name_bn: 'পোলেরহাট (Polerhat - JL 028)', name_en: 'Polerhat (JL 028)' }] },
-      { id: '02', name_bn: '[ ০২ ] বারুইপুর (Baruipur)', name_en: '[ 02 ] Baruipur', mouzas: [{ id: '014', name_bn: 'মাদারাত (Madarat - JL 014)', name_en: 'Madarat (JL 014)' }, { id: '035', name_bn: 'কল্যাণপুর (Kalyanpur - JL 035)', name_en: 'Kalyanpur (JL 035)' }] },
-      { id: '04', name_bn: '[ ০৪ ] সোনারপুর (Sonarpur)', name_en: '[ 04 ] Sonarpur', mouzas: [{ id: '005', name_bn: 'রাজপুর (Rajpur - JL 005)', name_en: 'Rajpur (JL 005)' }, { id: '021', name_bn: 'কমলগাজী (Kamalgazi - JL 021)', name_en: 'Kamalgazi (JL 021)' }] }
-    ]
-  },
-  '03': {
-    name_bn: '[ ০৩ ] বীরভূম (BIRBHUM)',
-    name_en: '[ 03 ] Birbhum (BIRBHUM)',
-    blocks: [
-      { id: '01', name_bn: '[ ০১ ] সিউড়ি-১ (Suri-I)', name_en: '[ 01 ] Suri-I', mouzas: [{ id: '011', name_bn: 'খটঙ্গা (Khatanga - JL 011)', name_en: 'Khatanga (JL 011)' }, { id: '025', name_bn: 'কড়িধ্যা (Karidhya - JL 025)', name_en: 'Karidhya (JL 025)' }] },
-      { id: '02', name_bn: '[ ০২ ] বোলপুর-শ্রীনিকেতন (Bolpur)', name_en: '[ 02 ] Bolpur-Sriniketan', mouzas: [{ id: '005', name_bn: 'বোলপুর (Bolpur - JL 005)', name_en: 'Bolpur (JL 005)' }, { id: '034', name_bn: 'শ্রীনিকেতন (Sriniketan - JL 034)', name_en: 'Sriniketan (JL 034)' }] }
-    ]
-  },
-  '05': {
-    name_bn: '[ ০৫ ] হাওড়া (HOWRAH)',
-    name_en: '[ 05 ] Howrah (HOWRAH)',
-    blocks: [
-      { id: '01', name_bn: '[ ০১ ] উলুবেড়িয়া-১ (Uluberia-I)', name_en: '[ 01 ] Uluberia-I', mouzas: [{ id: '008', name_bn: 'হীরাপুর (Hirapur - JL 008)', name_en: 'Hirapur (JL 008)' }, { id: '019', name_bn: 'বাউড়িয়া (Bauria - JL 019)', name_en: 'Bauria (JL 019)' }] },
-      { id: '02', name_bn: '[ ০২ ] ডোমজুড় (Domjur)', name_en: '[ 02 ] Domjur', mouzas: [{ id: '014', name_bn: 'ডোমজুড় (Domjur - JL 014)', name_en: 'Domjur (JL 014)' }, { id: '031', name_bn: 'সলপ (Salap - JL 031)', name_en: 'Salap (JL 031)' }] }
-    ]
+const ALL_DISTRICTS = [
+  { code: '01', name_en: '[ 01 ] Bankura (BANKURA)', name_bn: '[ ০১ ] বাঁকুড়া (BANKURA)' },
+  { code: '02', name_en: '[ 02 ] Purba Bardhaman (PURBA BARDHAMAN)', name_bn: '[ ০২ ] পূর্ব বর্ধমান (PURBA BARDHAMAN)' },
+  { code: '03', name_en: '[ 03 ] Birbhum (BIRBHUM)', name_bn: '[ ০৩ ] বীরভূম (BIRBHUM)' },
+  { code: '04', name_en: '[ 04 ] Darjeeling (DARJEELING)', name_bn: '[ ০৪ ] দার্জিলিং (DARJEELING)' },
+  { code: '05', name_en: '[ 05 ] Howrah (HOWRAH)', name_bn: '[ ০৫ ] হাওড়া (HOWRAH)' },
+  { code: '06', name_en: '[ 06 ] Hooghly (HOOGHLY)', name_bn: '[ ০৬ ] হুগলি (HOOGHLY)' },
+  { code: '07', name_en: '[ 07 ] Jalpaiguri (JALPAIGURI)', name_bn: '[ ০৭ ] জলপাইগুড়ি (JALPAIGURI)' },
+  { code: '08', name_en: '[ 08 ] Cooch Behar (COOCH BEHAR)', name_bn: '[ ০৮ ] কোচবিহার (COOCH BEHAR)' },
+  { code: '09', name_en: '[ 09 ] Malda (MALDA)', name_bn: '[ ০৯ ] মালদা (MALDA)' },
+  { code: '10', name_en: '[ 10 ] Paschim Medinipur (PASCHIM MEDINIPUR)', name_bn: '[ ১০ ] পশ্চিম মেদিনীপুর (PASCHIM MEDINIPUR)' },
+  { code: '11', name_en: '[ 11 ] Purba Medinipur (PURBA MEDINIPUR)', name_bn: '[ ১১ ] পূর্ব মেদিনীপুর (PURBA MEDINIPUR)' },
+  { code: '12', name_en: '[ 12 ] Murshidabad (MURSHIDABAD)', name_bn: '[ ১২ ] মুর্শিদাবাদ (MURSHIDABAD)' },
+  { code: '13', name_en: '[ 13 ] Nadia (NADIA)', name_bn: '[ ১৩ ] নদিয়া (NADIA)' },
+  { code: '14', name_en: '[ 14 ] Purulia (PURULIA)', name_bn: '[ ১৪ ] পুরুলিয়া (PURULIA)' },
+  { code: '15', name_en: '[ 15 ] North 24 Parganas (NORTH 24 PGS)', name_bn: '[ ১৫ ] উত্তর ২৪ পরগনা (NORTH 24 PGS)' },
+  { code: '16', name_en: '[ 16 ] South 24 Parganas (SOUTH 24 PGS)', name_bn: '[ ১৬ ] দক্ষিণ ২৪ পরগনা (SOUTH 24 PGS)' },
+  { code: '17', name_en: '[ 17 ] Dakshin Dinajpur (DAKSHIN DINAJPUR)', name_bn: '[ ১৭ ] দক্ষিণ দিনাজপুর (DAKSHIN DINAJPUR)' },
+  { code: '18', name_en: '[ 18 ] Uttar Dinajpur (UTTAR DINAJPUR)', name_bn: '[ ১৮ ] উত্তর দিনাজপুর (UTTAR DINAJPUR)' },
+  { code: '19', name_en: '[ 19 ] Kolkata (KOLKATA)', name_bn: '[ ১৯ ] কলকাতা (KOLKATA)' },
+  { code: '20', name_en: '[ 20 ] Alipurduar (ALIPURDUAR)', name_bn: '[ ২০ ] আলিপুরদুয়ার (ALIPURDUAR)' },
+  { code: '21', name_en: '[ 21 ] Kalimpong (KALIMPONG)', name_bn: '[ ২১ ] কালিম্পং (KALIMPONG)' },
+  { code: '22', name_en: '[ 22 ] Jhargram (JHARGRAM)', name_bn: '[ ২২ ] ঝাড়গ্রাম (JHARGRAM)' },
+  { code: '23', name_en: '[ 23 ] Paschim Bardhaman (PASCHIM BARDHAMAN)', name_bn: '[ ২৩ ] পশ্চিম বর্ধমান (PASCHIM BARDHAMAN)' }
+];
+
+function getSlNum(code, text) {
+  if (code !== undefined && code !== null) {
+    const m = String(code).match(/\d+/);
+    if (m) return parseInt(m[0], 10);
   }
-};
+  if (text) {
+    const m = String(text).match(/\[\s*(\d+)\s*\]/);
+    if (m) return parseInt(m[1], 10);
+    const m2 = String(text).match(/\d+/);
+    if (m2) return parseInt(m2[0], 10);
+  }
+  return 999999;
+}
+
+const blocksCache = {};
+const mouzaCache = {};
+
+async function fetchBlocksForDistrict(distCode) {
+  if (blocksCache[distCode]) return blocksCache[distCode];
+  try {
+    const res = await fetch(`/api/v1/blocks?district=${encodeURIComponent(distCode)}`);
+    const data = await res.json();
+    if (data && data.blocks && data.blocks.length > 0) {
+      const sortedBlocks = [...data.blocks].sort((a, b) => {
+        const numA = getSlNum(a.bcode, a.text || a.name);
+        const numB = getSlNum(b.bcode, b.text || b.name);
+        if (numA !== numB) return numA - numB;
+        return (a.text || a.name || '').localeCompare(b.text || b.name || '');
+      });
+      blocksCache[distCode] = sortedBlocks;
+      return sortedBlocks;
+    }
+  } catch (e) { }
+  return [];
+}
+
+async function fetchMouzasForBlock(distCode, blockCode) {
+  const cacheKey = `${distCode}_${blockCode}`;
+  if (mouzaCache[cacheKey]) return mouzaCache[cacheKey];
+  try {
+    const res = await fetch(`/api/v1/mouzas?district=${encodeURIComponent(distCode)}&block=${encodeURIComponent(blockCode)}`);
+    const data = await res.json();
+    if (data && data.mouzas && data.mouzas.length > 0) {
+      const sortedMouzas = [...data.mouzas].sort((a, b) => {
+        const numA = getSlNum(a.moucode, a.text || a.name);
+        const numB = getSlNum(b.moucode, b.text || b.name);
+        if (numA !== numB) return numA - numB;
+        return (a.text || a.name || '').localeCompare(b.text || b.name || '');
+      });
+      mouzaCache[cacheKey] = sortedMouzas;
+      return sortedMouzas;
+    }
+  } catch (e) { }
+  return [];
+}
 
 const I18N = {
   en: {
@@ -60,12 +95,12 @@ const I18N = {
     nav_stats: 'Portal Stats',
     nav_guide: 'Due Diligence Guide',
     nav_classes: 'Land Classes',
-    nav_barga: 'Bargadar Rights',
     nav_presets: 'Sample Records',
     nav_faq: 'FAQs',
+    nav_about: 'About Project',
     nav_portal_jump: 'Open Search Portal Directly',
     bulletin_badge: 'IMPORTANT NOTICE',
-    bulletin_text: 'Under West Bengal Land Reforms Act 1955, cadastral maps, bargadar possessor records and certified schedules are available online across all districts. • Contact your local BL&LRO office for conversion (Section 4C) and mutation. • Citizen Helpline: 1800-345-5555 (Toll Free).',
+    bulletin_text: 'Under West Bengal Land Reforms Act 1955, cadastral maps, land ownership records and certified schedules are available online across all districts. • Contact your local BL&LRO office for conversion (Section 4C) and mutation. • Citizen Helpline: 1800-345-5555 (Toll Free).',
     widget_title: 'Know Your Property',
     widget_sub: 'Search digital land records directly by Khatian or Plot Number',
     btn_khatian: 'By Khatian No.',
@@ -94,14 +129,14 @@ const I18N = {
     th_class: 'Land Class',
     th_share: 'Share',
     th_area: 'Area (Acre)',
-    th_barga: 'Possessor / Barga Status',
+    th_possessor: 'Possession / Occupant Status',
     th_remarks: 'Remarks & Section',
     btn_map: 'Map',
     cl_shale_val: 'Shale (শালি)',
     badge_anumati: 'Permission (Anumati)',
-    badge_barga: 'Bargadar (Barga)',
+    status_direct: 'Direct Possession (Nij)',
     sec5_remark: 'Section 5(1) Remarks',
-    feat_notice: '* Demonstration record with simulated data for citizen privacy. Plots with red badge indicate Bargadar or permissive possessor.',
+    feat_notice: '* Demonstration record with simulated data for citizen privacy. Detailed schedule includes plot classification, area share and possessor remarks.',
     btn_full_sched: 'Open Sample Schedule in Search Portal →',
     services_heading: 'Citizen Services & Record Inspection Modules',
     services_sub: 'Modern digital land governance services of Government of West Bengal',
@@ -111,9 +146,9 @@ const I18N = {
     serv2_title: 'Cadastral Plot Map (Mouza Naksha)',
     serv2_desc: 'Interactive cadastral vector parcel map displaying boundary pillars, adjacent survey plots, north compass orientation, and right-of-way roads.',
     serv2_link: 'Inspect Parcel Map →',
-    serv3_title: 'Bargadar & Possessor Verification',
-    serv3_desc: 'Instant detection of recorded Bargadars or permissive possessors with prominent red alert badges and Section 50/51 statutory right auditing.',
-    serv3_link: 'Read Barga Statutory Rules →',
+    serv3_title: 'Plot Possession & Occupancy Verification',
+    serv3_desc: 'Instant audit of recorded possessor entries, permissive tenancy, legal status and Section 50/51 occupancy records.',
+    serv3_link: 'Check Occupancy Status →',
     serv4_title: 'Certified Schedule & Print Copy',
     serv4_desc: 'Official government revenue format with bilingual column headers, digital department seal, watermark, and one-click print/PDF download.',
     serv4_link: 'Certified Copy Layout →',
@@ -137,8 +172,8 @@ const I18N = {
     step1_title: 'Verify Khatian & Rayat Ownership',
     step1_desc: 'Search by Mouza and Khatian number to confirm the owner\'s legal name, father or husband\'s name, and total land share. Cross-reference the seller\'s deed spelling against active revenue records.',
     step2_pill: 'STEP 02',
-    step2_title: 'Inspect Bargadar & Possessor Column',
-    step2_desc: 'Examine whether any plot contains a red-badged \'Barga\' or \'Permission\' entry. If a Bargadar is recorded, under Sections 50/51 of the WBLR Act they cannot be evicted and their cultivation rights are hereditary.',
+    step2_title: 'Verify Land Classification & Occupancy',
+    step2_desc: 'Check official revenue classification (Shale, Danga, Bastu, Pukur) and recorded occupant status on each plot schedule before entering into any sale deed or title transfer.',
     step3_pill: 'STEP 03',
     step3_title: 'Inspect Boundaries on Cadastral Map',
     step3_desc: 'Click the \'Map\' button beside the plot to view parcel geometry, survey boundary pillars, adjacent survey numbers, and physical access road or water drainage on the ground.',
@@ -184,12 +219,10 @@ const I18N = {
     cl6_rule: 'Under West Bengal Inland Fisheries Act, filling or draining water bodies is a criminal offense.',
     cl6_conv: 'Filling & Conversion Strictly Prohibited',
     cl6_conv_short: 'Conversion: Strictly Prohibited & Criminal Offense',
-    barga_title: 'Statutory Barga Warning: Essential Due-Diligence Prior to Land Acquisition',
-    barga_text: 'Under Sections 50 & 51 of the West Bengal Land Reforms Act 1955, the cultivation rights and crop share of recorded Bargadars are legally protected and hereditary. Even if the land title transfers to a new buyer, the Bargadar cannot be evicted from possession. Inspecting the possessor column for Barga entries prior to any deed registration is mandatory. BanglarBhumi Pro identifies every recorded Barga parcel with prominent red indicator badges.',
     presets_heading: 'Verified Sample Mouzas & Test Records',
     presets_sub: 'Load pre-verified revenue parcels instantly with one click',
     p1_dist: 'Bankura',
-    p1_tag: 'Sample Barga',
+    p1_tag: 'Verified Schedule',
     p1_pill_khatian: 'Demo Khatian: 101/A',
     p1_pill_plots: '4 Plots (Demo)',
     p1_btn: 'Load Record →',
@@ -211,9 +244,9 @@ const I18N = {
     faq_heading: 'Frequently Asked Questions (FAQs)',
     faq_sub: 'Common citizen queries regarding West Bengal land records',
     q1_title: '1. What is the fundamental difference between Plot Search and Khatian Search?',
-    q1_ans: '<strong>Plot Search (দাগের তথ্য):</strong> Reveals all co-sharers in a specific survey plot, their exact ownership share and acreage, and whether any Bargadar is recorded on that plot.<br><br><strong>Khatian Search (খতিয়ানের তথ্য):</strong> Displays the complete ownership ledger of an individual owner (Rayat) in that mouza, showing the consolidated schedule of all plots owned by that rayat.',
-    q2_title: '2. Can land be sold or purchased if a Bargadar is recorded on it?',
-    q2_ans: 'Yes, land ownership can be sold or transferred, but the Bargadar\'s cultivation rights and physical possession remain legally protected under Sections 50 & 51 of the WBLR Act 1955. The new purchaser cannot evict the Bargadar. Therefore, verifying the possessor column before purchasing is essential.',
+    q1_ans: '<strong>Plot Search (দাগের তথ্য):</strong> Reveals all co-sharers in a specific survey plot, their exact ownership share and acreage, and recorded possessor details on that plot.<br><br><strong>Khatian Search (খতিয়ানের তথ্য):</strong> Displays the complete ownership ledger of an individual owner (Rayat) in that mouza, showing the consolidated schedule of all plots owned by that rayat.',
+    q2_title: '2. What is Section 4C Land Conversion and why is it required?',
+    q2_ans: 'Under Section 4C of the West Bengal Land Reforms Act 1955, changing the recorded character or use of land (such as agricultural Shale or Danga to Bastu or Commercial) requires prior written permission from the competent BL&LRO. Converting waterbodies or agricultural land without sanction is strictly unlawful.',
     q3_title: '3. What is a Bata Plot (বাটা দাগ) and how do you search for it?',
     q3_ans: 'When an original survey plot is subdivided after the survey settlement, a fractional Bata Plot is created (such as 165/1 or 522/2). You can enter \'165/1\' directly or place \'165\' as the main number and \'1\' in the fractional input.',
     q4_title: '4. How does the Cadastral Plot Map function?',
@@ -244,19 +277,19 @@ const I18N = {
     nav_stats: 'পরিসংখ্যান (Stats)',
     nav_guide: 'যাচাই নির্দেশিকা (Guide)',
     nav_classes: 'জমির শ্রেণি (Classes)',
-    nav_barga: 'বর্গাদার স্থিতি (Barga)',
     nav_presets: 'নমুনা মৌজা (Samples)',
     nav_faq: 'প্রশ্নোত্তর (FAQs)',
+    nav_about: 'প্রকল্পের বিবরণ',
     nav_portal_jump: 'সরাসরি সার্চ পোর্টালে যান',
     bulletin_badge: 'জরুরি বিজ্ঞপ্তি',
-    bulletin_text: 'পশ্চিমবঙ্গ ভূমি সংস্কার আইন (WBLR Act 1955) অনুযায়ী সমস্ত জেলার দাগের ক্যাডাস্ট্রাল ম্যাপ নকশা, বর্গাদার দখলদার রেকর্ড এবং সার্টিফাইড খতিয়ান তফসিল ডিজিটাল পোর্টালে উপলব্ধ। • নোটিশ: দাগের রূপান্তর (Section 4C) ও নামপত্তনের জন্য সংশ্লিষ্ট ব্লক BL&LRO অফিসে যোগাযোগ করুন। • সার্বক্ষণিক নাগরিক হেল্পডেস্ক (টোল ফ্রি): ১৮০০-৩৪৫-৫৫৫৫।',
+    bulletin_text: 'পশ্চিমবঙ্গ ভূমি সংস্কার আইন (WBLR Act 1955) অনুযায়ী সমস্ত জেলার দাগের ক্যাডাস্ট্রাল ম্যাপ নকশা, জমির স্বত্বাধিকার রেকর্ড এবং সার্টিফাইড খতিয়ান তফসিল ডিজিটাল পোর্টালে উপলব্ধ। • নোটিশ: দাগের রূপান্তর (Section 4C) ও নামপত্তনের জন্য সংশ্লিষ্ট ব্লক BL&LRO অফিসে যোগাযোগ করুন। • সার্বক্ষণিক নাগরিক হেল্পডেস্ক (টোল ফ্রি): ১৮০০-৩৪৫-৫৫৫৫।',
     widget_title: 'আপনার সম্পত্তি জানুন',
     widget_sub: 'খতিয়ান বা দাগ নম্বর দিয়ে সরাসরি জমির তথ্য দেখুন',
     btn_khatian: 'খতিয়ান অনুযায়ী',
     btn_plot: 'দাগ নম্বর অনুযায়ী',
     lbl_dist: 'জেলা (District):',
     lbl_block: 'ব্লক / থানা (Block):',
-    lbl_mouza: 'মৌজা (Mouza & J.L.):',
+    lbl_mouza: 'মৌজা ও জে.এল. (Mouza & J.L.):',
     lbl_khatian_num: 'খতিয়ান নম্বর (Khatian No.):',
     lbl_plot_num: 'দাগ নম্বর (Plot No.):',
     ph_khatian: 'যেমন: 101 বা 101/A (ডেমো)',
@@ -278,14 +311,14 @@ const I18N = {
     th_class: 'জমির শ্রেণি (Class)',
     th_share: 'অংশ (Share)',
     th_area: 'অংশের পরিমাণ (Acre)',
-    th_barga: 'দখলদার / বর্গা স্থিতি',
+    th_possessor: 'দখলদার স্থিতি (Possession Status)',
     th_remarks: 'মন্তব্য ও ধারা',
     btn_map: 'ম্যাপ',
     cl_shale_val: 'শালি (Shale)',
     badge_anumati: 'অনুমতি (Anumati)',
-    badge_barga: 'বর্গা (Barga)',
+    status_direct: 'নিজ দখল (Direct)',
     sec5_remark: 'ধারা ৫(১) মন্তব্য (Remarks)',
-    feat_notice: '* তথ্যের গোপনীয়তা বজায় রাখার স্বার্থে এটি একটি কৃত্রিম ডেমো রেকর্ড। লাল ব্যাজযুক্ত দাগে বর্গা বা অনুমতিপ্রাপ্ত দখলদার নির্দেশ করে।',
+    feat_notice: '* তথ্যের গোপনীয়তা বজায় রাখার স্বার্থে এটি একটি কৃত্রিম ডেমো রেকর্ড। বিস্তারিত তফসিলে জমির শ্রেণি, অংশ ও দখলদার বিবরণ অন্তর্ভুক্ত থাকে।',
     btn_full_sched: 'সার্চ পোর্টালে নমুনা তফসিল খুলুন →',
     services_heading: 'নাগরিক সেবা ও রেকর্ড পরিদর্শন মডিউল',
     services_sub: 'পশ্চিমবঙ্গ ভূমি ও ভূমি সংস্কার দপ্তরের আধুনিক ডিজিটাল পরিষেবা',
@@ -295,9 +328,9 @@ const I18N = {
     serv2_title: 'দাগের ক্যাডাস্ট্রাল ম্যাপ নকশা',
     serv2_desc: 'নির্দিষ্ট দাগের জ্যামিতিক নকশা, সংলগ্ন পার্সেলের অবস্থান (চতুঃসীমা), সীমানা স্তম্ভ এবং উত্তর দিক নির্ণায়ক কম্পাস সমন্বিত ডিজিটাল ক্যাডাস্ট্রাল ম্যাপ প্রদর্শন।',
     serv2_link: 'ম্যাপ নকশা দেখুন →',
-    serv3_title: 'বর্গাদার ও দখলদার স্থিতি',
-    serv3_desc: 'জমিতে কোনো বর্গাদার বা অনুমতিপ্রাপ্ত দখলদার নথিভুক্ত রয়েছে কিনা তা লাল সতর্কতা ব্যাজের মাধ্যমে তাৎক্ষণিক শনাক্তকরণ ও ধারা ৫০/৫১ বিধিবদ্ধ অধিকার যাচাই।',
-    serv3_link: 'বর্গা আইনি বিধি পড়ুন →',
+    serv3_title: 'দাগের দখলদার ও স্বত্ব নিরীক্ষা',
+    serv3_desc: 'মৌজা খতিয়ান তফসিলে উল্লিখিত বৈধ দখলদার এন্ট্রি, স্বত্বাধিকার এবং ভূমি রাজস্ব আইনের প্রাসঙ্গিক বিধিবদ্ধ তথ্যের তাৎক্ষণিক নিরীক্ষা।',
+    serv3_link: 'দখলদার তথ্য জানুন →',
     serv4_title: 'সার্টিফাইড তফসিল ও প্রিন্ট কপি',
     serv4_desc: 'অফিসিয়াল ভূমি রেকর্ড ফরম্যাটে ইংরেজি ও বাংলা কলাম টাইটেল, সরকারি সিলমোহর, ওয়াটারমার্ক এবং লিগ্যাল সাইজ প্রিন্ট/পিডিএফ এক ক্লিকে ডাউনলোড।',
     serv4_link: 'সার্টিফাইড কপি ফরম্যাট →',
@@ -321,8 +354,8 @@ const I18N = {
     step1_title: 'খতিয়ান ও রায়তের স্বত্ব যাচাই',
     step1_desc: 'মৌজা এবং খতিয়ান নম্বর দিয়ে অনুসন্ধান করে রায়তের পূর্ণ নাম, পিতা বা স্বামীর নাম এবং মোট জমির পরিমাণ পরীক্ষা করুন। বিক্রেতার নামের বানানের সাথে রেকর্ডের রায়তের নাম মিলিয়ে নেওয়া জরুরি।',
     step2_pill: 'ধাপ ০২',
-    step2_title: 'বর্গাদার ও দখলদার কলাম পরীক্ষা',
-    step2_desc: 'দাগের তফসিলে লাল ব্যাজযুক্ত \'বর্গা\' বা \'অনুমতি\' চিহ্নিত কোনো এন্ট্রি আছে কিনা নিশ্চিত করুন। জমিতে বর্গাদার রেকর্ডভুক্ত থাকলে WBLR Act-এর ধারা ৫০/৫১ অনুসারে উচ্ছেদ অসম্ভব ও বংশানুক্রমিক।',
+    step2_title: 'জমির শ্রেণি ও দখলদার নিরীক্ষা',
+    step2_desc: 'যেকোনো জমি ক্রয় বা চুক্তি করার পূর্বে প্রতিটি দাগের অফিশিয়াল রাজস্ব শ্রেণি (শালি, ডাঙা, পুকুর, বাগান) এবং দখলদার কলামের তথ্য নিবিড়ভাবে যাচাই করুন।',
     step3_pill: 'ধাপ ০৩',
     step3_title: 'ক্যাডাস্ট্রাল ম্যাপ নকশায় দাগের চৌহদ্দি',
     step3_desc: 'পোর্টালে দাগের পাশে থাকা \'ম্যাপ\' বোতামে ক্লিক করে দাগের জ্যামিতিক নকশা, সীমানা স্তম্ভ, সংলগ্ন দাগসমূহ এবং প্রবেশের সরকারি রাস্তা বা নালা আছে কিনা তা সরেজমিনে মিলিয়ে নিন।',
@@ -368,12 +401,10 @@ const I18N = {
     cl6_rule: 'পশ্চিমবঙ্গ অন্তর্বর্তী জলাশয় সংরক্ষণ আইন অনুযায়ী পুকুর ভরাট সম্পূর্ণ নিষিদ্ধ ও দণ্ডনীয় অপরাধ।',
     cl6_conv: 'ভরাট ও রূপান্তর সম্পূর্ণ নিষিদ্ধ',
     cl6_conv_short: 'শ্রেণি রূপান্তর: ভরাট ও রূপান্তর সম্পূর্ণ নিষিদ্ধ',
-    barga_title: 'বর্গাদার সংক্রান্ত আইনি সতর্কতা: জমি কেনার আগে জেনে রাখা আবশ্যক',
-    barga_text: 'পশ্চিমবঙ্গ ভূমি সংস্কার আইন (West Bengal Land Reforms Act 1955)-এর ধারা ৫০ ও ৫১ অনুযায়ী বর্গাদারের চাষের অধিকার ও ফসলের অংশ বংশানুক্রমিক ও আইনত সংরক্ষিত। জমিতে বর্গাদার রেকর্ডভুক্ত থাকলে জমির মালিকানা পরিবর্তন হলেও বর্গাদারকে জমি থেকে উচ্ছেদ করা যায় না। যেকোনো জমি কেনাবেচা বা রেজিস্ট্রি করার পূর্বে সংশ্লিষ্ট দাগের দখলদার কলাম পরীক্ষা করা অত্যাবশ্যক। বাংলারভূমি প্রো প্রতিটি দাগে বর্গা রেকর্ড চিহ্নিত করে লাল রঙের ব্যাজের মাধ্যমে স্বচ্ছভাবে প্রদর্শন করে।',
     presets_heading: 'যাচাইকৃত নমুনা মৌজা ও টেস্ট রেকর্ড',
     presets_sub: 'পোর্টালে তাৎক্ষণিক অনুসন্ধানের জন্য এক ক্লিকে লোড করুন',
     p1_dist: 'বাঁকুড়া (Bankura)',
-    p1_tag: 'নমুনা বর্গা',
+    p1_tag: 'যাচাইকৃত তফসিল',
     p1_pill_khatian: 'ডেমো খতিয়ান: ১০১/ক',
     p1_pill_plots: '৪টি দাগ (ডেমো)',
     p1_btn: 'রেকর্ড লোড করুন →',
@@ -395,9 +426,9 @@ const I18N = {
     faq_heading: 'সাধারণ নাগরিকের সচরাচর জিজ্ঞাস্য (FAQs)',
     faq_sub: 'পশ্চিমবঙ্গে ভূমি রেকর্ড সংক্রান্ত প্রচলিত প্রশ্নের উত্তর',
     q1_title: '১. দাগের তথ্য এবং খতিয়ানের তথ্যের মধ্যে মৌলিক পার্থক্য কী?',
-    q1_ans: '<strong>দাগের তথ্য (Plot Search):</strong> নির্দিষ্ট একটি দাগ বা প্লটে কে কে অংশীদার রয়েছে, তাদের কার কতটুকু জমির অংশ ও পরিমাণ এবং ওই দাগে কোনো বর্গাদার আছে কিনা তা প্রকাশ করে।<br><br><strong>খতিয়ানের তথ্য (Khatian Search):</strong> একজন নির্দিষ্ট জমির মালিক বা রায়তের মৌজাভুক্ত খতিয়ানের পূর্ণ হিসাবপত্র তুলে ধরে, যেখানে তার মালিকানাধীন সমস্ত দাগের সম্মিলিত তালিকা প্রদর্শিত হয়।',
-    q2_title: '২. জমিতে বর্গাদার রেকর্ডভুক্ত থাকলে কি জমি ক্রয়-বিক্রয় করা যায়?',
-    q2_ans: 'জমি বিক্রি বা হস্তান্তর সম্ভব হলেও বর্গাদারের চাষের অধিকার ও দখলের আইনি সুরক্ষা অক্ষুণ্ণ থাকে। নতুন ক্রেতা বর্গাদারকে জমি থেকে উচ্ছেদ করতে পারেন না। তাই জমি কেনার পূর্বে দখলদার কলামে কোনো বর্গা এন্ট্রি রয়েছে কিনা তা অবশ্যই যাচাই করা উচিত।',
+    q1_ans: '<strong>দাগের তথ্য (Plot Search):</strong> নির্দিষ্ট একটি দাগ বা প্লটে কে কে অংশীদার রয়েছে, তাদের কার কতটুকু জমির অংশ ও পরিমাণ এবং ওই দাগের দখলদার তথ্য প্রকাশ করে।<br><br><strong>খতিয়ানের তথ্য (Khatian Search):</strong> একজন নির্দিষ্ট জমির মালিক বা রায়তের মৌজাভুক্ত খতিয়ানের পূর্ণ হিসাবপত্র তুলে ধরে, যেখানে তার মালিকানাধীন সমস্ত দাগের সম্মিলিত তালিকা প্রদর্শিত হয়।',
+    q2_title: '২. ৪সি ধারা অনুযায়ী জমির রূপান্তর (Conversion) কী এবং কেন এটি প্রয়োজন?',
+    q2_ans: 'পশ্চিমবঙ্গ ভূমি সংস্কার আইন ১৯৫৫-এর ধারা ৪সি অনুসারে জমির বর্তমান ব্যবহারের শ্রেণি (যেমন শালি বা ডাঙা থেকে বাস্তু বা বাণিজ্যিক) পরিবর্তন করতে হলে সংশ্লিষ্ট ব্লক ভূমি ও ভূমি সংস্কার আধিকারিক (BL&LRO)-এর পূর্বানুমতি বাধ্যতামূলক। কোনো পুকুর বা জলাশয় ভরাট করা বা অনুমতি ছাড়া রূপান্তর আইনত দণ্ডনীয় অপরাধ।',
     q3_title: '৩. বাটা দাগ (Bata Plot) কী এবং এটি কীভাবে সার্চ করবেন?',
     q3_ans: 'জরিপের পরবর্তী সময়ে কোনো মূল দাগ বিভক্ত হলে বা ভগ্নাংশ তৈরি হলে বাটা দাগ গঠিত হয় (যেমন: ১৬৫/১ বা ৫২২/২)। সার্চ বক্সে মূল দাগ নম্বর এবং বাটা অংশে ভগ্নাংশ বসিয়ে বা \'১৬৫/১\' লিখে সরাসরি অনুসন্ধান করা সম্ভব।',
     q4_title: '৪. দাগের ক্যাডাস্ট্রাল ম্যাপ নকশা কীভাবে কাজ করে?',
@@ -470,19 +501,16 @@ function setPortalLanguage(lang) {
 function updateDistrictSelectOptions() {
   const distSelect = document.getElementById('widgetDistrict');
   if (!distSelect) return;
-  const currentVal = distSelect.value;
+  const currentVal = distSelect.value || '01';
 
   distSelect.innerHTML = '';
-  Object.keys(DISTRICT_DATA).forEach(distKey => {
-    const d = DISTRICT_DATA[distKey];
+  ALL_DISTRICTS.forEach(d => {
     const opt = document.createElement('option');
-    opt.value = distKey;
+    opt.value = d.code;
     opt.textContent = currentPortalLang === 'bn' ? d.name_bn : d.name_en;
-    if (distKey === currentVal) opt.selected = true;
+    if (d.code === currentVal) opt.selected = true;
     distSelect.appendChild(opt);
   });
-
-  onWidgetDistrictChange();
 }
 
 function setWidgetMode(mode) {
@@ -505,32 +533,44 @@ function setWidgetMode(mode) {
   }
 }
 
-function onWidgetDistrictChange() {
+async function onWidgetDistrictChange(preferredBlock, preferredMouza) {
   const distSelect = document.getElementById('widgetDistrict');
   const blockSelect = document.getElementById('widgetBlock');
   const mouzaSelect = document.getElementById('widgetMouza');
   if (!distSelect || !blockSelect || !mouzaSelect) return;
 
   const distVal = distSelect.value;
-  const distInfo = DISTRICT_DATA[distVal];
+  const prevBlockVal = preferredBlock || blockSelect.value;
 
+  blockSelect.innerHTML = `<option value="">${currentPortalLang === 'bn' ? 'ব্লক লোড হচ্ছে...' : 'Loading Blocks...'}</option>`;
+  mouzaSelect.innerHTML = `<option value="">${currentPortalLang === 'bn' ? 'মৌজা লোড হচ্ছে...' : 'Loading Mouzas & J.L....'}</option>`;
+
+  const blocks = await fetchBlocksForDistrict(distVal);
   blockSelect.innerHTML = '';
-  mouzaSelect.innerHTML = '';
 
-  if (distInfo && distInfo.blocks.length > 0) {
-    distInfo.blocks.forEach((blk, idx) => {
+  if (blocks && blocks.length > 0) {
+    let matched = false;
+    blocks.forEach((blk, idx) => {
       const opt = document.createElement('option');
-      opt.value = blk.id;
-      opt.textContent = currentPortalLang === 'bn' ? blk.name_bn : blk.name_en;
-      if (idx === 0) opt.selected = true;
+      opt.value = blk.bcode;
+      const rawText = blk.text || blk.name || '';
+      opt.textContent = rawText.startsWith('[') ? rawText : `[ ${blk.bcode} ] ${rawText}`;
+      if (prevBlockVal && blk.bcode === prevBlockVal) {
+        opt.selected = true;
+        matched = true;
+      } else if (!matched && idx === 0) {
+        opt.selected = true;
+      }
       blockSelect.appendChild(opt);
     });
-
-    onWidgetBlockChange();
+  } else {
+    blockSelect.innerHTML = `<option value="">${currentPortalLang === 'bn' ? 'কোনো ব্লক পাওয়া যায়নি' : 'No blocks available'}</option>`;
   }
+
+  await onWidgetBlockChange(preferredMouza);
 }
 
-function onWidgetBlockChange() {
+async function onWidgetBlockChange(preferredMouza) {
   const distSelect = document.getElementById('widgetDistrict');
   const blockSelect = document.getElementById('widgetBlock');
   const mouzaSelect = document.getElementById('widgetMouza');
@@ -538,21 +578,34 @@ function onWidgetBlockChange() {
 
   const distVal = distSelect.value;
   const blockVal = blockSelect.value;
-  const distInfo = DISTRICT_DATA[distVal];
+  if (!distVal || !blockVal) {
+    mouzaSelect.innerHTML = `<option value="">${currentPortalLang === 'bn' ? 'মৌজা নির্বাচন করুন' : '--- Select Mouza ---'}</option>`;
+    return;
+  }
 
+  const prevMouzaVal = preferredMouza || mouzaSelect.value;
+  mouzaSelect.innerHTML = `<option value="">${currentPortalLang === 'bn' ? 'মৌজা লোড হচ্ছে...' : 'Loading Mouzas & J.L....'}</option>`;
+
+  const mouzas = await fetchMouzasForBlock(distVal, blockVal);
   mouzaSelect.innerHTML = '';
 
-  if (distInfo) {
-    const matchedBlock = distInfo.blocks.find(b => b.id === blockVal);
-    if (matchedBlock && matchedBlock.mouzas) {
-      matchedBlock.mouzas.forEach((m, idx) => {
-        const opt = document.createElement('option');
-        opt.value = m.id;
-        opt.textContent = currentPortalLang === 'bn' ? m.name_bn : m.name_en;
-        if (idx === 0) opt.selected = true;
-        mouzaSelect.appendChild(opt);
-      });
-    }
+  if (mouzas && mouzas.length > 0) {
+    let matched = false;
+    mouzas.forEach((m, idx) => {
+      const opt = document.createElement('option');
+      opt.value = m.moucode;
+      const rawText = m.text || m.name || '';
+      opt.textContent = rawText.startsWith('[') ? rawText : `[ ${m.moucode} ] ${rawText}`;
+      if (prevMouzaVal && m.moucode === prevMouzaVal) {
+        opt.selected = true;
+        matched = true;
+      } else if (!matched && idx === 0) {
+        opt.selected = true;
+      }
+      mouzaSelect.appendChild(opt);
+    });
+  } else {
+    mouzaSelect.innerHTML = `<option value="">${currentPortalLang === 'bn' ? 'কোনো মৌজা পাওয়া যায়নি' : 'No mouzas available'}</option>`;
   }
 }
 
@@ -606,10 +659,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setPortalLanguage(savedLang);
 
+  const distSelect = document.getElementById('widgetDistrict');
+  if (distSelect) {
+    distSelect.addEventListener('change', () => onWidgetDistrictChange());
+  }
+
   const blockSelect = document.getElementById('widgetBlock');
   if (blockSelect) {
-    blockSelect.addEventListener('change', onWidgetBlockChange);
+    blockSelect.addEventListener('change', () => onWidgetBlockChange());
   }
+
+  onWidgetDistrictChange('19', '089');
 
   const btnMobile = document.getElementById('btnMenuMobile');
   const mobilePanel = document.getElementById('mobileNavPanel');

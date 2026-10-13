@@ -220,6 +220,14 @@ let currentMouzas = [];
         const isOpen = box.classList.contains('is-open');
         closeAllCustomSelects();
         if (!isOpen) {
+          const rect = trigger.getBoundingClientRect();
+          const spaceBelow = window.innerHeight - rect.bottom;
+          const spaceAbove = rect.top;
+          if (spaceBelow < 280 && spaceAbove > spaceBelow) {
+            box.classList.add('is-reverse');
+          } else {
+            box.classList.remove('is-reverse');
+          }
           box.classList.add('is-open');
           if (search) {
             search.value = '';
@@ -333,7 +341,10 @@ let currentMouzas = [];
     }
 
     function closeAllCustomSelects() {
-      document.querySelectorAll('.custom-select-box.is-open').forEach(b => b.classList.remove('is-open'));
+      document.querySelectorAll('.custom-select-box').forEach(b => {
+        b.classList.remove('is-open');
+        b.classList.remove('is-reverse');
+      });
     }
 
     document.addEventListener('click', closeAllCustomSelects);
@@ -359,7 +370,13 @@ let currentMouzas = [];
         const res = await fetch(`/api/v1/blocks?district=${dcode}`);
         const data = await res.json();
         if (data.blocks && data.blocks.length > 0) {
-          data.blocks.forEach(b => {
+          const sortedBlocks = [...data.blocks].sort((a, b) => {
+            const numA = parseInt(String(a.bcode || '').replace(/\D/g, '') || '999999', 10);
+            const numB = parseInt(String(b.bcode || '').replace(/\D/g, '') || '999999', 10);
+            if (numA !== numB) return numA - numB;
+            return (a.text || a.name || '').localeCompare(b.text || b.name || '');
+          });
+          sortedBlocks.forEach(b => {
             const opt = document.createElement('option');
             opt.value = b.bcode;
             const rawName = b.name || b.text || '';
@@ -392,7 +409,12 @@ let currentMouzas = [];
         const res = await fetch(`/api/v1/mouzas?district=${dcode}&block=${bcode}`);
         const data = await res.json();
         if (data.mouzas && data.mouzas.length > 0) {
-          currentMouzas = data.mouzas;
+          currentMouzas = [...data.mouzas].sort((a, b) => {
+            const numA = parseInt(String(a.moucode || '').replace(/\D/g, '') || '999999', 10);
+            const numB = parseInt(String(b.moucode || '').replace(/\D/g, '') || '999999', 10);
+            if (numA !== numB) return numA - numB;
+            return (a.text || a.name || '').localeCompare(b.text || b.name || '');
+          });
           renderMouzaOptions(currentMouzas);
         }
       } catch (err) {
@@ -635,67 +657,490 @@ let currentMouzas = [];
       }
     }
 
-    function renderTableHead(mode) {
+    
+    let currentScheduleLang = 'en';
+    let prevModernLang = 'en';
+
+    const BN_DIGITS = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+    const EN_DIGITS_MAP = { '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4', '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9' };
+
+    function toBengaliDigits(str) {
+      if (str === null || str === undefined) return '';
+      return String(str).replace(/[0-9]/g, d => BN_DIGITS[parseInt(d, 10)]);
+    }
+
+    function toEnglishDigits(str) {
+      if (str === null || str === undefined) return '';
+      return String(str).replace(/[০-৯]/g, d => EN_DIGITS_MAP[d] || d);
+    }
+
+    const CLASSIFICATION_MAP = {
+      'shale': 'শালি',
+      'sali': 'শালি',
+      'saali': 'শালি',
+      'bastu': 'বাস্তু',
+      'vastu': 'বাস্তু',
+      'danga': 'ডাঙা',
+      'do': 'ডু',
+      'pukur': 'পুকুর',
+      'bagan': 'বাগান',
+      'dhani': 'ধানি',
+      'suna': 'সুনা',
+      'boro': 'বোরো',
+      'patit': 'পতিত',
+      'doba': 'ডোবা',
+      'karkhana': 'কারখানা',
+      'bila': 'বিলা',
+      'nayanjali': 'নয়ঞ্জলি',
+      'khas': 'খাস',
+      'rasta': 'রাস্তা',
+      'khal': 'খাল',
+      'gora': 'গোড়া',
+      'palit': 'পালিত',
+      'jol': 'জল',
+      'jal': 'জল',
+      'bathan': 'বাথান',
+      'bhit': 'ভিটি',
+      'bhiti': 'ভিটি',
+      'dokan': 'দোকান',
+      'mondir': 'মন্দির',
+      'mandir': 'মন্দির',
+      'masjid': 'মসজিদ',
+      'chala': 'চালা',
+      'khamar': 'খামার',
+      'math': 'মাঠ',
+      'haat': 'হাট',
+      'ghat': 'ঘাট',
+      'tada': 'তড়া',
+      'torha': 'তড়া',
+      'tora': 'তড়া',
+      'baid': 'বাইদ',
+      'sol': 'শোল'
+    };
+
+    const CLASSIFICATION_MAP_EN = {
+      'শালি': 'Shale',
+      'বাস্তু': 'Bastu',
+      'ডাঙা': 'Danga',
+      'ডু': 'Do',
+      'পুকুর': 'Pukur',
+      'বাগান': 'Bagan',
+      'ধানি': 'Dhani',
+      'সুনা': 'Suna',
+      'বোরো': 'Boro',
+      'পতিত': 'Patit',
+      'ডোবা': 'Doba',
+      'কারখানা': 'Karkhana',
+      'বিলা': 'Bila',
+      'নয়ঞ্জলি': 'Nayanjali',
+      'খাস': 'Khas',
+      'রাস্তা': 'Rasta',
+      'খাল': 'Khal',
+      'গোড়া': 'Gora',
+      'পালিত': 'Palit',
+      'জল': 'Jal',
+      'বাথান': 'Bathan',
+      'ভিটি': 'Bhiti',
+      'দোকান': 'Dokan',
+      'মন্দির': 'Mandir',
+      'মসজিদ': 'Masjid',
+      'তড়া': 'Tada',
+      'বাইদ': 'Baid',
+      'শোল': 'Sol'
+    };
+
+    function translateClassification(val, lang) {
+      if (!val) return '-';
+      const trimmed = String(val).trim();
+      if (lang === 'bn') {
+        return CLASSIFICATION_MAP[trimmed.toLowerCase()] || trimmed;
+      }
+      return CLASSIFICATION_MAP_EN[trimmed] || trimmed;
+    }
+
+    function translateDakhaldar(val, lang) {
+      if (!val) return lang === 'bn' ? '—' : 'Nil';
+      const trimmed = String(val).trim();
+      const lower = trimmed.toLowerCase();
+      if (lang === 'bn') {
+        if (lower === 'nil' || lower === '-' || lower === 'none') return '—';
+        if (lower === 'anumati') return 'অনুমতি';
+        if (lower === 'barga') return 'বর্গা';
+        if (lower === 'direct' || lower === 'nij') return 'নিজ দখল';
+        return transliterateToBengali(trimmed);
+      }
+      if (trimmed === '—' || trimmed === 'নেই') return 'Nil';
+      if (trimmed === 'অনুমতি') return 'Anumati';
+      if (trimmed === 'বর্গা') return 'Barga';
+      if (trimmed === 'নিজ দখল') return 'Direct';
+      return trimmed;
+    }
+
+    function translateRemarks(val, lang) {
+      if (!val) return lang === 'bn' ? '—' : 'Nil';
+      const trimmed = String(val).trim();
+      const lower = trimmed.toLowerCase();
+      if (lang === 'bn') {
+        if (lower === 'nil' || lower === '-' || lower === 'none') return '—';
+        if (lower.includes('section 5(1)') || lower.includes('sec 5(1)')) return 'ধারা ৫(১)';
+        if (lower.includes('section 4c') || lower.includes('sec 4c')) return 'ধারা ৪সি';
+        if (lower.includes('court')) return 'আদালতের নির্দেশ';
+        return transliterateToBengali(trimmed);
+      }
+      if (trimmed === '—' || trimmed === 'নেই') return 'Nil';
+      if (trimmed.includes('ধারা ৫(১)')) return 'Section 5(1)';
+      if (trimmed.includes('ধারা ৪সি')) return 'Section 4C';
+      return trimmed;
+    }
+
+        const NAME_DICT = {
+      'anil': 'অনিল',
+      'tulsidas': 'তুলসীদাস',
+      'tulsi': 'তুলসী',
+      'durgadas': 'দুর্গাদাস',
+      'durga': 'দুর্গা',
+      'fakir': 'ফকির',
+      'sunil': 'সুনীল',
+      'shilla': 'শীলা',
+      'shila': 'শীলা',
+      'bankubihari': 'বাঁকুবিহারী',
+      'banku': 'বাঁকু',
+      'bihari': 'বিহারী',
+      'bhaskar': 'ভাস্কর',
+      'kalipada': 'কালীপদ',
+      'kali': 'কালী',
+      'bagala': 'বগলা',
+      'bagla': 'বগলা',
+      'ramdas': 'রামদাস',
+      'ranjit': 'রঞ্জিত',
+      'gopal': 'গোপাল',
+      'paramanik': 'প্রামাণিক',
+      'pramanik': 'প্রামাণিক',
+      'sangeeta': 'সঙ্গীতা',
+      'sangita': 'সঙ্গীতা',
+      'satyagopal': 'সত্যগোপাল',
+      'satya': 'সত্য',
+      'saraswati': 'সরস্বতী',
+      'bandyopadhyay': 'বন্দ্যোপাধ্যায়',
+      'banerjee': 'ব্যানার্জী',
+      'mukhopadhyay': 'মুখোপাধ্যায়',
+      'mukherjee': 'মুখার্জী',
+      'chattopadhyay': 'চট্টোপাধ্যায়',
+      'chatterjee': 'চ্যাটার্জী',
+      'gangopadhyay': 'গঙ্গোপাধ্যায়',
+      'ganguly': 'গাঙ্গুলী',
+      'bhattacharya': 'ভট্টাচার্য',
+      'bhattacharjee': 'ভট্টাচার্য',
+      'chakraborty': 'চক্রবর্তী',
+      'chakrabarti': 'চক্রবর্তী',
+      'ghosh': 'ঘোষ',
+      'bose': 'বসু',
+      'basu': 'বসু',
+      'mitra': 'মিত্র',
+      'dutta': 'দত্ত',
+      'datta': 'দত্ত',
+      'roy': 'রায়',
+      'ray': 'রায়',
+      'saha': 'সাহা',
+      'karmakar': 'কর্মকার',
+      'mondal': 'মণ্ডল',
+      'mandal': 'মণ্ডল',
+      'das': 'দাস',
+      'dass': 'দাস',
+      'pal': 'পাল',
+      'paul': 'পাল',
+      'sen': 'সেন',
+      'dey': 'দে',
+      'de': 'দে',
+      'kundu': 'কুণ্ডু',
+      'biswas': 'বিশ্বাস',
+      'haldar': 'হালদার',
+      'halder': 'হালদার',
+      'sarkar': 'সরকার',
+      'khan': 'খান',
+      'mallick': 'মল্লিক',
+      'singha': 'সিংহ',
+      'singh': 'সিংহ',
+      'samanta': 'সামন্ত',
+      'santra': 'সাঁতরা',
+      'bag': 'বাগ',
+      'bauri': 'বাউরি',
+      'mahato': 'মাহাতো',
+      'chowdhury': 'চৌধুরী',
+      'ali': 'আলি',
+      'hossain': 'হোসেন',
+      'hussain': 'হোসেন',
+      'sekh': 'শেখ',
+      'sheikh': 'শেখ',
+      'molla': 'মোল্লা',
+      'barman': 'বর্মন',
+      'nirmal': 'নির্মল',
+      'nirmmal': 'নির্মল',
+      'nij': 'নিজ',
+      'kumar': 'কুমার',
+      'kumari': 'কুমারী',
+      'devi': 'দেবী',
+      'debi': 'দেবী',
+      'prasad': 'প্রসাদ',
+      'narayan': 'নারায়ণ',
+      'mohan': 'মোহন',
+      'ram': 'রাম',
+      'shyam': 'শ্যাম',
+      'hari': 'হরি',
+      'krishna': 'কৃষ্ণ',
+      'shiva': 'শিব',
+      'ananda': 'আনন্দ',
+      'babu': 'বাবু',
+      'ajay': 'অজয়',
+      'ajoy': 'অজয়',
+      'amit': 'অমিত',
+      'anup': 'অনুপ',
+      'asit': 'অসিত',
+      'babul': 'বাবুল',
+      'bapi': 'বাপি',
+      'bikash': 'বিকাশ',
+      'bimal': 'বিমল',
+      'binoy': 'বিনয়',
+      'biswajit': 'বিশ্বজিৎ',
+      'chandan': 'চন্দন',
+      'debabrata': 'দেবব্রত',
+      'debasis': 'দেবাশিস',
+      'debasish': 'দেবাশিস',
+      'dilip': 'দিলীপ',
+      'dipak': 'দীপক',
+      'dipankar': 'দীপঙ্কর',
+      'gour': 'গৌর',
+      'gouranga': 'গৌরাঙ্গ',
+      'haripada': 'হরিপদ',
+      'jagannath': 'জগন্নাথ',
+      'kalyan': 'কল্যাণ',
+      'kamal': 'কমল',
+      'kanai': 'কানাই',
+      'kartik': 'কার্তিক',
+      'koushik': 'কৌশিক',
+      'madan': 'মদন',
+      'madhab': 'মাধব',
+      'mahadev': 'মহাদেব',
+      'manik': 'মানিক',
+      'milan': 'মিলন',
+      'nabin': 'নবীন',
+      'nemai': 'নিমাই',
+      'nimai': 'নিমাই',
+      'nihar': 'নীহার',
+      'niranjan': 'নিরঞ্জন',
+      'nitai': 'নিতাই',
+      'pankaj': 'পঙ্কজ',
+      'paresh': 'পরেশ',
+      'partha': 'পার্থ',
+      'prabir': 'প্রবীর',
+      'pradip': 'প্রদীপ',
+      'prakash': 'প্রকাশ',
+      'pranab': 'প্রণব',
+      'prasanta': 'প্রশান্ত',
+      'rabin': 'রবিন',
+      'rabindra': 'রবীন্দ্র',
+      'ratan': 'রতন',
+      'rohit': 'রোহিত',
+      'sadhan': 'সাধন',
+      'samir': 'সমীর',
+      'sandip': 'সন্দীপ',
+      'sanjib': 'সঞ্জীব',
+      'sankar': 'শঙ্কর',
+      'santosh': 'সন্তোষ',
+      'saroj': 'সরোজ',
+      'sasanka': 'শশাঙ্ক',
+      'shib': 'শিব',
+      'shambhu': 'শম্ভু',
+      'shyamal': 'শ্যামল',
+      'subhas': 'সুভাষ',
+      'subhash': 'সুভাষ',
+      'subrata': 'সুব্রত',
+      'sudhir': 'সুধীর',
+      'sukumar': 'সুকুমার',
+      'sumanta': 'সুমন্ত',
+      'suman': 'সুমন',
+      'sundar': 'সুন্দর',
+      'surajit': 'সুরজিৎ',
+      'suresh': 'সুরেশ',
+      'swapan': 'স্বপন',
+      'tarapada': 'তারাপদ',
+      'tarun': 'তরুণ',
+      'tapan': 'তপন',
+      'uttam': 'উত্তম'
+    };
+
+    function phoneticToBengali(word) {
+      if (!word) return '';
+      const clean = word.toLowerCase().trim();
+      if (NAME_DICT[clean]) return NAME_DICT[clean];
+      if (/^[\u0980-\u09FF\s]+$/.test(word)) return word;
+
+      let s = clean;
+      const multi = [
+        ['ksha', 'ক্ষ'], ['ksh', 'ক্ষ'],
+        ['chha', 'ছা'], ['chh', 'ছ'],
+        ['shya', 'শ্য'], ['shwa', 'শ্ব'],
+        ['bha', 'ভা'], ['bh', 'ভ'],
+        ['dha', 'ধা'], ['dh', 'ধ'],
+        ['tha', 'থা'], ['th', 'থ'],
+        ['gha', 'ঘা'], ['gh', 'ঘ'],
+        ['kha', 'খা'], ['kh', 'খ'],
+        ['cha', 'চা'], ['ch', 'চ'],
+        ['jha', 'ঝা'], ['jh', 'ঝ'],
+        ['pha', 'ফা'], ['ph', 'ফ'],
+        ['sha', 'শা'], ['sh', 'শ'],
+        ['rha', 'ঢ়া'], ['rh', 'ঢ়'],
+        ['nga', 'ঙা'], ['ng', 'ঙ'],
+        ['nya', 'ঞা'], ['ny', 'ঞ'],
+        ['tra', 'ত্র'], ['tro', 'ত্র'],
+        ['jna', 'জ্ঞ'], ['gya', 'জ্ঞ']
+      ];
+      for (let i = 0; i < multi.length; i++) {
+        s = s.split(multi[i][0]).join(multi[i][1]);
+      }
+
+      const single = [
+        ['k', 'ক'], ['g', 'গ'], ['j', 'জ'], ['t', 'ত'],
+        ['d', 'দ'], ['n', 'ন'], ['p', 'প'], ['b', 'ব'],
+        ['m', 'ম'], ['r', 'র'], ['l', 'ল'], ['s', 'স'],
+        ['h', 'হ'], ['y', 'য়'], ['w', 'ওয়'], ['v', 'ভ'],
+        ['z', 'য'], ['c', 'ক'], ['q', 'ক'], ['x', 'ক্স']
+      ];
+      for (let i = 0; i < single.length; i++) {
+        s = s.split(single[i][0]).join(single[i][1]);
+      }
+
+      const vowels = [
+        ['aa', 'া'], ['ee', 'ী'], ['oo', 'ূ'],
+        ['ai', 'ৈ'], ['au', 'ৌ'], ['ou', 'ৌ'],
+        ['oi', 'ৈ'], ['a', 'া'], ['i', 'ি'],
+        ['u', 'ু'], ['e', 'ে'], ['o', 'ো']
+      ];
+      for (let i = 0; i < vowels.length; i++) {
+        s = s.split(vowels[i][0]).join(vowels[i][1]);
+      }
+
+      s = s.replace(/^া/, 'আ')
+           .replace(/^ি/, 'ই')
+           .replace(/^ী/, 'ঈ')
+           .replace(/^ু/, 'উ')
+           .replace(/^ূ/, 'ঊ')
+           .replace(/^ে/, 'এ')
+           .replace(/^ৈ/, 'ঐ')
+           .replace(/^ো/, 'ও')
+           .replace(/^ৌ/, 'ঔ');
+
+      return s;
+    }
+
+    function transliterateToBengali(text) {
+      if (!text) return '';
+      const sanitized = String(text)
+        .replace(/\bbyakti\b/gi, '')
+        .replace(/\bব্যক্তি(?:গত)?\b/gi, '')
+        .trim();
+      return sanitized.split(/\s+/).map(w => {
+        if (!w) return '';
+        if (/^[\u0980-\u09FF]+$/.test(w)) return w;
+        const clean = w.toLowerCase().replace(/[^a-z]/g, '');
+        if (NAME_DICT[clean]) return NAME_DICT[clean];
+        return phoneticToBengali(clean) || w;
+      }).join(' ');
+    }
+
+    
+    function formatShareArea(val, isBn) {
+      if (!val || val === '-') return '-';
+      const str = String(val).trim();
+      const match = str.match(/^([\d.]+)(?:\s*(?:ekar|acre|\u098f\u0995\u09b0)?\s*(?:\(([^)]+)\))?)?/i);
+      if (!match) return isBn ? toBengaliDigits(str) : str;
+      const num = match[1];
+      const shreni = match[2] ? match[2].trim() : '';
+      const numDisplay = isBn ? toBengaliDigits(num) : num;
+      if (!shreni) {
+        return isBn ? (numDisplay + ' \u098f\u0995\u09b0') : (numDisplay + ' Acre');
+      }
+      if (isBn) {
+        const bnShreni = CLASSIFICATION_MAP[shreni.toLowerCase()] || shreni;
+        return numDisplay + ' \u098f\u0995\u09b0 (\u09b6\u09cd\u09b0\u09c7\u09a3\u09bf: ' + bnShreni + ')';
+      } else {
+        const enShreni = CLASSIFICATION_MAP_EN[shreni] || (shreni === '\u09a4\u09dc\u09be' ? 'Tada' : shreni);
+        return numDisplay + ' Acre (Class: ' + enShreni + ')';
+      }
+    }
+  
+    function setScheduleLanguage(lang, triggerRerender = true) {
+      currentScheduleLang = (lang === 'bn') ? 'bn' : 'en';
+      const btnEn = document.getElementById('btnSchedLangEn');
+      const btnBn = document.getElementById('btnSchedLangBn');
+      if (btnEn && btnBn) {
+        if (currentScheduleLang === 'bn') {
+          btnBn.classList.add('active');
+          btnEn.classList.remove('active');
+        } else {
+          btnEn.classList.add('active');
+          btnBn.classList.remove('active');
+        }
+      }
+
+      const isBn = (currentScheduleLang === 'bn');
+
+      const swipeHint = document.getElementById('swipeHintText');
+      if (swipeHint) {
+        swipeHint.innerText = isBn ? '\u09b8\u09ae\u09cd\u09aa\u09c2\u09b0\u09cd\u09a3 \u09a4\u09ab\u09b8\u09bf\u09b2 \u09a6\u09c7\u0996\u09a4\u09c7 \u09aa\u09be\u09b6\u09c7 \u09b8\u09cd\u0995\u09cd\u09b0\u09cb\u09b2 \u0995\u09b0\u09c1\u09a8' : 'Swipe horizontally to view full schedule';
+      }
+
+      if (triggerRerender && activeData) {
+        displayResults(activeData);
+      }
+    }
+
+function renderTableHead(mode) {
       const theadRow = document.getElementById('recordsTableHeadRow');
       if (!theadRow) return;
+      const isBn = (currentScheduleLang === 'bn');
       if (mode === 'khatian') {
-        theadRow.innerHTML = `
-          <th>
-            <span class="th-title-en">Plot / Dag No</span>
-            <span class="th-title-bn bn">(দাগ নম্বর)</span>
-          </th>
-          <th>
-            <span class="th-title-en">Classification</span>
-            <span class="th-title-bn bn">(শ্রেণি)</span>
-          </th>
-          <th>
-            <span class="th-title-en">Share</span>
-            <span class="th-title-bn bn">(অংশ)</span>
-          </th>
-          <th>
-            <span class="th-title-en">Share Area</span>
-            <span class="th-title-bn bn">(অংশ পরিমাণ - একর)</span>
-          </th>
-          <th>
-            <span class="th-title-en">Dakhaldar</span>
-            <span class="th-title-bn bn">(দখলদার)</span>
-          </th>
-          <th>
-            <span class="th-title-en">Remarks</span>
-            <span class="th-title-bn bn">(মন্তব্য)</span>
-          </th>
-        `;
+        if (isBn) {
+          theadRow.innerHTML = `
+            <th>\u09a6\u09be\u0997 \u09a8\u09ae\u09cd\u09ac\u09b0</th>
+            <th>\u099c\u09ae\u09bf\u09b0 \u09b6\u09cd\u09b0\u09c7\u09a3\u09bf</th>
+            <th>\u0985\u0982\u09b6</th>
+            <th>\u0985\u0982\u09b6 \u09aa\u09b0\u09bf\u09ae\u09be\u09a3 (\u098f\u0995\u09b0)</th>
+            <th>\u09a6\u0996\u09b2\u09a6\u09be\u09b0</th>
+            <th>\u09ae\u09a8\u09cd\u09a4\u09ac\u09cd\u09af</th>
+          `;
+        } else {
+          theadRow.innerHTML = `
+            <th>Plot / Dag No</th>
+            <th>Classification</th>
+            <th>Share</th>
+            <th>Share Area (Acre)</th>
+            <th>Dakhaldar</th>
+            <th>Remarks</th>
+          `;
+        }
       } else {
-        theadRow.innerHTML = `
-          <th>
-            <span class="th-title-en">Khatian No</span>
-            <span class="th-title-bn bn">(খতিয়ান নম্বর)</span>
-          </th>
-          <th>
-            <span class="th-title-en">Rayat / Owner Name</span>
-            <span class="th-title-bn bn">(রায়তের নাম)</span>
-          </th>
-          <th>
-            <span class="th-title-en">Father / Husband</span>
-            <span class="th-title-bn bn">(পিতা/স্বামী)</span>
-          </th>
-          <th>
-            <span class="th-title-en">Share</span>
-            <span class="th-title-bn bn">(অংশ)</span>
-          </th>
-          <th>
-            <span class="th-title-en">Share Area</span>
-            <span class="th-title-bn bn">(অংশ পরিমাণ)</span>
-          </th>
-          <th>
-            <span class="th-title-en">Dakhaldar</span>
-            <span class="th-title-bn bn">(দখলদার)</span>
-          </th>
-          <th>
-            <span class="th-title-en">Remarks</span>
-            <span class="th-title-bn bn">(মন্তব্য)</span>
-          </th>
-        `;
+        if (isBn) {
+          theadRow.innerHTML = `
+            <th>\u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u09a8\u09ae\u09cd\u09ac\u09b0</th>
+            <th>\u09b0\u09be\u09af\u09bc\u09a4\u09c7\u09b0 \u09a8\u09be\u09ae</th>
+            <th>\u09aa\u09bf\u09a4\u09be/\u09b8\u09cd\u09ac\u09be\u09ae\u09c0\u09b0 \u09a8\u09be\u09ae</th>
+            <th>\u0985\u0982\u09b6</th>
+            <th>\u0985\u0982\u09b6 \u09aa\u09b0\u09bf\u09ae\u09be\u09a3 (\u098f\u0995\u09b0)</th>
+            <th>\u09a6\u0996\u09b2\u09a6\u09be\u09b0</th>
+            <th>\u09ae\u09a8\u09cd\u09a4\u09ac\u09cd\u09af</th>
+          `;
+        } else {
+          theadRow.innerHTML = `
+            <th>Khatian No</th>
+            <th>Rayat / Owner Name</th>
+            <th>Father / Husband</th>
+            <th>Share</th>
+            <th>Share Area (Acre)</th>
+            <th>Dakhaldar</th>
+            <th>Remarks</th>
+          `;
+        }
       }
     }
 
@@ -721,7 +1166,10 @@ let currentMouzas = [];
     function openPlotPossessorByIndex(idx) {
       const p = currentRenderedPlots[idx];
       if (!p) return;
-      triggerPlotPossessorModal(p.plotNo, p.dakhaldar, p.dakhaldarRaw);
+      triggerPlotPossessorModal(p.plotNo, p.dakhaldar, p.dakhaldarRaw, {
+        classification: p.classification,
+        area: p.shareArea
+      });
     }
 
     function openPlotRemarksByIndex(idx) {
@@ -736,7 +1184,11 @@ let currentMouzas = [];
       const curPlotEl = document.getElementById('txtPlotNo');
       const curPlotVal = (curPlotEl && curPlotEl.value ? String(curPlotEl.value).trim() : '');
       const curPlotNo = (activeData && activeData.plotDetails && activeData.plotDetails.dagNo) || curPlotVal || '-';
-      triggerPlotPossessorModal(curPlotNo, h.dakhaldar, h.dakhaldarRaw);
+      triggerPlotPossessorModal(curPlotNo, h.dakhaldar, h.dakhaldarRaw, {
+        holderName: h.ownerName,
+        fatherOrHusband: h.fatherOrHusband,
+        khatianNo: h.khatianNo
+      });
     }
 
     function openHolderRemarksByIndex(idx) {
@@ -753,13 +1205,19 @@ let currentMouzas = [];
       tbody.innerHTML = '';
       currentRenderedPlots = plots || [];
 
+      const isBn = (currentScheduleLang === 'bn');
       if (!plots || plots.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:32px; color:#64748b;">No plot records found under this Khatian.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:32px; color:#64748b;">${isBn ? 'এই খতিয়ানের অধীনে কোনো দাগের রেকর্ড পাওয়া যায়নি।' : 'No plot records found under this Khatian.'}</td></tr>`;
         return;
       }
 
       tbody.innerHTML = plots.map((p, idx) => {
-        const plotNoStr = (p.plotNo || '-').trim();
+        const rawPlot = (p.plotNo || '-').trim();
+        const plotNoDisplay = isBn ? toBengaliDigits(rawPlot) : rawPlot;
+        const classDisplay = isBn ? translateClassification(p.classification, 'bn') : (p.classification || '-');
+        const shareDisplay = isBn ? toBengaliDigits(p.share || '-') : (p.share || '-');
+        const shareAreaDisplay = formatShareArea(p.shareArea, isBn);
+
         let dakhaldarStr = (p.dakhaldar || 'Nil').trim();
         let remarksStr = (p.remarks || 'Nil').trim();
 
@@ -770,19 +1228,23 @@ let currentMouzas = [];
           dakhaldarStr = dakhaldarStr.replace(/^nil\s+/i, '').trim();
         }
 
-        let dakhaldarCell = `<span class="tbl-nil">Nil</span>`;
+        let dakhaldarCell = `<span class="tbl-nil">${isBn ? '—' : 'Nil'}</span>`;
         if (dakhaldarStr && dakhaldarStr.toLowerCase() !== 'nil') {
-          dakhaldarCell = `<button type="button" class="tbl-badge-btn possessor-badge-btn" onclick="openPlotPossessorByIndex(${idx})">
+          const isBarga = /barga|বর্গা/i.test(dakhaldarStr);
+          const badgeClass = isBarga ? 'tbl-badge-btn possessor-badge-btn barga-badge-btn' : 'tbl-badge-btn possessor-badge-btn';
+          const badgeText = isBn ? translateDakhaldar(dakhaldarStr, 'bn') : dakhaldarStr;
+          dakhaldarCell = `<button type="button" class="${badgeClass}" onclick="openPlotPossessorByIndex(${idx})">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span>${escapeHtml(dakhaldarStr)}</span>
+            <span>${escapeHtml(badgeText)}</span>
           </button>`;
         }
 
-        let remarksCell = `<span class="tbl-nil">Nil</span>`;
+        let remarksCell = `<span class="tbl-nil">${isBn ? '—' : 'Nil'}</span>`;
         if (remarksStr && remarksStr.toLowerCase() !== 'nil') {
+          const remText = isBn ? translateRemarks(remarksStr, 'bn') : remarksStr;
           remarksCell = `<button type="button" class="tbl-badge-btn remarks-badge-btn" onclick="openPlotRemarksByIndex(${idx})">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <span>${escapeHtml(remarksStr)}</span>
+            <span>${escapeHtml(remText)}</span>
           </button>`;
         }
 
@@ -790,35 +1252,40 @@ let currentMouzas = [];
           <tr>
             <td>
               <div class="plot-cell-flex">
-                <span class="khatian-pill">${escapeHtml(plotNoStr)}</span>
-                <button type="button" class="tbl-badge-btn map-badge-btn" onclick="openPlotMapByIndex(${idx})" title="View Dager Map (দাগের ম্যাপ)">
+                <span class="khatian-pill">${escapeHtml(plotNoDisplay)}</span>
+                <button type="button" class="tbl-badge-btn map-badge-btn" onclick="openPlotMapByIndex(${idx})" title="${isBn ? 'দাগের ক্যাডাস্ট্রাল ম্যাপ নকশা' : 'View Dager Map'}">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-                  <span>ম্যাপ</span>
+                  <span>${isBn ? 'ম্যাপ' : 'Map'}</span>
                 </button>
               </div>
             </td>
             <td>
               <div class="rayat-name-cell">
-                <span class="rayat-name-main">${escapeHtml(p.classification || '-')}</span>
+                <span class="rayat-name-main">${escapeHtml(classDisplay)}</span>
               </div>
             </td>
-            <td><span class="share-val">${escapeHtml(p.share || '-')}</span></td>
-            <td><span class="share-quantum">${escapeHtml(p.shareArea || '-')}</span></td>
+            <td><span class="share-val">${escapeHtml(shareDisplay)}</span></td>
+            <td><span class="share-quantum">${escapeHtml(shareAreaDisplay)}</span></td>
             <td>${dakhaldarCell}</td>
             <td>${remarksCell}</td>
           </tr>
         `;
       }).join('');
 
-      document.getElementById('filterCountDisplay').innerText = `Showing all ${plots.length} records`;
+      const countEl = document.getElementById('filterCountDisplay');
+      if (countEl) {
+        countEl.innerText = isBn ? `মোট ${toBengaliDigits(plots.length)}টি রেকর্ড প্রদর্শিত হচ্ছে` : `Showing all ${plots.length} records`;
+      }
     }
 
     function displayResults(data) {
       document.getElementById('resultsCard').style.display = 'block';
 
+      const isBn = (currentScheduleLang === 'bn');
       const liveBadge = document.getElementById('resLiveBadge');
       if (data.liveInfo) {
-        liveBadge.innerText = data.liveInfo;
+        const cleanLive = String(data.liveInfo).replace(/Live\s*Data\s*As\s*On\s*:?/gi, '').trim();
+        liveBadge.innerText = isBn ? ("\u09b8\u09b0\u09be\u09b8\u09b0\u09bf \u09a4\u09a5\u09cd\u09af: " + toBengaliDigits(cleanLive)) : (data.liveInfo.includes('Live Data') ? data.liveInfo : ("Live Data As On " + data.liveInfo));
         liveBadge.style.display = 'inline-flex';
       } else {
         liveBadge.style.display = 'none';
@@ -837,44 +1304,60 @@ let currentMouzas = [];
       if (isKhatian) {
         const kd = data.khatianDetails || {};
         const khInputVal = document.getElementById('txtKhatian1').value.trim();
-        if (lblStat1) lblStat1.innerText = 'Khatian No (খতিয়ান নম্বর)';
-        document.getElementById('resDagNo').innerText = kd.khatianNo || khInputVal || '-';
+        const rawKh = kd.khatianNo || khInputVal || '-';
+        if (lblStat1) lblStat1.innerText = isBn ? 'খতিয়ান নম্বর' : 'Khatian No';
+        document.getElementById('resDagNo').innerText = isBn ? toBengaliDigits(rawKh) : toEnglishDigits(rawKh);
 
-        if (lblStat2) lblStat2.innerText = 'Rayat / Owner (রায়তের নাম)';
-        document.getElementById('resClassification').innerText = kd.ownerName || 'N/A';
+        if (lblStat2) lblStat2.innerText = isBn ? 'রায়তের নাম' : 'Rayat / Owner';
+        const rawOwner = kd.ownerName || 'N/A';
+        document.getElementById('resClassification').innerText = isBn ? transliterateToBengali(rawOwner) : rawOwner;
 
-        if (lblStat3) lblStat3.innerText = 'Total Land Area (মোট পরিমাণ)';
-        document.getElementById('resTotalArea').innerText = kd.totalArea || '-';
-        if (resAreaUnit) resAreaUnit.innerText = '';
+        if (lblStat3) lblStat3.innerText = isBn ? 'মোট জমির পরিমাণ' : 'Total Land Area';
+        const rawArea = kd.totalArea || '-';
+        const cleanArea = String(rawArea).replace(/\s*(?:acre|ekar|\u098f\u0995\u09b0)\b/gi, '').trim();
+        document.getElementById('resTotalArea').innerText = isBn ? toBengaliDigits(cleanArea) : toEnglishDigits(cleanArea);
+        if (resAreaUnit) resAreaUnit.innerText = isBn ? '\u098f\u0995\u09b0' : 'Acre';
 
-        if (lblStat4) lblStat4.innerText = 'Total Plots (অন্তর্ভুক্ত দাগ)';
+        if (lblStat4) lblStat4.innerText = isBn ? 'অন্তর্ভুক্ত দাগ' : 'Total Plots';
         const plotsCount = data.plots ? data.plots.length : (parseInt(kd.plotCount) || 0);
-        document.getElementById('resHoldersCount').innerText = `${plotsCount} Plots`;
+        document.getElementById('resHoldersCount').innerText = isBn ? `${toBengaliDigits(plotsCount)} টি দাগ` : `${plotsCount} Plots`;
 
-        if (resLedgerTitle) resLedgerTitle.innerText = 'Schedule of Plots under Khatian (খতিয়ানভুক্ত দাগের বিবরণ ও পরিমাণ)';
-        if (tableSearchInput) tableSearchInput.placeholder = 'Search plot / dag number, classification, remarks...';
+        if (resLedgerTitle) {
+          resLedgerTitle.innerText = isBn ? 'খতিয়ানভুক্ত দাগের বিবরণ ও পরিমাণ' : 'Schedule of Plots under Khatian';
+        }
+        if (tableSearchInput) {
+          tableSearchInput.placeholder = isBn ? '\u09a6\u09be\u0997 \u09a8\u09ae\u09cd\u09ac\u09b0 \u09ac\u09be \u099c\u09ae\u09bf\u09b0 \u09b6\u09cd\u09b0\u09c7\u09a3\u09bf \u09a6\u09bf\u09af\u09bc\u09c7 \u0996\u09c1\u0981\u099c\u09c1\u09a8\u0987' : 'Search by plot no or classification...';
+        }
 
         renderTableHead('khatian');
         renderPlotsTable(data.plots || []);
       } else {
         const plotDetails = data.plotDetails || {};
         const plotInputVal = document.getElementById('txtPlotNo').value.trim();
-        if (lblStat1) lblStat1.innerText = 'Dag / Plot No (দাগ নম্বর)';
-        document.getElementById('resDagNo').innerText = plotDetails.dagNo || plotInputVal || '-';
+        const rawDag = plotDetails.dagNo || plotInputVal || '-';
+        if (lblStat1) lblStat1.innerText = isBn ? 'দাগ নম্বর' : 'Plot / Dag No';
+        document.getElementById('resDagNo').innerText = isBn ? toBengaliDigits(rawDag) : toEnglishDigits(rawDag);
 
-        if (lblStat2) lblStat2.innerText = 'Classification (শ্রেণি)';
-        document.getElementById('resClassification').innerText = plotDetails.classification || 'N/A';
+        if (lblStat2) lblStat2.innerText = isBn ? 'জমির শ্রেণি' : 'Classification';
+        const rawClass = plotDetails.classification || 'N/A';
+        document.getElementById('resClassification').innerText = isBn ? translateClassification(rawClass, 'bn') : rawClass;
 
-        if (lblStat3) lblStat3.innerText = 'Total Area (মোট পরিমাণ)';
-        document.getElementById('resTotalArea').innerText = plotDetails.totalArea || '-';
-        if (resAreaUnit) resAreaUnit.innerText = 'Acre';
+        if (lblStat3) lblStat3.innerText = isBn ? 'মোট পরিমাণ' : 'Total Area';
+        const rawArea = plotDetails.totalArea || '-';
+        const cleanArea = String(rawArea).replace(/\s*(?:acre|ekar|\u098f\u0995\u09b0)\b/gi, '').trim();
+        document.getElementById('resTotalArea').innerText = isBn ? toBengaliDigits(cleanArea) : toEnglishDigits(cleanArea);
+        if (resAreaUnit) resAreaUnit.innerText = isBn ? '\u098f\u0995\u09b0' : 'Acre';
 
-        if (lblStat4) lblStat4.innerText = 'Total Rayats / অংশীদার';
+        if (lblStat4) lblStat4.innerText = isBn ? 'মোট অংশীদার' : 'Total Rayats';
         const holders = data.holders || [];
-        document.getElementById('resHoldersCount').innerText = holders.length;
+        document.getElementById('resHoldersCount').innerText = isBn ? `${toBengaliDigits(holders.length)} জন` : holders.length;
 
-        if (resLedgerTitle) resLedgerTitle.innerText = 'Land Ownership Schedule (খতিয়ান ও দাগের তথ্য)';
-        if (tableSearchInput) tableSearchInput.placeholder = 'Search owner name, khatian, father...';
+        if (resLedgerTitle) {
+          resLedgerTitle.innerText = isBn ? 'খতিয়ান ও দাগের তথ্য' : 'Land Ownership Schedule';
+        }
+        if (tableSearchInput) {
+          tableSearchInput.placeholder = isBn ? '\u09ae\u09be\u09b2\u09bf\u0995, \u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u09ac\u09be \u09aa\u09bf\u09a4\u09be \u09a6\u09bf\u09af\u09bc\u09c7 \u0996\u09c1\u0981\u099c\u09c1\u09a8...' : 'Search by owner, khatian, or father...';
+        }
 
         renderTableHead('plot');
         renderHoldersTable(holders);
@@ -884,9 +1367,9 @@ let currentMouzas = [];
 
       const officialContent = document.getElementById('officialHtmlContent');
       if (data.rawHtml) {
-        officialContent.innerHTML = formatOfficialPortalHtml(data.rawHtml);
+        officialContent.innerHTML = formatOfficialPortalHtml(data.rawHtml, currentScheduleLang);
       } else {
-        officialContent.innerHTML = '<div style="color:#64748b; padding:20px; text-align:center;">Official portal extract not available.</div>';
+        officialContent.innerHTML = `<div style="color:#64748b; padding:20px; text-align:center;">${isBn ? 'অফিসিয়াল পোর্টাল তথ্য উপলব্ধ নেই।' : 'Official portal extract not available.'}</div>`;
       }
 
       document.getElementById('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -897,12 +1380,21 @@ let currentMouzas = [];
       tbody.innerHTML = '';
       currentRenderedHolders = holders || [];
 
+      const isBn = (currentScheduleLang === 'bn');
       if (!holders || holders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:32px; color:#64748b;">No land records found for this entry.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:32px; color:#64748b;">${isBn ? 'এই দাগের অধীনে কোনো রায়তের রেকর্ড পাওয়া যায়নি।' : 'No land records found for this entry.'}</td></tr>`;
         return;
       }
 
       tbody.innerHTML = holders.map((h, idx) => {
+        const rawKh = (h.khatianNo || '-').trim();
+        const khDisplay = isBn ? toBengaliDigits(rawKh) : rawKh;
+        const cleanOwnerName = (h.ownerName || '-').replace(/\bbyakti\b/gi, '').replace(/\b\u09ac\u09cd\u09af\u0995\u09cd\u09a4\u09bf(?:\u0997\u09a4)?\b/gi, '').trim();
+        const ownerDisplay = isBn ? transliterateToBengali(cleanOwnerName) : cleanOwnerName;
+        const fatherDisplay = isBn ? transliterateToBengali(h.fatherOrHusband) : (h.fatherOrHusband || '-');
+        const shareDisplay = isBn ? toBengaliDigits(h.share || '-') : (h.share || '-');
+        const shareAreaDisplay = formatShareArea(h.shareArea, isBn);
+
         let dakhaldarStr = (h.dakhaldar || 'Nil').trim();
         let remarksStr = (h.remarks || 'Nil').trim();
 
@@ -913,41 +1405,48 @@ let currentMouzas = [];
           dakhaldarStr = dakhaldarStr.replace(/^nil\s+/i, '').trim();
         }
 
-        let dakhaldarCell = `<span class="tbl-nil">Nil</span>`;
+        let dakhaldarCell = `<span class="tbl-nil">${isBn ? '—' : 'Nil'}</span>`;
         if (dakhaldarStr && dakhaldarStr.toLowerCase() !== 'nil') {
-          dakhaldarCell = `<button type="button" class="tbl-badge-btn possessor-badge-btn" onclick="openHolderPossessorByIndex(${idx})">
+          const isBarga = /barga|বর্গা/i.test(dakhaldarStr);
+          const badgeClass = isBarga ? 'tbl-badge-btn possessor-badge-btn barga-badge-btn' : 'tbl-badge-btn possessor-badge-btn';
+          const badgeText = isBn ? translateDakhaldar(dakhaldarStr, 'bn') : dakhaldarStr;
+          dakhaldarCell = `<button type="button" class="${badgeClass}" onclick="openHolderPossessorByIndex(${idx})">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span>${escapeHtml(dakhaldarStr)}</span>
+            <span>${escapeHtml(badgeText)}</span>
           </button>`;
         }
 
-        let remarksCell = `<span class="tbl-nil">Nil</span>`;
+        let remarksCell = `<span class="tbl-nil">${isBn ? '—' : 'Nil'}</span>`;
         if (remarksStr && remarksStr.toLowerCase() !== 'nil') {
+          const remText = isBn ? translateRemarks(remarksStr, 'bn') : remarksStr;
           remarksCell = `<button type="button" class="tbl-badge-btn remarks-badge-btn" onclick="openHolderRemarksByIndex(${idx})">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <span>${escapeHtml(remarksStr)}</span>
+            <span>${escapeHtml(remText)}</span>
           </button>`;
         }
 
         return `
           <tr>
-            <td><span class="khatian-pill">${escapeHtml(h.khatianNo || '-')}</span></td>
+            <td><span class="khatian-pill">${escapeHtml(khDisplay)}</span></td>
             <td>
               <div class="rayat-name-cell">
-                <span class="rayat-name-main">${escapeHtml(h.ownerName || '-')}</span>
-                <span class="rayat-classification bn">ব্যক্তিগত মালিকানা</span>
+                <span class="rayat-name-main">${escapeHtml(ownerDisplay)}</span>
+                <span class="rayat-classification bn">${isBn ? 'ব্যক্তিগত মালিকানা' : 'Individual Ownership'}</span>
               </div>
             </td>
-            <td>${escapeHtml(h.fatherOrHusband || '-')}</td>
-            <td><span class="share-val">${escapeHtml(h.share || '-')}</span></td>
-            <td><span class="share-quantum">${escapeHtml(h.shareArea || '-')}</span></td>
+            <td>${escapeHtml(fatherDisplay)}</td>
+            <td><span class="share-val">${escapeHtml(shareDisplay)}</span></td>
+            <td><span class="share-quantum">${escapeHtml(shareAreaDisplay)}</span></td>
             <td>${dakhaldarCell}</td>
             <td>${remarksCell}</td>
           </tr>
         `;
       }).join('');
 
-      document.getElementById('filterCountDisplay').innerText = `Showing all ${holders.length} records`;
+      const countEl = document.getElementById('filterCountDisplay');
+      if (countEl) {
+        countEl.innerText = isBn ? `মোট ${toBengaliDigits(holders.length)}টি রেকর্ড প্রদর্শিত হচ্ছে` : `Showing all ${holders.length} records`;
+      }
     }
 
     function filterHoldersTable() {
@@ -964,7 +1463,8 @@ let currentMouzas = [];
           (p.dakhaldar && p.dakhaldar.toLowerCase().includes(q))
         );
         renderPlotsTable(filtered);
-        document.getElementById('filterCountDisplay').innerText = `Filtered ${filtered.length} of ${plots.length} records`;
+        const isBnFilter = (currentScheduleLang === 'bn');
+        document.getElementById('filterCountDisplay').innerText = isBnFilter ? ("\u09ae\u09cb\u099f " + toBengaliDigits(plots.length) + "\u099f\u09bf\u09b0 \u09ae\u09a7\u09cd\u09af\u09c7 " + toBengaliDigits(filtered.length) + "\u099f\u09bf \u09b0\u0987\u0995\u09b0\u09cd\u09a1 \u09aa\u09cd\u09b0\u09a6\u09b0\u09cd\u09b6\u09bf\u09a4 \u09b9\u099a\u09cd\u099b\u09c7") : ("Filtered " + filtered.length + " of " + plots.length + " records");
       } else {
         const holders = activeData.holders || [];
         const filtered = holders.filter(h =>
@@ -973,7 +1473,8 @@ let currentMouzas = [];
           (h.fatherOrHusband && h.fatherOrHusband.toLowerCase().includes(q))
         );
         renderHoldersTable(filtered);
-        document.getElementById('filterCountDisplay').innerText = `Filtered ${filtered.length} of ${holders.length} records`;
+        const isBnFilterH = (currentScheduleLang === 'bn');
+        document.getElementById('filterCountDisplay').innerText = isBnFilterH ? ("\u09ae\u09cb\u099f " + toBengaliDigits(holders.length) + "\u099f\u09bf\u09b0 \u09ae\u09a7\u09cd\u09af\u09c7 " + toBengaliDigits(filtered.length) + "\u099f\u09bf \u09b0\u0987\u0995\u09b0\u09cd\u09a1 \u09aa\u09cd\u09b0\u09a6\u09b0\u09cd\u09b6\u09bf\u09a4 \u09b9\u099a\u09cd\u099b\u09c7") : ("Filtered " + filtered.length + " of " + holders.length + " records");
       }
     }
 
@@ -988,15 +1489,18 @@ let currentMouzas = [];
         officialBtn.className = 'btn-view-tab';
         modernTable.style.display = 'block';
         officialWrap.style.display = 'none';
+        setScheduleLanguage(prevModernLang || 'en', true);
       } else {
         modernBtn.className = 'btn-view-tab';
         officialBtn.className = 'btn-view-tab active';
         modernTable.style.display = 'none';
         officialWrap.style.display = 'block';
+        prevModernLang = currentScheduleLang;
+        setScheduleLanguage('bn', true);
       }
     }
 
-    function formatOfficialPortalHtml(rawHtml) {
+    function formatOfficialPortalHtml(rawHtml, lang = currentScheduleLang) {
       if (!rawHtml) return '<div style="color:#64748b; padding:20px; text-align:center;">Official portal extract not available.</div>';
 
       let html = String(rawHtml)
@@ -1016,10 +1520,145 @@ let currentMouzas = [];
         });
       }
 
+      if (lang === 'bn') {
+        html = html
+          .replace(/Khatian\s*No/gi, 'খতিয়ান নং')
+          .replace(/Raiter\s*Nam/gi, 'রায়তের নাম')
+          .replace(/Pita\/swami/gi, 'পিতা/স্বামীর নাম')
+          .replace(/Raiter\s*Dharan/gi, 'রায়তের ধরন')
+          .replace(/Thikana/gi, 'ঠিকানা')
+          .replace(/Zamir\s*Moat\s*Pariman\s*\(ekar\)|Zamir\s*Moat\s*Pariman\s*\(একর\)|Zamir\s*Moat\s*Pariman/gi, 'জমির মোট পরিমাণ (একর)')
+          .replace(/Zamir\s*Pariman\s*\(ekar\)|Zamir\s*Pariman\s*\(একর\)|Zamir\s*Pariman/gi, 'জমির পরিমাণ (একর)')
+          .replace(/Dager\s*Myap|Dager\s*Map/gi, 'দাগের ম্যাপ')
+          .replace(/Dager\s*Sankhyan/gi, 'দাগের সংখ্যা')
+          .replace(/Dag\s*No/gi, 'দাগ নং')
+          .replace(/Shreni/gi, 'শ্রেণি')
+          .replace(/Ansh\s*Pariman\s*\(ekar\)|Ansh\s*Pariman\s*\(একর\)|Ansh\s*Pariman/gi, 'অংশ পরিমাণ (একর)')
+          .replace(/<b>\s*Ansh\s*<\/b>|<center>\s*Ansh\s*<\/center>|\bAnsh\b/gi, 'অংশ')
+          .replace(/Ongsho/gi, 'অংশ')
+          .replace(/Dakhaldar/gi, 'দখলদার')
+          .replace(/Mantaby|Montoobyo|Montobyo/gi, 'মন্তব্য')
+          .replace(/Remarks/gi, 'মন্তব্য')
+          .replace(/Area\(Acre\)|Zamir\s*Pariman\(Ekar\)/gi, 'জমির পরিমাণ (একর)')
+          .replace(/Byakti/gi, 'ব্যক্তিগত')
+          .replace(/Ekar\b|Acre\b/gi, 'একর')
+          .replace(/Live\s*Data\s*As\s*On/gi, 'সরাসরি তথ্য:')
+          .replace(/Thana/gi, 'থানা')
+          .replace(/J\.?l\s*No/gi, 'জে.এল. নং')
+          .replace(/Mouza/gi, 'মৌজা')
+          .replace(/District/gi, 'জেলা')
+          .replace(/Click\s*Here/gi, 'এখানে ক্লিক করুন')
+          .replace(/Atrasbatber\s*Dager\s*Bibaran\s*O\s*Pariman:?/gi, 'অত্রস্বত্বের দাগের বিবরণ ও পরিমাণ:')
+          .replace(/\(?\s*Exact\s+quantum\s+of\s+land\s+against\s+any\s+plot\s+will\s+be\s+determined\s+as\s+per\s+the\s+share\s+mentioned\s+in\s+respect\s+of\s+that\s+plot\.?\s*\)?/gi, '(যেকোনো দাগের ক্ষেত্রে জমির সঠিক পরিমাণ সেই দাগের উল্লিখিত অংশ অনুযায়ী নির্ধারিত হবে।)')
+          .replace(/\(?\s*\*\s*Exact\s+quantum\s+of\s+land\s+in\s+respect\s+of\s+any\s+khatian\s+will\s+be\s+determined\s+as\s+per\s+the\s+share\s+mentioned\s+in\s+the\s+khatian\s+against\s+the\s+Plot\.?\s*\)?/gi, '(* যেকোনো খতিয়ানের ক্ষেত্রে জমির সঠিক পরিমাণ সেই দাগের বিপরীতে খতিয়ানে উল্লিখিত অংশ অনুযায়ী নির্ধারিত হবে।)')
+          .replace(/(?:Thana|থানা)[\s\S]*?<font[^>]*>\s*([a-zA-Z\s]+)<\/font>/gi, (m, thanaName) => {
+            const cleanThana = thanaName.trim();
+            const lowerThana = cleanThana.toLowerCase();
+            const thanaBn = lowerThana === 'bankura' ? 'বাঁকুড়া' : (lowerThana === 'kotulpur' ? 'কোতুলপুর' : transliterateToBengali(cleanThana));
+            return m.replace(thanaName, thanaBn);
+          });
+
+        html = html.replace(/(?:রায়তের|রায়তের)\s*নাম\s*:\s*([a-zA-Z\s]+)/gi, (m, p1) => 'রায়তের নাম: ' + transliterateToBengali(p1));
+        html = html.replace(/(পিতা\/স্বামীর\s*নাম\s*:\s*)([a-zA-Z\s]+)/gi, (m, p1, p2) => p1 + (p2.trim().toLowerCase() === 'nil' ? '—' : transliterateToBengali(p2)));
+
+        html = html.replace(/(<td[^>]*>)([\s\S]*?)(<\/td>)/gi, (match, openTag, cellContent, closeTag) => {
+          let newInner = cellContent;
+
+          if (/byakti|ব্যক্তিগত/i.test(newInner)) {
+            newInner = newInner.replace(/(?:<left[^>]*>)?\s*([a-zA-Z\s.'-]+?)\s*(?:<\/?br\s*\/?>|\s*<font)/i, (m, name) => {
+              const cleanName = name.trim();
+              if (cleanName && cleanName.length > 1 && !/^(?:nil|byakti)$/i.test(cleanName)) {
+                return m.replace(name, transliterateToBengali(cleanName));
+              }
+              return m;
+            });
+          }
+
+          let trimmed = newInner.replace(/<[^>]+>/g, '').trim();
+          if (CLASSIFICATION_MAP[trimmed.toLowerCase()]) {
+            newInner = newInner.replace(new RegExp('\\b' + trimmed + '\\b', 'gi'), CLASSIFICATION_MAP[trimmed.toLowerCase()]);
+          } else if (/^nil$/i.test(trimmed)) {
+            newInner = cellContent.replace(/nil/gi, '—');
+          } else if (/^anumati$/i.test(trimmed)) {
+            newInner = cellContent.replace(/anumati/gi, 'অনুমতি');
+          } else if (/^barga$/i.test(trimmed)) {
+            newInner = cellContent.replace(/barga/gi, 'বর্গা');
+          } else if (/^sadharaner\s*byabaharyya$/i.test(trimmed)) {
+            newInner = cellContent.replace(/sadharaner\s*byabaharyya/gi, 'সাধারণের ব্যবহার্য');
+          } else if (/^direct|nij$/i.test(trimmed)) {
+            newInner = cellContent.replace(/direct|nij/gi, 'নিজ দখল');
+          } else if (/^[\d./]+$/.test(trimmed)) {
+            newInner = toBengaliDigits(newInner);
+          } else if (trimmed && /^[a-zA-Z\s]+$/.test(trimmed) && trimmed.length > 2 && !/<[a-z]/i.test(trimmed)) {
+            newInner = transliterateToBengali(trimmed);
+          }
+          return openTag + newInner + closeTag;
+        });
+
+        html = html.replace(/(>)([^<]+)(<)/g, (m, p1, textNode, p3) => {
+          let out = textNode.replace(/\bnil\b/gi, '—');
+          out = out.replace(/[0-9]/g, d => BN_DIGITS[parseInt(d, 10)]);
+          return p1 + out + p3;
+        });
+      } else {
+        html = html
+          .replace(/খতিয়ান নং|খতিয়ান নং/g, 'Khatian No')
+          .replace(/রায়তের নাম|রায়তের নাম/g, 'Raiter Nam')
+          .replace(/পিতা\/স্বামীর নাম/g, 'Pita/swami')
+          .replace(/রায়তের ধরন|রায়তের ধরন/g, 'Raiter Dharan')
+          .replace(/ঠিকানা/g, 'Thikana')
+          .replace(/জমির মোট পরিমাণ \(একর\)|Zamir\s*Moat\s*Pariman\s*\(ekar\)/gi, 'Total Land Area (Acre)')
+          .replace(/জমির পরিমাণ \(একর\)/g, 'Area(Acre)')
+          .replace(/জমির পরিমাণ/g, 'Zamir Pariman')
+          .replace(/দাগের ম্যাপ|Dager\s*Myap/gi, 'Plot Map')
+          .replace(/দাগের সংখ্যা/g, 'Dager Sankhyan')
+          .replace(/দাগ নং/g, 'Dag No')
+          .replace(/শ্রেণি/g, 'Shreni')
+          .replace(/অংশ পরিমাণ \(একর\)|Ansh\s*Pariman\s*\(ekar\)/gi, 'Share Area (Acre)')
+          .replace(/অংশ/g, 'Share')
+          .replace(/Ongsho/g, 'Share')
+          .replace(/দখলদার/g, 'Dakhaldar')
+          .replace(/মন্তব্য|Mantaby|Montobyo|Montoobyo/gi, 'Remarks')
+          .replace(/ব্যক্তিগত/g, 'Byakti')
+          .replace(/সরাসরি তথ্য:/g, 'Live Data As On')
+          .replace(/থানা/g, 'Thana')
+          .replace(/জে\.এল\. নং/g, 'J.l No')
+          .replace(/মৌজা/g, 'Mouza')
+          .replace(/জেলা/g, 'District')
+          .replace(/অনুমতি/g, 'Anumati')
+          .replace(/বর্গা/g, 'Barga')
+          .replace(/সাধারণের ব্যবহার্য/g, 'Public Use')
+          .replace(/নিজ দখল/g, 'Direct')
+          .replace(/ক্লিক হেয়ার|এখানে ক্লিক করুন/g, 'Click Here')
+          .replace(/অত্রস্বত্বের দাগের বিবরণ ও পরিমাণ:?/g, 'Schedule and Quantum of Plots under this Title:')
+          .replace(/\(?যেকোনো দাগের ক্ষেত্রে জমির সঠিক পরিমাণ সেই দাগের উল্লিখিত অংশ অনুযায়ী নির্ধারিত হবে।\)?|\(?যেকোনো দাগের ক্ষেত্রে জমির সঠিক পরিমাণ সেই দাগের উল্লিখিত অংশ অনুযায়ী নির্ধারিত হবে।\)?/g, '(Exact quantum of land against any plot will be determined as per the share mentioned in respect of that plot.)')
+          .replace(/\(?\*\s*যেকোনো খতিয়ানের ক্ষেত্রে জমির সঠিক পরিমাণ সেই দাগের বিপরীতে খতিয়ানে উল্লিখিত অংশ অনুযায়ী নির্ধারিত হবে।\)?/g, '(* Exact quantum of land in respect of any khatian will be determined as per the share mentioned in the khatian against the Plot.)');
+
+        html = html.replace(/(<td[^>]*>)([\s\S]*?)(<\/td>)/gi, (match, openTag, cellContent, closeTag) => {
+          let trimmed = cellContent.replace(/<[^>]+>/g, '').trim();
+          let newInner = cellContent;
+          if (CLASSIFICATION_MAP_EN[trimmed]) {
+            newInner = cellContent.replace(new RegExp('\\b' + trimmed + '\\b', 'g'), CLASSIFICATION_MAP_EN[trimmed]);
+          } else if (trimmed === '—') {
+            newInner = cellContent.replace(/—/g, 'Nil');
+          }
+          return openTag + newInner + closeTag;
+        });
+
+        html = html.replace(/(>)([^<]+)(<)/g, (m, p1, textNode, p3) => {
+          let out = textNode.replace(/[০-৯]/g, d => EN_DIGITS_MAP[d] || d);
+          return p1 + out + p3;
+        });
+      }
+
+      const swipeHintBn = 'সম্পূর্ণ তফসিল দেখতে পাশে স্ক্রোল করুন';
+      const swipeHintEn = 'Swipe horizontally to view full schedule';
+      const swipeText = (lang === 'bn') ? swipeHintBn : swipeHintEn;
+
       if (!html.includes('official-table-scroll-container')) {
         html = html.replace(/(<table[^>]*class="[^"]*table-(?:responsive|fixed)[^"]*"[^>]*>[\s\S]*?<\/table>)/gi, `
           <div class="mobile-table-swipe-hint">
-            <span>↔ সম্পূর্ণ তফসিল দেখতে পাশে স্ক্রোল করুন (Swipe horizontally to view full schedule)</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display:inline-block; vertical-align:middle; flex-shrink:0;"><polyline points="7 8 3 12 7 16" /><polyline points="17 8 21 12 17 16" /><line x1="3" y1="12" x2="21" y2="12" /></svg><span>${swipeText}</span>
           </div>
           <div class="official-table-scroll-container">
             $1
@@ -1028,11 +1667,11 @@ let currentMouzas = [];
       }
 
       if (!html.includes('official-table-scroll-container') && html.includes('<table')) {
-        html = html.replace(/(<table[^>]*>(?:(?!official-plot-meta-table|official-khatian-meta-table)[\s\S])*?(?:Dag\s*No|Dakhaldar|Shreni)[\s\S]*?<\/table>)/gi, (m) => {
+        html = html.replace(/(<table[^>]*>(?:(?!official-plot-meta-table|official-khatian-meta-table)[\s\S])*?(?:Dag\s*No|দাগ\s*নং|Dakhaldar|Shreni|শ্রেণি)[\s\S]*?<\/table>)/gi, (m) => {
           if (m.includes('official-plot-meta-table') || m.includes('official-khatian-meta-table')) return m;
           return `
             <div class="mobile-table-swipe-hint">
-              <span>↔ সম্পূর্ণ তফসিল দেখতে পাশে স্ক্রোল করুন (Swipe horizontally to view full schedule)</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display:inline-block; vertical-align:middle; flex-shrink:0;"><polyline points="7 8 3 12 7 16" /><polyline points="17 8 21 12 17 16" /><line x1="3" y1="12" x2="21" y2="12" /></svg><span>${swipeText}</span>
             </div>
             <div class="official-table-scroll-container">
               ${m}
@@ -1247,7 +1886,7 @@ let currentMouzas = [];
       );
     }
 
-    function openPossessorModal(khatian, dag, mouza, code, typeText) {
+    function openPossessorModal(khatian, dag, mouza, code, typeText, extraMeta) {
       const khatianTrim = (khatian || '').trim();
       const dagTrim = (dag || '').trim();
       const mouzaTrim = (mouza || '').trim();
@@ -1255,16 +1894,24 @@ let currentMouzas = [];
       const typeTrim = (typeText || '').trim();
 
       const { activeDist, activeBlock, activeMouza, activeJl } = getActiveSelectionMeta();
-      const displayKhatian = khatianTrim || (activeData && activeData.khatianDetails && activeData.khatianDetails.khatianNo) || getSafeInputValue('txtKhatian1') || '-';
+      let distCode = activeDist;
+      let blockCode = activeBlock;
+      let mouzaCode = mouzaTrim || activeMouza || '-';
+      if (mouzaTrim.length >= 7) {
+        distCode = mouzaTrim.substring(0, 2);
+        blockCode = mouzaTrim.substring(2, 4);
+        mouzaCode = mouzaTrim.substring(4);
+      }
+      const displayKhatian = khatianTrim || (activeData && activeData.khatianDetails && activeData.khatianDetails.khatianNo) || (extraMeta && extraMeta.khatianNo) || getSafeInputValue('txtKhatian1') || '-';
       const displayDag = dagTrim || (activeData && activeData.plotDetails && activeData.plotDetails.dagNo) || getSafeInputValue('txtPlotNo') || '-';
-      const displayMouza = mouzaTrim || activeMouza || '-';
+      const displayMouza = mouzaCode || '-';
       const cleanDag = String(displayDag).replace(/[^\d/]/g, '') || String(displayDag).trim();
 
       let statusDescription = 'দখলদার বা বর্গাদারের অধিকার পশ্চিমবঙ্গ ভূমি সংস্কার আইন অনুযায়ী সংরক্ষিত।';
       let classificationLabel = typeTrim || 'Possessor Record';
       if (typeTrim.toLowerCase().includes('barga') || codeTrim === '03') {
         classificationLabel = 'Barga / Bargadar (বর্গাদার)';
-        statusDescription = 'বর্গাদার হিসেবে রেকর্ডভুক্ত। বর্গাদারের চাষের অধিকার ও অংশ আইনত সুরক্ষিত।';
+        statusDescription = 'বর্গাদার হিসেবে রেকর্ডভুক্ত। বর্গাদারের চাষের অধিকার ও ফসলের অংশ আইনত সুরক্ষিত।';
       } else if (typeTrim.toLowerCase().includes('anumati') || codeTrim === '02') {
         classificationLabel = 'Anumati (অনুমতিপ্রাপ্ত দখলদার)';
         statusDescription = 'অনুমতিপ্রাপ্ত দখলদার হিসেবে রাজস্ব নথিতে অন্তর্ভুক্তি অনুমোদিত।';
@@ -1273,26 +1920,12 @@ let currentMouzas = [];
         statusDescription = 'সর্বসাধারণের ব্যবহার্য জমি হিসেবে রাজস্ব নথিতে চিহ্নিত।';
       }
 
-      const PRESET_POSSESSORS = {
-        '73': [{ name: 'ভূতনাথ চক্রবর্তী', father: 'প্রসন্ন চক্রবর্তী', address: 'নিজ', remarks: 'Nil' }],
-        '522': [{ name: 'কার্তিক ঘোষ', father: 'পরেশ', address: 'নিজ', remarks: 'Nil' }],
-        '525': [{ name: 'কার্তিক ঘোষ', father: 'পরেশ', address: 'নিজ', remarks: 'Nil' }],
-        '537': [{ name: 'কার্তিক ঘোষ', father: 'পরেশ', address: 'নিজ', remarks: 'Nil' }],
-        '538': [{ name: 'কার্তিক ঘোষ', father: 'পরেশ', address: 'নিজ', remarks: 'Nil' }],
-        '539': [{ name: 'কার্তিক ঘোষ', father: 'পরেশ', address: 'নিজ', remarks: 'Nil' }],
-        '540': [{ name: 'কার্তিক ঘোষ', father: 'পরেশ', address: 'নিজ', remarks: 'Nil' }],
-        '565': [{ name: 'কার্তিক ঘোষ', father: 'পরেশ', address: 'নিজ', remarks: 'Nil' }],
-        '572': [{ name: 'কার্তিক ঘোষ', father: 'পরেশ', address: 'নিজ', remarks: 'Nil' }],
-        '760': [{ name: 'কার্তিক ঘোষ', father: 'পরেশ', address: 'নিজ', remarks: 'Nil' }],
-        '762': [{ name: 'কার্তিক ঘোষ', father: 'পরেশ', address: 'নিজ', remarks: 'Nil' }]
-      };
-
-      function buildPossessorRowsHtml(list) {
+      function buildPossessorRowsHtml(list, notFoundMsg) {
         if (!list || list.length === 0) {
           return `
             <tr>
-              <td colspan="4" style="text-align:center;padding:22px 14px;color:#64748b;" class="bn">
-                এই দাগের জন্য কোনো পৃথক দখলদার বিবরণ রেকর্ড পাওয়া যায়নি।
+              <td colspan="4" style="text-align:center;padding:26px 14px;color:#64748b;" class="bn">
+                ${escapeHtml(notFoundMsg || 'সরকারি ভূমি রেকর্ড অনুযায়ী এই দাগের কোনো পৃথক দখলদার বা বর্গাদার বিবরণ নথিবদ্ধ নেই (Record Not Found in Banglarbhumi)। জমিটি সম্পূর্ণভাবে রেকর্ডভুক্ত মূল রায়তের প্রত্যক্ষ খাস ও নিরঙ্কুশ দখলে স্থিত।')}
               </td>
             </tr>
           `;
@@ -1307,19 +1940,16 @@ let currentMouzas = [];
         `).join('');
       }
 
-      const initialPreset = PRESET_POSSESSORS[cleanDag];
-      const initialRowsHtml = initialPreset
-        ? buildPossessorRowsHtml(initialPreset)
-        : `
-          <tr>
-            <td colspan="4" style="text-align:center;padding:22px 14px;">
-              <div class="possessor-loading-spinner bn">
-                <svg class="possessor-spinner-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-                <span>দখলদার তথ্য লোড হচ্ছে... (Fetching Possessor Details...)</span>
-              </div>
-            </td>
-          </tr>
-        `;
+      const initialRowsHtml = `
+        <tr>
+          <td colspan="4" style="text-align:center;padding:22px 14px;">
+            <div class="possessor-loading-spinner bn">
+              <svg class="possessor-spinner-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+              <span>দখলদার তথ্য লোড হচ্ছে... (Fetching Dynamic Possessor Details...)</span>
+            </div>
+          </td>
+        </tr>
+      `;
 
       const iconSvg = `
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1335,7 +1965,7 @@ let currentMouzas = [];
               <span class="sched-hdr-title bn" style="font-size:15px;color:#991b1b;">দখলদারের তথ্য</span>
               <span class="sched-hdr-sub">(Possessor Details)</span>
             </div>
-            <span class="sched-hdr-badge" style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;">
+            <span class="sched-hdr-badge" id="possessorHeaderBadge" style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;">
               ${escapeHtml(classificationLabel)}
             </span>
           </div>
@@ -1395,8 +2025,8 @@ let currentMouzas = [];
               <span class="sc-val mono">${escapeHtml(displayKhatian)}</span>
             </div>
             <div class="sched-cell">
-              <span class="sc-lbl">দখলদার ধরণ (Type)</span>
-              <span class="sc-val bn" style="color:#dc2626;">${escapeHtml(classificationLabel)}</span>
+              <span class="sc-lbl">দখলদারের ধরন (Type)</span>
+              <span class="sc-val bn" id="schedTypeCellVal" style="color:#dc2626;">${escapeHtml(classificationLabel)}</span>
             </div>
           </div>
         </div>
@@ -1406,11 +2036,11 @@ let currentMouzas = [];
             <span>দখলদার ও বর্গার আইনগত স্থিতি</span>
           </div>
           <div class="official-extract-body">
-            <div class="extract-text-box bn">${statusDescription}</div>
+            <div class="extract-text-box bn" id="extractStatusTextBox">${statusDescription}</div>
             <div class="extract-meta-grid">
               <div class="ext-meta-item">
                 <span class="ext-lbl">দখলদার শ্রেণি (Category)</span>
-                <span class="ext-val bn">${escapeHtml(classificationLabel)}</span>
+                <span class="ext-val bn" id="extractCategoryVal">${escapeHtml(classificationLabel)}</span>
               </div>
               <div class="ext-meta-item">
                 <span class="ext-lbl">মৌজা কোড (Identifier)</span>
@@ -1424,7 +2054,7 @@ let currentMouzas = [];
               ` : ''}
               <div class="ext-meta-item">
                 <span class="ext-lbl">আইনগত ধারা (Statutory Provision)</span>
-                <span class="ext-val">Section 50/51, WBLR Act 1955</span>
+                <span class="ext-val" id="extractStatutoryProvision">Section 50/51, WBLR Act 1955</span>
               </div>
             </div>
           </div>
@@ -1439,13 +2069,22 @@ let currentMouzas = [];
       );
 
       const fetchPayload = {
-        district: activeDist || getSafeInputValue('lstDistrictCode1') || '01',
-        block: activeBlock || getSafeInputValue('lstBlockCode1') || '19',
-        mouza: displayMouza || getSafeInputValue('lstMouzaList') || '089',
-        khatian: displayKhatian || getSafeInputValue('txtKhatian1') || '539/1',
+        district: distCode || getSafeInputValue('lstDistrictCode1') || '01',
+        block: blockCode || getSafeInputValue('lstBlockCode1') || '19',
+        mouza: mouzaCode || getSafeInputValue('lstMouzaList') || '089',
+        khatian: displayKhatian || getSafeInputValue('txtKhatian1') || '',
         plotNo: cleanDag,
         code: codeTrim,
-        type: typeTrim
+        type: typeTrim,
+        ktsr: khatianTrim || displayKhatian || '',
+        ptsr: dagTrim || cleanDag,
+        idn: (mouzaTrim.length >= 7 ? mouzaTrim : `${distCode || '01'}${blockCode || '19'}${mouzaCode || '089'}`),
+        poc: codeTrim || '',
+        dataType: 'NEW',
+        holderName: (extraMeta && extraMeta.holderName) || '',
+        fatherOrHusband: (extraMeta && extraMeta.fatherOrHusband) || '',
+        classification: (extraMeta && extraMeta.classification) || '',
+        area: (extraMeta && extraMeta.area) || ''
       };
 
       fetch('/api/v1/get-possessor-info', {
@@ -1458,27 +2097,66 @@ let currentMouzas = [];
         const tbody = document.getElementById('modalPossessorTbody');
         if (!tbody) return;
         if (data && data.success && Array.isArray(data.possessors) && data.possessors.length > 0) {
-          tbody.innerHTML = buildPossessorRowsHtml(data.possessors);
-        } else if (PRESET_POSSESSORS[cleanDag]) {
-          tbody.innerHTML = buildPossessorRowsHtml(PRESET_POSSESSORS[cleanDag]);
+          tbody.innerHTML = buildPossessorRowsHtml(data.possessors, data.message);
+          const isBargaPlot = (data.type === 'Barga' || data.code === '03');
+          const isAnumatiPlot = (data.type === 'Anumati' || data.code === '02');
+          const isSadharanPlot = (data.type && data.type.includes('Sadharan'));
+          const dynamicLabel = isBargaPlot ? 'Barga / Bargadar (বর্গাদার)' : (isAnumatiPlot ? 'Anumati (অনুমতিপ্রাপ্ত দখলদার)' : (isSadharanPlot ? 'Sadharaner Byabaharyya (সাধারণের ব্যবহার্য)' : (data.type || 'Possessor Record')));
+          const badgeEl = document.getElementById('possessorHeaderBadge');
+          if (badgeEl) {
+            badgeEl.innerText = dynamicLabel;
+            badgeEl.style.background = '#fee2e2';
+            badgeEl.style.color = '#991b1b';
+            badgeEl.style.borderColor = '#fca5a5';
+          }
+          const schedTypeEl = document.getElementById('schedTypeCellVal');
+          if (schedTypeEl) {
+            schedTypeEl.innerText = dynamicLabel;
+            schedTypeEl.style.color = '#dc2626';
+          }
+          const catEl = document.getElementById('extractCategoryVal');
+          if (catEl) catEl.innerText = dynamicLabel;
+          const provEl = document.getElementById('extractStatutoryProvision');
+          if (provEl) {
+            provEl.innerText = isBargaPlot ? 'Section 50/51, WBLR Act 1955 (Bargadar)' : (isAnumatiPlot ? 'Section 51, WBLR Act 1955 (Permitted)' : 'Section 50/51, WBLR Act 1955');
+          }
         } else {
-          tbody.innerHTML = buildPossessorRowsHtml([]);
+          tbody.innerHTML = buildPossessorRowsHtml([], data ? data.message : '');
+          const badgeEl = document.getElementById('possessorHeaderBadge');
+          if (badgeEl) {
+            badgeEl.innerText = 'স্বত্বাধিকারী খাস দখল (Raiyat Khas)';
+            badgeEl.style.background = '#dcfce7';
+            badgeEl.style.color = '#15803d';
+            badgeEl.style.borderColor = '#86efac';
+          }
+          const schedTypeEl = document.getElementById('schedTypeCellVal');
+          if (schedTypeEl) {
+            schedTypeEl.innerText = 'স্বত্বাধিকারী খাস দখল (Raiyat Khas)';
+            schedTypeEl.style.color = '#15803d';
+          }
+          const extractDescEl = document.getElementById('extractStatusTextBox');
+          if (extractDescEl) {
+            extractDescEl.innerText = (data && data.message) || 'এই দাগের জন্য কোনো পৃথক দখলদার বা বর্গাদার নথিভুক্ত নেই। জমিটি সম্পূর্ণভাবে রেকর্ডভুক্ত মূল রায়তের প্রত্যক্ষ খাস ও নিরঙ্কুশ দখলে স্থিত।';
+          }
+          const catEl = document.getElementById('extractCategoryVal');
+          if (catEl) catEl.innerText = 'রায়তের প্রত্যক্ষ খাস দখল (Unencumbered Ownership)';
+          const provEl = document.getElementById('extractStatutoryProvision');
+          if (provEl) provEl.innerText = 'Section 4 & 49, WBLR Act 1955';
         }
       })
       .catch(() => {
         const tbody = document.getElementById('modalPossessorTbody');
         if (!tbody) return;
-        if (PRESET_POSSESSORS[cleanDag]) {
-          tbody.innerHTML = buildPossessorRowsHtml(PRESET_POSSESSORS[cleanDag]);
-        } else {
-          tbody.innerHTML = buildPossessorRowsHtml([]);
-        }
+        tbody.innerHTML = buildPossessorRowsHtml([]);
       });
     }
 
-
-    function openMapModal(dagNo, classification, area) {
-      const { activeDist, activeBlock, activeMouza, activeJl } = getActiveSelectionMeta();
+    function openMapModal(dagNo, classification, area, meta) {
+      const metaSelection = getActiveSelectionMeta();
+      const activeDist = (meta && meta.district) || metaSelection.activeDist;
+      const activeBlock = (meta && meta.block) || metaSelection.activeBlock;
+      const activeMouza = (meta && meta.mouza) || metaSelection.activeMouza;
+      const activeJl = (meta && meta.jlNo) || metaSelection.activeJl;
 
       let rawDag = String(dagNo || '').trim();
       if (!rawDag || rawDag.toLowerCase().includes('plots') || rawDag === '-') {
@@ -1499,14 +2177,6 @@ let currentMouzas = [];
 
       const plotArea = (area || (activeData && activeData.plotDetails && activeData.plotDetails.totalArea) || (activeData && activeData.khatianDetails && activeData.khatianDetails.totalArea) || '-').trim();
       const activeKh = (activeData && activeData.khatianDetails && activeData.khatianDetails.khatianNo) || getSafeInputValue('txtKhatian1') || '-';
-
-      const numVal = parseInt(plotNum) || 50;
-      const prevPlot = Math.max(1, numVal - 1);
-      const nextPlot = numVal + 1;
-      const topPlot = numVal - 10 > 0 ? numVal - 10 : numVal + 12;
-      const btmPlot = numVal + 10;
-      const corner1 = numVal - 11 > 0 ? numVal - 11 : numVal + 11;
-      const corner2 = nextPlot + 11;
 
       const iconSvg = `
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1545,15 +2215,15 @@ let currentMouzas = [];
             </div>
             <div class="sched-cell">
               <span class="sc-lbl">রেকর্ডভুক্ত পরিমাণ (Area)</span>
-              <span class="sc-val mono">${escapeHtml(plotArea)} ${plotArea !== '-' ? 'Acre' : ''}</span>
+              <span class="sc-val mono" id="cadAreaAcre">${escapeHtml(plotArea)} ${plotArea !== '-' ? 'Acre' : ''}</span>
             </div>
             <div class="sched-cell">
-              <span class="sc-lbl">খতিয়ান নম্বর (Khatian No)</span>
-              <span class="sc-val mono">${escapeHtml(activeKh)}</span>
+              <span class="sc-lbl">শতক ও কাঠা (Dec / Katha)</span>
+              <span class="sc-val mono" id="cadAreaDecimal">-</span>
             </div>
             <div class="sched-cell">
-              <span class="sc-lbl">নকশার স্থিতি (Map Status)</span>
-              <span class="sc-val sc-status-live">ক্যাডাস্ট্রাল নকশা প্রস্তুত</span>
+              <span class="sc-lbl">বর্গফুট (Sq. Feet)</span>
+              <span class="sc-val mono" id="cadAreaSqFt">-</span>
             </div>
           </div>
         </div>
@@ -1578,98 +2248,46 @@ let currentMouzas = [];
           </div>
 
           <div class="cadastral-svg-wrap" id="cadastralMapContainer">
-            <svg id="cadastralSvg" class="cadastral-svg" viewBox="0 0 600 340" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="surveyGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="0.7"/>
-                  <circle cx="0" cy="0" r="1" fill="#cbd5e1"/>
-                  <circle cx="40" cy="0" r="1" fill="#cbd5e1"/>
-                  <circle cx="0" cy="40" r="1" fill="#cbd5e1"/>
-                  <circle cx="40" cy="40" r="1" fill="#cbd5e1"/>
-                </pattern>
-                <filter id="cadShadow" x="-3%" y="-3%" width="106%" height="106%">
-                  <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#0284c7" flood-opacity="0.2"/>
-                </filter>
-              </defs>
-
-              <rect width="600" height="340" fill="#ffffff"/>
-              <rect width="600" height="340" fill="url(#surveyGrid)"/>
-
-              <rect x="8" y="8" width="584" height="324" fill="none" stroke="#1e293b" stroke-width="1.8"/>
-              <rect x="13" y="13" width="574" height="314" fill="none" stroke="#94a3b8" stroke-width="0.8"/>
-
-              <g id="cadastralParcelsGroup" transform="translate(0,0) scale(1)">
-                <line x1="80" y1="65" x2="520" y2="275" stroke="#e2e8f0" stroke-width="0.8" stroke-dasharray="4,4"/>
-                <line x1="520" y1="65" x2="80" y2="275" stroke="#e2e8f0" stroke-width="0.8" stroke-dasharray="4,4"/>
-
-                <polygon points="100,45 240,35 220,118 110,115" fill="#f8fafc" stroke="#64748b" stroke-width="1.3"/>
-                <text x="165" y="80" font-size="13" font-weight="700" fill="#475569" text-anchor="middle" font-family="'Hind Siliguri', sans-serif">${corner1}</text>
-
-                <polygon points="240,35 400,30 390,110 220,118" fill="#f8fafc" stroke="#64748b" stroke-width="1.3"/>
-                <text x="315" y="75" font-size="14" font-weight="700" fill="#334155" text-anchor="middle" font-family="'Hind Siliguri', sans-serif">${topPlot}</text>
-
-                <polygon points="400,30 530,50 510,132 390,110" fill="#f8fafc" stroke="#64748b" stroke-width="1.3"/>
-                <text x="460" y="82" font-size="13" font-weight="700" fill="#475569" text-anchor="middle" font-family="'Hind Siliguri', sans-serif">${corner2}</text>
-
-                <polygon points="60,128 180,115 155,220 65,212" fill="#f8fafc" stroke="#64748b" stroke-width="1.3"/>
-                <text x="115" y="172" font-size="14" font-weight="700" fill="#334155" text-anchor="middle" font-family="'Hind Siliguri', sans-serif">${prevPlot}</text>
-
-                <polygon points="430,118 540,132 520,235 420,215" fill="#f8fafc" stroke="#64748b" stroke-width="1.3"/>
-                <text x="475" y="175" font-size="14" font-weight="700" fill="#334155" text-anchor="middle" font-family="'Hind Siliguri', sans-serif">${nextPlot}</text>
-
-                <polygon points="175,225 385,235 370,305 180,296" fill="#f8fafc" stroke="#64748b" stroke-width="1.3"/>
-                <text x="275" y="272" font-size="14" font-weight="700" fill="#334155" text-anchor="middle" font-family="'Hind Siliguri', sans-serif">${btmPlot}</text>
-
-                <polygon points="65,212 175,225 180,296 75,288" fill="#f8fafc" stroke="#64748b" stroke-width="1.3"/>
-                <text x="120" y="260" font-size="13" font-weight="700" fill="#475569" text-anchor="middle" font-family="'Hind Siliguri', sans-serif">${prevPlot - 1 > 0 ? prevPlot - 1 : prevPlot + 8}</text>
-
-                <polygon points="385,235 520,235 500,305 370,305" fill="#f8fafc" stroke="#64748b" stroke-width="1.3"/>
-                <text x="445" y="274" font-size="13" font-weight="700" fill="#475569" text-anchor="middle" font-family="'Hind Siliguri', sans-serif">${btmPlot + 2}</text>
-
-                <polygon points="180,115 390,110 430,118 420,215 385,235 175,225 155,220"
-                  fill="#e0f2fe" stroke="#0284c7" stroke-width="2.6" filter="url(#cadShadow)"/>
-
-                <circle cx="180" cy="115" r="3.5" fill="#0284c7" stroke="#ffffff" stroke-width="1"/>
-                <circle cx="390" cy="110" r="3.5" fill="#0284c7" stroke="#ffffff" stroke-width="1"/>
-                <circle cx="430" cy="118" r="3.5" fill="#0284c7" stroke="#ffffff" stroke-width="1"/>
-                <circle cx="420" cy="215" r="3.5" fill="#0284c7" stroke="#ffffff" stroke-width="1"/>
-                <circle cx="385" cy="235" r="3.5" fill="#0284c7" stroke="#ffffff" stroke-width="1"/>
-                <circle cx="175" cy="225" r="3.5" fill="#0284c7" stroke="#ffffff" stroke-width="1"/>
-                <circle cx="155" cy="220" r="3.5" fill="#0284c7" stroke="#ffffff" stroke-width="1"/>
-
-                <text x="290" y="158" font-size="20" font-weight="800" fill="#0369a1" text-anchor="middle" font-family="'Hind Siliguri', sans-serif">দাগ নং ${plotNum}</text>
-                <text x="290" y="178" font-size="12" font-weight="700" fill="#0284c7" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">PLOT ${plotNum} • ${escapeHtml(plotClass)}</text>
-                <text x="290" y="195" font-size="11" font-weight="600" fill="#334155" text-anchor="middle">${escapeHtml(plotArea)} ${plotArea !== '-' ? 'Acre' : ''}</text>
-              </g>
-
-              <g transform="translate(545, 26)">
-                <circle cx="16" cy="16" r="14" fill="#ffffff" stroke="#334155" stroke-width="1.2"/>
-                <polygon points="16,4 12,17 16,14 20,17" fill="#dc2626"/>
-                <polygon points="16,28 12,17 16,14 20,17" fill="#64748b"/>
-                <text x="16" y="2" font-size="9" font-weight="800" fill="#dc2626" text-anchor="middle">উঃ</text>
-              </g>
-
-              <g transform="translate(25, 305)">
-                <line x1="0" y1="0" x2="120" y2="0" stroke="#1e293b" stroke-width="2"/>
-                <line x1="0" y1="-4" x2="0" y2="4" stroke="#1e293b" stroke-width="1.5"/>
-                <line x1="30" y1="-3" x2="30" y2="3" stroke="#1e293b" stroke-width="1"/>
-                <line x1="60" y1="-3" x2="60" y2="3" stroke="#1e293b" stroke-width="1"/>
-                <line x1="120" y1="-4" x2="120" y2="4" stroke="#1e293b" stroke-width="1.5"/>
-                <text x="0" y="-6" font-size="8" font-weight="600" fill="#334155" text-anchor="middle">০</text>
-                <text x="30" y="-6" font-size="8" font-weight="600" fill="#334155" text-anchor="middle">১ চেইন</text>
-                <text x="60" y="-6" font-size="8" font-weight="600" fill="#334155" text-anchor="middle">২ চেইন</text>
-                <text x="120" y="-6" font-size="8" font-weight="600" fill="#334155" text-anchor="middle">৪ চেইন (৮৮ গজ)</text>
-              </g>
-
-              <text x="575" y="318" font-size="8.5" font-weight="600" fill="#64748b" text-anchor="end" font-family="'Hind Siliguri', sans-serif">ডিজিটাল ক্যাডাস্ট্রাল ডাটাবেস • ভূমি ও ভূমি সংস্কার দপ্তর, পঃবঃ</text>
-            </svg>
+            <div style="padding:48px 20px;text-align:center;">
+              <div class="possessor-loading-spinner bn">
+                <svg class="possessor-spinner-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                <span>ক্যাডাস্ট্রাল নকশা ডাটাবেস থেকে প্রস্তুত হচ্ছে... (Loading Cadastral Parcel Map...)</span>
+              </div>
+            </div>
           </div>
 
           <div class="cadastral-legend-bar">
             <span class="leg-item"><strong class="leg-swatch target">■</strong> নির্বাচিত দাগ (${plotNum})</span>
-            <span class="leg-item"><strong class="leg-swatch adj">□</strong> সংলগ্ন দাগসমূহ</span>
-            <span class="leg-item"><strong class="leg-swatch pin">●</strong> চান্দা / সীমানা স্তম্ভ</span>
-            <span class="leg-item"><strong class="leg-swatch north">↑</strong> উত্তর দিক (North)</span>
+            <span class="leg-item"><strong class="leg-swatch adj">□</strong> সংলগ্ন মৌজা দাগসমূহ</span>
+            <span class="leg-item"><strong class="leg-swatch pin">●</strong> সার্ভে স্টেশন ও চান্দা</span>
+            <span class="leg-item"><strong class="leg-swatch north">↑</strong> উত্তর দিক (North Meridian)</span>
+          </div>
+        </div>
+
+        <div class="revenue-schedule-card" style="margin-top:14px;">
+          <div class="revenue-schedule-header">
+            <span class="sched-hdr-title bn">সীমানা ও সংলগ্ন দাগ তফসিল (Boundary Dimensions &amp; Adjacent Plots)</span>
+            <span class="sched-hdr-badge">সার্ভে রেকর্ড</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table" style="margin:0;font-size:12px;">
+              <thead>
+                <tr>
+                  <th style="background:#f8fafc;padding:7px 10px;text-align:left;">দিক (Direction)</th>
+                  <th style="background:#f8fafc;padding:7px 10px;text-align:center;">সংলগ্ন দাগ (Adjacent Plot)</th>
+                  <th style="background:#f8fafc;padding:7px 10px;text-align:center;">পরিমাপ (লিঙ্ক / Links)</th>
+                  <th style="background:#f8fafc;padding:7px 10px;text-align:center;">দৈর্ঘ্য (ফুট / Feet)</th>
+                  <th style="background:#f8fafc;padding:7px 10px;text-align:center;">কোণ (Bearing)</th>
+                </tr>
+              </thead>
+              <tbody id="cadastralBoundaryTbody">
+                <tr>
+                  <td colspan="5" style="text-align:center;padding:16px;color:#64748b;" class="bn">
+                    সীমানা বিবরণ লোড হচ্ছে...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       `;
@@ -1680,6 +2298,53 @@ let currentMouzas = [];
         `মৌজা: ${escapeHtml(activeMouza || '-')}${activeJl ? ` (${escapeHtml(activeJl)})` : ''} • দাগ নম্বর: ${escapeHtml(plotNum)}`,
         contentHtml
       );
+
+      fetch('/api/v1/get-map-info', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          district: activeDist || getSafeInputValue('lstDistrictCode1') || '01',
+          block: activeBlock || getSafeInputValue('lstBlockCode1') || '19',
+          mouza: activeMouza || getSafeInputValue('lstMouzaList') || '089',
+          jlNo: activeJl || '',
+          plotNo: plotNum,
+          khatian: activeKh,
+          classification: plotClass,
+          area: plotArea
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (!data || !data.success) return;
+        const container = document.getElementById('cadastralMapContainer');
+        if (container && data.svgMap) {
+          container.innerHTML = data.svgMap;
+        }
+        const bTbody = document.getElementById('cadastralBoundaryTbody');
+        if (bTbody && Array.isArray(data.boundaries)) {
+          bTbody.innerHTML = data.boundaries.map(b => `
+            <tr>
+              <td class="bn" style="font-weight:600;padding:7px 10px;text-align:left;">${escapeHtml(b.direction)}</td>
+              <td style="padding:7px 10px;text-align:center;"><span class="mono khatian-pill">${escapeHtml(b.adjacentPlot || '-')}</span></td>
+              <td class="mono" style="font-weight:700;color:#0369a1;padding:7px 10px;text-align:center;">${escapeHtml(String(b.lengthLinks))} L</td>
+              <td class="mono" style="padding:7px 10px;text-align:center;">${escapeHtml(String(b.lengthFeet))} ft</td>
+              <td class="mono" style="color:#64748b;padding:7px 10px;text-align:center;">${escapeHtml(b.bearing || '-')}</td>
+            </tr>
+          `).join('');
+        }
+        if (data.area) {
+          const decEl = document.getElementById('cadAreaDecimal');
+          if (decEl) decEl.innerText = `${data.area.decimal} Dec (${data.area.katha} Katha)`;
+          const sqftEl = document.getElementById('cadAreaSqFt');
+          if (sqftEl) sqftEl.innerText = `${data.area.sqFt} Sq.Ft (${data.area.sqMtr} Sq.M)`;
+        }
+      })
+      .catch(() => {
+        const container = document.getElementById('cadastralMapContainer');
+        if (container) {
+          container.innerHTML = '<div style="padding:28px;text-align:center;color:#ef4444;" class="bn">নকশা ডাটাবেস থেকে লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে পুনরায় চেষ্টা করুন।</div>';
+        }
+      });
     }
 
     function triggerDagerMapClick() {
@@ -1709,7 +2374,7 @@ let currentMouzas = [];
       openRemarksModal(encodedPayload, remarks);
     }
 
-    function triggerPlotPossessorModal(plotNo, dakhaldar, rawDakhaldar) {
+    function triggerPlotPossessorModal(plotNo, dakhaldar, rawDakhaldar, extraMeta) {
       let rawDecoded = '';
       if (rawDakhaldar) {
         try {
@@ -1734,7 +2399,7 @@ let currentMouzas = [];
           type = parts[4] || type;
         }
       }
-      openPossessorModal(khatian, dag, mouza, code, type);
+      openPossessorModal(khatian, dag, mouza, code, type, extraMeta);
     }
 
     window.loadRemarksHtml = function(encodedHtml) {
@@ -1742,6 +2407,40 @@ let currentMouzas = [];
         window.event.preventDefault();
         window.event.stopPropagation();
       }
+      const mapContainer = document.getElementById('map');
+      const poseserContainer = document.getElementById('poseser');
+      const remarksContainer = document.getElementById('remarks');
+      const trusteeContainer = document.getElementById('trustee');
+
+      if (mapContainer) mapContainer.style.display = 'none';
+      if (poseserContainer) poseserContainer.style.display = 'none';
+      if (trusteeContainer) trusteeContainer.style.display = 'none';
+
+      let decoded = '';
+      if (encodedHtml) {
+        try {
+          decoded = decodeURIComponent(encodedHtml.replace(/\+/g, ' '));
+        } catch (e) {
+          decoded = encodedHtml;
+        }
+      }
+
+      if (remarksContainer) {
+        remarksContainer.style.display = 'block';
+        remarksContainer.innerHTML = `
+          <div style="padding:6px 4px;">
+            <div style="background:#fef2f2;border:1px solid #fecaca;padding:6px 10px;border-radius:4px;margin-bottom:8px;font-size:12px;font-weight:700;color:#991b1b;display:flex;justify-content:space-between;align-items:center;">
+              <span>মন্তব্য ও প্রযোজ্য ধারা (Remarks Details)</span>
+              <button type="button" onclick="document.getElementById('remarks').style.display='none'" style="border:none;background:transparent;cursor:pointer;font-weight:bold;color:#991b1b;">✕</button>
+            </div>
+            ${decoded || '<div style="padding:16px;text-align:center;color:#64748b;">কোনো প্রযোজ্য ধারা বা বিশেষ মন্তব্য নেই।</div>'}
+          </div>
+        `;
+        if (window.innerWidth < 768) {
+          remarksContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+
       openRemarksModal(encodedHtml);
       return false;
     };
@@ -1751,7 +2450,124 @@ let currentMouzas = [];
         window.event.preventDefault();
         window.event.stopPropagation();
       }
-      openPossessorModal(khatian, dag, mouza, code, type);
+      let rawKhatian = String(khatian || '').trim();
+      let rawDag = String(dag || '').trim();
+      let rawMouza = String(mouza || '').trim();
+      let rawCode = String(code || '').trim();
+      let rawType = String(type || '').trim();
+
+      let distCode = '';
+      let blockCode = '';
+      let mouzaCode = rawMouza;
+
+      if (rawMouza.length >= 7) {
+        distCode = rawMouza.substring(0, 2);
+        blockCode = rawMouza.substring(2, 4);
+        mouzaCode = rawMouza.substring(4);
+      }
+      if (!distCode) distCode = getSafeInputValue('lstDistrictCode1') || '01';
+      if (!blockCode) blockCode = getSafeInputValue('lstBlockCode1') || '19';
+      if (!mouzaCode) mouzaCode = getSafeInputValue('lstMouzaList') || '089';
+
+      const mapContainer = document.getElementById('map');
+      const poseserContainer = document.getElementById('poseser');
+      const remarksContainer = document.getElementById('remarks');
+      const trusteeContainer = document.getElementById('trustee');
+
+      if (mapContainer) mapContainer.style.display = 'none';
+      if (remarksContainer) remarksContainer.style.display = 'none';
+      if (trusteeContainer) trusteeContainer.style.display = 'none';
+
+      if (poseserContainer) {
+        poseserContainer.style.display = 'block';
+        poseserContainer.innerHTML = `
+          <div style="padding:28px 16px;text-align:center;">
+            <div class="possessor-loading-spinner bn">
+              <svg class="possessor-spinner-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+              <span>দখলদার ও বর্গাদার বিবরণ লোড হচ্ছে... (Loading Possessor Records...)</span>
+            </div>
+          </div>
+        `;
+
+        fetch('/api/v1/get-possessor-info', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            district: distCode,
+            block: blockCode,
+            mouza: mouzaCode,
+            khatian: rawKhatian,
+            plotNo: rawDag,
+            code: rawCode,
+            type: rawType,
+            ktsr: rawKhatian,
+            ptsr: rawDag,
+            idn: (rawMouza.length >= 7 ? rawMouza : `${distCode}${blockCode}${mouzaCode}`),
+            poc: rawCode,
+            dataType: rawType || 'NEW'
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (!poseserContainer) return;
+          if (data && data.success && Array.isArray(data.possessors) && data.possessors.length > 0) {
+            let rowsHtml = data.possessors.map((p, idx) => `
+              <tr align="center">
+                <td>${idx + 1}</td>
+                <td style="font-family:'BN BIDISHA Opentype', 'Hind Siliguri', sans-serif;"><b>${escapeHtml(p.name || '-')}</b></td>
+                <td style="font-family:'BN BIDISHA Opentype', 'Hind Siliguri', sans-serif;">${escapeHtml(p.father || '-')}</td>
+                <td>${escapeHtml(p.address || '-')}</td>
+                <td><font color="red">${escapeHtml(p.remarks && p.remarks !== 'Nil' ? p.remarks : 'Nil')}</font></td>
+              </tr>
+            `).join('');
+
+            poseserContainer.innerHTML = `
+              <div style="padding:6px 4px;">
+                <div style="background:#e0f2fe;border:1px solid #7dd3fc;padding:6px 10px;border-radius:4px;margin-bottom:8px;font-size:12px;font-weight:700;color:#0369a1;display:flex;justify-content:space-between;align-items:center;">
+                  <span>দাগ নং: ${escapeHtml(rawDag)} • দখলদার ও বর্গাদার তফসিল (${escapeHtml(data.type || rawType || 'নথিভুক্ত')})</span>
+                  <button type="button" onclick="document.getElementById('poseser').style.display='none'" style="border:none;background:transparent;cursor:pointer;font-weight:bold;color:#0369a1;">✕</button>
+                </div>
+                <table class="table table-bordered table-striped" width="100%" border="1" style="border-collapse:collapse;font-size:11.5px;background:#ffffff;">
+                  <thead>
+                    <tr bgcolor="#f1f5f9" style="font-weight:700;text-align:center;">
+                      <th width="8%">ক্রমিক</th>
+                      <th width="28%">দখলদারের নাম</th>
+                      <th width="28%">পিতা / স্বামীর নাম</th>
+                      <th width="20%">ঠিকানা</th>
+                      <th width="16%">মন্তব্য</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${rowsHtml}
+                  </tbody>
+                </table>
+              </div>
+            `;
+          } else {
+            poseserContainer.innerHTML = `
+              <div style="padding:6px 4px;">
+                <div style="background:#f1f5f9;border:1px solid #cbd5e1;padding:6px 10px;border-radius:4px;margin-bottom:8px;font-size:12px;font-weight:700;color:#334155;display:flex;justify-content:space-between;align-items:center;">
+                  <span>দাগ নং: ${escapeHtml(rawDag)} • দখলদার রেকর্ড</span>
+                  <button type="button" onclick="document.getElementById('poseser').style.display='none'" style="border:none;background:transparent;cursor:pointer;font-weight:bold;color:#334155;">✕</button>
+                </div>
+                <div style="padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;border-radius:4px;font-size:12.5px;text-align:center;" class="bn">
+                  ${escapeHtml((data && data.message) || 'এই দাগের জন্য কোনো পৃথক দখলদার বা বর্গাদার নথিভুক্ত নেই। জমিটি সম্পূর্ণভাবে মূল রায়তের প্রত্যক্ষ খাস দখলে স্থিত।')}
+                </div>
+              </div>
+            `;
+          }
+          if (window.innerWidth < 768) {
+            poseserContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        })
+        .catch(() => {
+          if (poseserContainer) {
+            poseserContainer.innerHTML = '<div style="padding:16px;color:#dc2626;text-align:center;">দখলদার বিবরণ লোড করতে ব্যর্থ হয়েছে।</div>';
+          }
+        });
+      }
+
+      openPossessorModal(rawKhatian, rawDag, mouzaCode, rawCode, rawType);
       return false;
     };
 
@@ -1760,7 +2576,42 @@ let currentMouzas = [];
         window.event.preventDefault();
         window.event.stopPropagation();
       }
-      openMapModal(dag);
+      let rawDag = String(dag || '').trim();
+      let rawMouza = String(mouza || '').trim();
+      let distCode = String(dist || '').trim();
+      let blockCode = String(block || '').trim();
+      let mouzaCode = rawMouza;
+
+      if (rawMouza.length >= 7) {
+        distCode = rawMouza.substring(0, 2);
+        blockCode = rawMouza.substring(2, 4);
+        mouzaCode = rawMouza.substring(4);
+      }
+      if (!distCode) distCode = getSafeInputValue('lstDistrictCode1') || '01';
+      if (!blockCode) blockCode = getSafeInputValue('lstBlockCode1') || '01';
+      if (!mouzaCode) mouzaCode = getSafeInputValue('lstMouzaList') || '182';
+
+      const mapContainer = document.getElementById('map');
+      const mapFrame = document.getElementById('MapFrame');
+      const poseserContainer = document.getElementById('poseser');
+      const remarksContainer = document.getElementById('remarks');
+      const trusteeContainer = document.getElementById('trustee');
+
+      if (poseserContainer) poseserContainer.style.display = 'none';
+      if (remarksContainer) remarksContainer.style.display = 'none';
+      if (trusteeContainer) trusteeContainer.style.display = 'none';
+
+      const frameUrl = `/api/v1/get-map-frame?plotNo=${encodeURIComponent(rawDag)}&mouza=${encodeURIComponent(mouzaCode)}&district=${encodeURIComponent(distCode)}&block=${encodeURIComponent(blockCode)}`;
+
+      if (mapContainer && mapFrame) {
+        mapContainer.style.display = 'block';
+        mapFrame.src = frameUrl;
+        if (window.innerWidth < 768) {
+          mapContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+
+      openMapModal(rawDag, null, null, { district: distCode, block: blockCode, mouza: mouzaCode });
       return false;
     };
 
@@ -1783,7 +2634,7 @@ let currentMouzas = [];
       const el = e.target.closest('a, button, [onclick], [href]');
       if (!el) return;
       if (el.closest('#modernTableView')) return;
-      if (el.closest('#officialHtmlView')) return;
+
       if (el.closest('#recordDetailModal')) return;
       if (el.classList.contains('tbl-badge-btn')) return;
       if (el.id === 'btnOpenPlotMap') return;
@@ -1866,6 +2717,7 @@ let currentMouzas = [];
 
     function downloadCsv() {
       if (!activeData) return;
+      const isBn = (currentScheduleLang === 'bn');
       const isKhatian = (activeData.searchType === 'khatian');
 
       let headers = [];
@@ -1874,30 +2726,55 @@ let currentMouzas = [];
 
       if (isKhatian) {
         const plots = activeData.plots || [];
-        headers = ['Plot No', 'Classification', 'Share', 'Share Area (Acre)', 'Dakhaldar', 'Remarks'];
-        rows = plots.map(p => [
-          `"${p.plotNo || ''}"`,
-          `"${p.classification || ''}"`,
-          `"${p.share || ''}"`,
-          `"${p.shareArea || ''}"`,
-          `"${p.dakhaldar || ''}"`,
-          `"${p.remarks || ''}"`
-        ]);
+        headers = isBn
+          ? ['\u09a6\u09be\u0997 \u09a8\u09ae\u09cd\u09ac\u09b0', '\u099c\u09ae\u09bf\u09b0 \u09b6\u09cd\u09b0\u09c7\u09a3\u09bf', '\u0985\u0982\u09b6', '\u0985\u0982\u09b6 \u09aa\u09b0\u09bf\u09ae\u09be\u09a3 (\u098f\u0995\u09b0)', '\u09a6\u0996\u09b2\u09a6\u09be\u09b0', '\u09ae\u09a8\u09cd\u09a4\u09ac\u09cd\u09af']
+          : ['Plot / Dag No', 'Classification', 'Share', 'Share Area (Acre)', 'Dakhaldar', 'Remarks'];
+        rows = plots.map(p => {
+          const plotNoVal = isBn ? toBengaliDigits(p.plotNo || '') : (p.plotNo || '');
+          const classVal = isBn ? translateClassification(p.classification, 'bn') : translateClassification(p.classification, 'en');
+          const shareVal = isBn ? toBengaliDigits(p.share || '') : (p.share || '');
+          const shareAreaVal = isBn ? toBengaliDigits(p.shareArea || '') : (p.shareArea || '');
+          const dakhaldarVal = isBn ? translateDakhaldar(p.dakhaldar, 'bn') : translateDakhaldar(p.dakhaldar, 'en');
+          const remarksVal = isBn ? translateRemarks(p.remarks, 'bn') : translateRemarks(p.remarks, 'en');
+          return [
+            `"${plotNoVal}"`,
+            `"${classVal}"`,
+            `"${shareVal}"`,
+            `"${shareAreaVal}"`,
+            `"${dakhaldarVal}"`,
+            `"${remarksVal}"`
+          ];
+        });
         const khNo = (activeData.khatianDetails && activeData.khatianDetails.khatianNo) || document.getElementById('txtKhatian1').value || 'record';
-        filename = `banglarbhumi_khatian_${String(khNo).replace(/[\/\\ ]+/g, '_')}.csv`;
+        const cleanKh = isBn ? toBengaliDigits(khNo) : khNo;
+        filename = `banglarbhumi_khatian_${String(cleanKh).replace(/[\/\\ ]+/g, '_')}.csv`;
       } else {
         const holders = activeData.holders || [];
-        headers = ['Khatian No', 'Owner Name', 'Father or Husband', 'Share', 'Share Area', 'Dakhaldar', 'Remarks'];
-        rows = holders.map(h => [
-          `"${h.khatianNo || ''}"`,
-          `"${h.ownerName || ''}"`,
-          `"${h.fatherOrHusband || ''}"`,
-          `"${h.share || ''}"`,
-          `"${h.shareArea || ''}"`,
-          `"${h.dakhaldar || ''}"`,
-          `"${h.remarks || ''}"`
-        ]);
-        filename = `banglarbhumi_plot_${document.getElementById('txtPlotNo').value || 'record'}.csv`;
+        headers = isBn
+          ? ['\u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u09a8\u09ae\u09cd\u09ac\u09b0', '\u09b0\u09be\u09af\u09bc\u09a4\u09c7\u09b0 \u09a8\u09be\u09ae', '\u09aa\u09bf\u09a4\u09be/\u09b8\u09cd\u09ac\u09be\u09ae\u09c0\u09b0 \u09a8\u09be\u09ae', '\u0985\u0982\u09b6', '\u0985\u0982\u09b6 \u09aa\u09b0\u09bf\u09ae\u09be\u09a3 (\u098f\u0995\u09b0)', '\u09a6\u0996\u09b2\u09a6\u09be\u09b0', '\u09ae\u09a8\u09cd\u09a4\u09ac\u09cd\u09af']
+          : ['Khatian No', 'Rayat / Owner Name', 'Father / Husband', 'Share', 'Share Area (Acre)', 'Dakhaldar', 'Remarks'];
+        rows = holders.map(h => {
+          const rawOwner = (h.ownerName || '').replace(/\bbyakti\b/gi, '').replace(/\b\u09ac\u09cd\u09af\u0995\u09cd\u09a4\u09bf(?:\u0997\u09a4)?\b/gi, '').trim();
+          const khVal = isBn ? toBengaliDigits(h.khatianNo || '') : (h.khatianNo || '');
+          const ownerVal = isBn ? transliterateToBengali(rawOwner) : rawOwner;
+          const fatherVal = isBn ? transliterateToBengali(h.fatherOrHusband || '') : (h.fatherOrHusband || '');
+          const shareVal = isBn ? toBengaliDigits(h.share || '') : (h.share || '');
+          const shareAreaVal = formatShareArea(h.shareArea, isBn);
+          const dakhaldarVal = isBn ? translateDakhaldar(h.dakhaldar, 'bn') : translateDakhaldar(h.dakhaldar, 'en');
+          const remarksVal = isBn ? translateRemarks(h.remarks, 'bn') : translateRemarks(h.remarks, 'en');
+          return [
+            `"${khVal}"`,
+            `"${ownerVal}"`,
+            `"${fatherVal}"`,
+            `"${shareVal}"`,
+            `"${shareAreaVal}"`,
+            `"${dakhaldarVal}"`,
+            `"${remarksVal}"`
+          ];
+        });
+        const plotNo = (activeData.plotDetails && activeData.plotDetails.dagNo) || document.getElementById('txtPlotNo').value || 'record';
+        const cleanPlot = isBn ? toBengaliDigits(plotNo) : plotNo;
+        filename = `banglarbhumi_plot_${String(cleanPlot).replace(/[\/\\ ]+/g, '_')}.csv`;
       }
 
       const csv = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -1908,7 +2785,7 @@ let currentMouzas = [];
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      toast.success('CSV record table exported successfully!');
+      toast.success(isBn ? '\u09b8\u09ab\u09b2\u09ad\u09be\u09ac\u09c7 CSV \u09ab\u09be\u0987\u09b2 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09b9\u09af\u09bc\u09c7\u099b\u09c7!' : 'CSV record table exported successfully!');
     }
 
     let cachedHeaderImageDataUrl = 'images/header_image.png';
@@ -1928,15 +2805,17 @@ let currentMouzas = [];
     } catch (e) {}
 
     function buildOwnershipScheduleHtml(data) {
+      const isBn = (currentScheduleLang === 'bn');
+
       const distEl = document.getElementById('lstDistrictCode1');
       const blockEl = document.getElementById('lstBlockCode1');
       const mouzaEl = document.getElementById('lstMouzaList');
 
-      const distName = (distEl && distEl.selectedIndex >= 0 && !distEl.options[distEl.selectedIndex].text.includes('Select'))
+      let distName = (distEl && distEl.selectedIndex >= 0 && !distEl.options[distEl.selectedIndex].text.includes('Select'))
         ? distEl.options[distEl.selectedIndex].text : (data.districtName || 'Bankura');
-      const blockName = (blockEl && blockEl.selectedIndex >= 0 && !blockEl.options[blockEl.selectedIndex].text.includes('Select'))
+      let blockName = (blockEl && blockEl.selectedIndex >= 0 && !blockEl.options[blockEl.selectedIndex].text.includes('Select'))
         ? blockEl.options[blockEl.selectedIndex].text : (data.blockName || 'Bankura - I');
-      const rawMouzaText = (mouzaEl && mouzaEl.selectedIndex >= 0 && !mouzaEl.options[mouzaEl.selectedIndex].text.includes('Select'))
+      let rawMouzaText = (mouzaEl && mouzaEl.selectedIndex >= 0 && !mouzaEl.options[mouzaEl.selectedIndex].text.includes('Select'))
         ? mouzaEl.options[mouzaEl.selectedIndex].text : (data.mouzaName || 'Krishnagar');
 
       const jlMatch = rawMouzaText.match(/J\.?L\.?\s*(?:No\.?)?\s*(\d+)/i);
@@ -1944,20 +2823,33 @@ let currentMouzas = [];
       const cleanMouzaName = rawMouzaText.replace(/\s*\(\s*J\.?L\.?.*?\)/i, '').trim();
       const thanaName = data.thana || blockName.split('-')[0].trim();
 
+      const distDisplay = isBn ? transliterateToBengali(distName) : distName;
+      const blockDisplay = isBn ? transliterateToBengali(blockName) : blockName;
+      const mouzaDisplay = isBn ? (transliterateToBengali(cleanMouzaName) + ' (\u099c\u09c7.\u098f\u09b2. \u09a8\u0982 ' + toBengaliDigits(jlNo) + ')') : (cleanMouzaName + ' (J.L. ' + jlNo + ')');
+      const thanaDisplay = isBn ? transliterateToBengali(thanaName) : thanaName;
+
       const now = new Date();
-      const formattedGenTime = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + now.toLocaleTimeString('en-GB');
-      const liveInfoText = data.liveInfo || ('Live Portal Extract As On ' + formattedGenTime);
+      const rawDateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + now.toLocaleTimeString('en-GB');
+      const formattedGenTime = isBn ? toBengaliDigits(rawDateStr) : rawDateStr;
+      const rawLive = (data.liveInfo || ('Live Portal Extract As On ' + rawDateStr)).replace(/Live\s*Portal\s*Extract\s*As\s*On\s*:?|Live\s*Data\s*As\s*On\s*:?/gi, '').trim();
+      const liveInfoText = isBn ? ('\u09b8\u09b0\u09be\u09b8\u09b0\u09bf \u09a4\u09a5\u09cd\u09af: ' + toBengaliDigits(rawLive)) : ('Live Portal Extract As On ' + rawLive);
 
       const isKhatian = (data.searchType === 'khatian');
 
       if (isKhatian) {
         const kd = data.khatianDetails || {};
-        const khNo = kd.khatianNo || document.getElementById('txtKhatian1').value.trim() || '-';
-        const ownerName = kd.ownerName || '-';
-        const fatherOrHusband = kd.fatherOrHusband || '-';
-        const ownerType = kd.ownerType || 'Byakti';
-        const address = kd.address || '-';
-        const totalArea = kd.totalArea || '-';
+        const rawKhNo = kd.khatianNo || document.getElementById('txtKhatian1').value.trim() || '-';
+        const khNo = isBn ? toBengaliDigits(rawKhNo) : toEnglishDigits(rawKhNo);
+        const rawOwner = kd.ownerName || '-';
+        const ownerName = isBn ? transliterateToBengali(rawOwner) : rawOwner;
+        const rawFather = kd.fatherOrHusband || '-';
+        const fatherOrHusband = isBn ? (rawFather === '-' || rawFather.toLowerCase() === 'nil' ? '—' : transliterateToBengali(rawFather)) : rawFather;
+        const ownerType = isBn ? '\u09ac\u09cd\u09af\u0995\u09cd\u09a4\u09bf\u0997\u09a4 \u09ae\u09be\u09b2\u09bf\u0995\u09be\u09a8\u09be' : 'Individual Ownership';
+        const rawAddress = kd.address || '-';
+        const address = isBn ? (rawAddress === '-' || rawAddress.toLowerCase() === 'nil' ? '—' : transliterateToBengali(rawAddress)) : rawAddress;
+        const rawTotalArea = kd.totalArea || '-';
+        const cleanTotalArea = String(rawTotalArea).replace(/\s*(?:acre|ekar|\u098f\u0995\u09b0)\b/gi, '').trim();
+        const totalArea = isBn ? (toBengaliDigits(cleanTotalArea) + ' \u098f\u0995\u09b0') : (cleanTotalArea + ' Acre');
         const plots = data.plots || [];
         const plotsCount = plots.length;
 
@@ -1971,20 +2863,34 @@ let currentMouzas = [];
         });
 
         const rowsHtml = plots.map((p, idx) => {
+          const slDisplay = isBn ? toBengaliDigits(idx + 1) : (idx + 1);
+          const plotNoDisplay = isBn ? toBengaliDigits(p.plotNo || '-') : toEnglishDigits(p.plotNo || '-');
+          const classDisplay = isBn ? translateClassification(p.classification, 'bn') : translateClassification(p.classification, 'en');
+          const shareDisplay = isBn ? toBengaliDigits(p.share || '-') : (p.share || '-');
+          const shareAreaDisplay = isBn ? (toBengaliDigits(p.shareArea || '-') + ' \u098f\u0995\u09b0') : (p.shareArea ? (p.shareArea + ' Acre') : '-');
+          const dakhaldarDisplay = isBn ? translateDakhaldar(p.dakhaldar, 'bn') : translateDakhaldar(p.dakhaldar, 'en');
+          const remarksDisplay = isBn ? translateRemarks(p.remarks, 'bn') : translateRemarks(p.remarks, 'en');
+
           return `
             <tr>
-              <td class="print-col-center print-sl-num">${idx + 1}</td>
-              <td class="print-col-center"><span class="print-khatian-badge">${escape(p.plotNo || '-')}</span></td>
-              <td>
-                <div class="print-owner-primary">${escape(p.classification || '-')}</div>
-              </td>
-              <td class="print-col-right font-mono print-share-cell">${escape(p.share || '-')}</td>
-              <td class="print-col-right font-mono print-area-cell">${escape(p.shareArea || '-')} Acre</td>
-              <td class="print-col-center print-muted-cell">${escape(p.dakhaldar || 'Nil')}</td>
-              <td class="print-col-center print-muted-cell">${escape(p.remarks || 'Nil')}</td>
+              <td class="print-col-center print-sl-num">${escape(slDisplay)}</td>
+              <td class="print-col-center"><span class="print-khatian-badge">${escape(plotNoDisplay)}</span></td>
+              <td><div class="print-owner-primary">${escape(classDisplay)}</div></td>
+              <td class="print-col-right font-mono print-share-cell">${escape(shareDisplay)}</td>
+              <td class="print-col-right font-mono print-area-cell">${escape(shareAreaDisplay)}</td>
+              <td class="print-col-center print-muted-cell">${escape(dakhaldarDisplay)}</td>
+              <td class="print-col-center print-muted-cell">${escape(remarksDisplay)}</td>
             </tr>
           `;
         }).join('');
+
+        const refText = isBn ? `\u09b8\u09c2\u09a4\u09cd\u09b0: WB-LR-KH-${khNo}` : `Ref: WB-LR-KH-${khNo}`;
+        const docBadgeText = isBn ? '\u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 (RoR)' : 'Khatian RoR';
+        const docBadgeSub = isBn ? '\u09aa\u09cd\u09b0\u09be\u09ae\u09be\u09a3\u09cd\u09af \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u09ac\u09bf\u09ac\u09b0\u09a3\u09c0' : 'Certified Digital Extract';
+        const bannerTitle = isBn ? '\u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u0993 \u09a6\u09be\u0997\u09c7\u09b0 \u09ac\u09bf\u09ac\u09b0\u09a3' : 'KHATIAN LAND SCHEDULE';
+        const totalPlotsDisplay = isBn ? `${toBengaliDigits(plotsCount)} \u099f\u09bf \u09a6\u09be\u0997` : `${plotsCount} Plots`;
+        const totalShareSumDisplay = isBn ? toBengaliDigits(totalShareSum.toFixed(4)) : (totalShareSum > 0 ? totalShareSum.toFixed(4) : '-');
+        const totalAreaSumDisplay = isBn ? (toBengaliDigits(totalAreaSum.toFixed(4)) + ' \u098f\u0995\u09b0') : (totalAreaSum > 0 ? (totalAreaSum.toFixed(4) + ' Acre') : totalArea);
 
         return `
           <div class="printable-schedule-doc">
@@ -1994,11 +2900,11 @@ let currentMouzas = [];
               </div>
               <div class="print-meta-substrip">
                 <div class="print-doc-badge-col">
-                  <span class="print-doc-type-pill">Khatian RoR</span>
-                  <span class="print-meta-text-inline">Certified Digital Extract</span>
+                  <span class="print-doc-type-pill">${docBadgeText}</span>
+                  <span class="print-meta-text-inline">${docBadgeSub}</span>
                 </div>
                 <div class="print-meta-ref-col">
-                  <span class="print-meta-text">Ref: WB-LR-KH-${escape(khNo)}</span>
+                  <span class="print-meta-text">${refText}</span>
                   <span class="print-meta-sep">•</span>
                   <span class="print-meta-text time">${escape(formattedGenTime)}</span>
                 </div>
@@ -2008,55 +2914,55 @@ let currentMouzas = [];
             <div class="print-gold-accent"></div>
 
             <div class="print-schedule-banner">
-              <div class="print-schedule-title-main"><span>KHATIAN LAND SCHEDULE</span><span class="print-title-sep">/</span><span class="print-bn-title">খতিয়ান ও দাগের বিবরণ</span></div>
+              <div class="print-schedule-title-main"><span>${bannerTitle}</span></div>
               <div class="print-schedule-title-sub">${escape(liveInfoText)}</div>
             </div>
 
             <div class="print-summary-box">
               <div class="print-summary-grid">
                 <div class="print-summary-item">
-                  <span class="print-sum-label">District / জেলা</span>
-                  <span class="print-sum-val">${escape(distName)}</span>
+                  <span class="print-sum-label">${isBn ? '\u099c\u09c7\u09b2\u09be' : 'District'}</span>
+                  <span class="print-sum-val">${escape(distDisplay)}</span>
                 </div>
                 <div class="print-summary-item">
-                  <span class="print-sum-label">Block / ব্লক</span>
-                  <span class="print-sum-val">${escape(blockName)}</span>
+                  <span class="print-sum-label">${isBn ? '\u09ac\u09cd\u09b2\u0995' : 'Block'}</span>
+                  <span class="print-sum-val">${escape(blockDisplay)}</span>
                 </div>
                 <div class="print-summary-item">
-                  <span class="print-sum-label">Mouza &amp; J.L. No / মৌজা ও জে.এল</span>
-                  <span class="print-sum-val">${escape(cleanMouzaName)} (J.L. ${escape(jlNo)})</span>
+                  <span class="print-sum-label">${isBn ? '\u09ae\u09cb\u099c\u09be \u0993 \u099c\u09c7.\u098f\u09b2' : 'Mouza & J.L. No'}</span>
+                  <span class="print-sum-val">${escape(mouzaDisplay)}</span>
                 </div>
                 <div class="print-summary-item">
-                  <span class="print-sum-label">Thana / থানা</span>
-                  <span class="print-sum-val">${escape(thanaName)}</span>
+                  <span class="print-sum-label">${isBn ? '\u09a5\u09be\u09a8\u09be' : 'Thana'}</span>
+                  <span class="print-sum-val">${escape(thanaDisplay)}</span>
                 </div>
               </div>
               <div class="print-summary-grid">
                 <div class="print-summary-item">
-                  <span class="print-sum-label">Khatian No (খতিয়ান নম্বর)</span>
+                  <span class="print-sum-label">${isBn ? '\u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u09a8\u09ae\u09cd\u09ac\u09b0' : 'Khatian No'}</span>
                   <span class="print-sum-val highlight"><span class="print-badge-plot">${escape(khNo)}</span></span>
                 </div>
                 <div class="print-summary-item">
-                  <span class="print-sum-label">Rayat Name / রায়তের নাম</span>
+                  <span class="print-sum-label">${isBn ? '\u09b0\u09be\u09af\u09bc\u09a4\u09c7\u09b0 \u09a8\u09be\u09ae' : 'Rayat / Owner Name'}</span>
                   <span class="print-sum-val">${escape(ownerName)} <span style="font-size:11px; color:#64748b;">(${escape(ownerType)})</span></span>
                 </div>
                 <div class="print-summary-item">
-                  <span class="print-sum-label">Father or Husband / পিতা বা স্বামী</span>
+                  <span class="print-sum-label">${isBn ? '\u09aa\u09bf\u09a4\u09be \u09ac\u09be \u09b8\u09cd\u09ac\u09be\u09ae\u09c0\u09b0 \u09a8\u09be\u09ae' : 'Father / Husband'}</span>
                   <span class="print-sum-val">${escape(fatherOrHusband)}</span>
                 </div>
                 <div class="print-summary-item">
-                  <span class="print-sum-label">Total Land Area / মোট জমির পরিমাণ</span>
+                  <span class="print-sum-label">${isBn ? '\u09ae\u09cb\u099f \u099c\u09ae\u09bf\u09b0 \u09aa\u09b0\u09bf\u09ae\u09be\u09a3' : 'Total Land Area'}</span>
                   <span class="print-sum-val highlight">${escape(totalArea)}</span>
                 </div>
               </div>
               <div class="print-summary-grid">
                 <div class="print-summary-item">
-                  <span class="print-sum-label">Address / ঠিকানা</span>
+                  <span class="print-sum-label">${isBn ? '\u09a0\u09bf\u0995\u09be\u09a8\u09be' : 'Address'}</span>
                   <span class="print-sum-val">${escape(address)}</span>
                 </div>
                 <div class="print-summary-item">
-                  <span class="print-sum-label">Total Plots / মোট অন্তর্ভুক্ত দাগ</span>
-                  <span class="print-sum-val highlight">${plotsCount} Plots</span>
+                  <span class="print-sum-label">${isBn ? '\u09ae\u09cb\u099f \u0985\u09a8\u09cd\u09a4\u09b0\u09cd\u09ad\u09c1\u0995\u09cd\u09a4 \u09a6\u09be\u0997' : 'Total Plots'}</span>
+                  <span class="print-sum-val highlight">${totalPlotsDisplay}</span>
                 </div>
               </div>
             </div>
@@ -2065,24 +2971,24 @@ let currentMouzas = [];
               <table class="print-ledger-table">
                 <thead>
                   <tr>
-                    <th style="width:6%;"><span class="print-th-en">Sl</span><span class="print-th-bn">নং</span></th>
-                    <th style="width:14%;"><span class="print-th-en">Dag / Plot No</span><span class="print-th-bn">(দাগ নম্বর)</span></th>
-                    <th style="width:25%;"><span class="print-th-en">Classification</span><span class="print-th-bn">(শ্রেণি)</span></th>
-                    <th style="width:12%;"><span class="print-th-en">Share</span><span class="print-th-bn">(অংশ)</span></th>
-                    <th style="width:18%;"><span class="print-th-en">Share Area</span><span class="print-th-bn">(অংশ একর)</span></th>
-                    <th style="width:12%;"><span class="print-th-en">Dakhaldar</span><span class="print-th-bn">(দখলদার)</span></th>
-                    <th style="width:13%;"><span class="print-th-en">Remarks</span><span class="print-th-bn">(মন্তব্য)</span></th>
+                    <th style="width:6%;">${isBn ? '\u0995\u09cd\u09b0.\u09a8\u0982' : 'Sl No'}</th>
+                    <th style="width:14%;">${isBn ? '\u09a6\u09be\u0997 \u09a8\u09ae\u09cd\u09ac\u09b0' : 'Plot / Dag No'}</th>
+                    <th style="width:25%;">${isBn ? '\u099c\u09ae\u09bf\u09b0 \u09b6\u09cd\u09b0\u09c7\u09a3\u09bf' : 'Classification'}</th>
+                    <th style="width:12%;">${isBn ? '\u0985\u0982\u09b6' : 'Share'}</th>
+                    <th style="width:18%;">${isBn ? '\u0985\u0982\u09b6 \u09aa\u09b0\u09bf\u09ae\u09be\u09a3 (\u098f\u0995\u09b0)' : 'Share Area (Acre)'}</th>
+                    <th style="width:12%;">${isBn ? '\u09a6\u0996\u09b2\u09a6\u09be\u09b0' : 'Dakhaldar'}</th>
+                    <th style="width:13%;">${isBn ? '\u09ae\u09a8\u09cd\u09a4\u09ac\u09cd\u09af' : 'Remarks'}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  ${rowsHtml || '<tr><td colspan="7" class="print-col-center" style="padding:18px;">No plot records found under this khatian.</td></tr>'}
+                  ${rowsHtml || `<tr><td colspan="7" class="print-col-center" style="padding:18px;">${isBn ? '\u098f\u0987 \u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8\u09c7\u09b0 \u0985\u09a7\u09c0\u09a8\u09c7 \u0995\u09cb\u09a8\u09cb \u09a6\u09be\u0997\u09c7\u09b0 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 \u09aa\u09be\u0993\u09af\u09bc\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0987' : 'No plot records found under this khatian.'}</td></tr>`}
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td colspan="3" style="text-align:right;">Total Share &amp; Calculated Area:</td>
-                    <td class="print-col-right font-mono" style="color:#047857; font-weight:700;">${totalShareSum > 0 ? totalShareSum.toFixed(4) : '-'}</td>
-                    <td class="print-col-right font-mono" style="color:#064e3b; font-weight:700;">${totalAreaSum > 0 ? (totalAreaSum.toFixed(4) + ' Acre') : (totalArea)}</td>
-                    <td colspan="2" class="print-col-center" style="color:#059669; font-weight:700;">Verified (যাচাইকৃত)</td>
+                    <td colspan="3" style="text-align:right;">${isBn ? '\u09ae\u09cb\u099f \u0985\u0982\u09b6 \u0993 \u09aa\u09b0\u09bf\u09ae\u09be\u09aa:' : 'Total Share & Calculated Area:'}</td>
+                    <td class="print-col-right font-mono" style="color:#0f172a; font-weight:700;">${totalShareSumDisplay}</td>
+                    <td class="print-col-right font-mono" style="color:#0f172a; font-weight:700;">${totalAreaSumDisplay}</td>
+                    <td colspan="2" class="print-col-center" style="color:#1e3a8a; font-weight:700;">${isBn ? '\u09af\u09be\u099a\u09be\u0987\u0995\u09c3\u09a4 \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1' : 'Verified Digital Record'}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -2090,17 +2996,17 @@ let currentMouzas = [];
 
             <div class="print-footer-notice">
               <div class="print-disclaimer">
-                <strong>Official Revenue Disclaimer:</strong> This document represents a certified computer-generated Land Ownership Schedule extracted directly from the Directorate of Land Records &amp; Surveys central database (Banglarbhumi), Government of West Bengal. Any clerical disputes or corrections must be registered with the jurisdictional B.L. &amp; L.R.O. office.
+                ${isBn ? '<strong>\u0985\u09ab\u09bf\u09b8\u09bf\u09af\u09bc\u09be\u09b2 \u09a4\u09a5\u09cd\u09af \u09ac\u09bf\u09ac\u09b0\u09a3\u09c0:</strong> \u098f\u0987 \u09a8\u09a5\u09bf\u099f\u09bf \u09aa\u09b6\u09cd\u099a\u09bf\u09ae\u09ac\u0999\u09cd\u0997 \u09b8\u09b0\u0995\u09be\u09b0\u09c7\u09b0 \u09ad\u09c2\u09ae\u09bf \u0993 \u09ad\u09c2\u09ae\u09bf \u09b8\u0982\u09b8\u09cd\u0995\u09be\u09b0 \u098f\u09ac\u0982 \u0989\u09a6\u09cd\u09ac\u09be\u09b8\u09cd\u09a4\u09c1 \u09a4\u09cd\u09b0\u09be\u09a3 \u0993 \u09aa\u09c1\u09a8\u09b0\u09cd\u09ac\u09be\u09b8\u09a8 \u09a6\u09aa\u09cd\u09a4\u09b0\u09c7\u09b0 \u09b8\u09c7\u09a8\u09cd\u099f\u09cd\u09b0\u09be\u09b2 \u09a1\u09be\u099f\u09be\u09ac\u09c7\u09b8 (\u09ac\u09be\u0982\u09b2\u09be\u09b0\u09ad\u09c2\u09ae\u09bf) \u09a5\u09c7\u0995\u09c7 \u09b8\u09b0\u09be\u09b8\u09b0\u09bf \u09b8\u0982\u0997\u09c3\u09b9\u09c0\u09a4 \u098f\u0995\u099f\u09bf \u09aa\u09cd\u09b0\u09be\u09ae\u09be\u09a3\u09cd\u09af \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u0993 \u09ae\u09be\u09b2\u09bf\u0995\u09be\u09a8\u09be \u09a4\u09ab\u09b8\u09bf\u09b2\u0987 \u09af\u09c7\u0995\u09cb\u09a8\u09cb \u09a4\u09a5\u09cd\u09af \u09b8\u0982\u09b6\u09cb\u09a7\u09a8 \u09ac\u09be \u09ac\u09bf\u09b7\u09af\u09bc\u09c7\u09b0 \u099c\u09a8\u09cd\u09af \u09b8\u09cd\u09a5\u09be\u09a8\u09c0\u09af\u09bc \u09ac\u09bf.\u098f\u09b2. \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1 \u098f\u09b2.\u0986\u09b0.\u0993. \u0985\u09ab\u09bf\u09b8\u09c7 \u09af\u09cb\u0997\u09be\u09af\u09cb\u0997 \u0995\u09b0\u09c1\u09a8\u0987' : '<strong>Official Revenue Disclaimer:</strong> This document represents a certified computer-generated Land Ownership Schedule extracted directly from the Directorate of Land Records & Surveys central database (Banglarbhumi), Government of West Bengal. Any clerical disputes or corrections must be registered with the jurisdictional B.L. & L.R. office.'}
               </div>
               <div class="print-seal-block">
                 <div class="print-seal-stamp">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
-                  <span>Certified Digital Extract</span>
+                  <span>${isBn ? '\u09aa\u09cd\u09b0\u09be\u09ae\u09be\u09a3\u09cd\u09af \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u09ac\u09bf\u09ac\u09b0\u09a3\u09c0' : 'Certified Digital Extract'}</span>
                 </div>
-                <div class="print-seal-sub">Directorate of Land Records &amp; Surveys</div>
-                <div class="print-seal-sub">Government of West Bengal</div>
+                <div class="print-seal-sub">${isBn ? '\u09ad\u09c2\u09ae\u09bf \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 \u0993 \u099c\u09b0\u09bf\u09aa \u0985\u09a7\u09bf\u0995\u09be\u09b0' : 'Directorate of Land Records & Surveys'}</div>
+                <div class="print-seal-sub">${isBn ? '\u09aa\u09b6\u09cd\u099a\u09bf\u09ae\u09ac\u0999\u09cd\u0997 \u09b8\u09b0\u0995\u09be\u09b0' : 'Government of West Bengal'}</div>
               </div>
             </div>
           </div>
@@ -2108,9 +3014,13 @@ let currentMouzas = [];
       }
 
       const plotDetails = data.plotDetails || {};
-      const plotNo = plotDetails.dagNo || document.getElementById('txtPlotNo').value.trim() || '-';
-      const classification = plotDetails.classification || document.getElementById('resClassification').innerText || 'N/A';
-      const totalArea = plotDetails.totalArea || document.getElementById('resTotalArea').innerText || '-';
+      const rawPlotNo = plotDetails.dagNo || document.getElementById('txtPlotNo').value.trim() || '-';
+      const plotNo = isBn ? toBengaliDigits(rawPlotNo) : toEnglishDigits(rawPlotNo);
+      const rawClass = plotDetails.classification || document.getElementById('resClassification').innerText || 'N/A';
+      const classification = isBn ? translateClassification(rawClass, 'bn') : translateClassification(rawClass, 'en');
+      const rawTotalArea = plotDetails.totalArea || document.getElementById('resTotalArea').innerText || '-';
+      const cleanTotalArea = String(rawTotalArea).replace(/\s*(?:acre|ekar|\u098f\u0995\u09b0)\b/gi, '').trim();
+      const totalArea = isBn ? (toBengaliDigits(cleanTotalArea) + ' \u098f\u0995\u09b0') : (cleanTotalArea + ' Acre');
 
       const holders = data.holders || [];
       const holdersCount = holders.length;
@@ -2125,22 +3035,41 @@ let currentMouzas = [];
       });
 
       const rowsHtml = holders.map((h, idx) => {
+        const slDisplay = isBn ? toBengaliDigits(idx + 1) : (idx + 1);
+        const khDisplay = isBn ? toBengaliDigits(h.khatianNo || '-') : toEnglishDigits(h.khatianNo || '-');
+        const rawOwner = (h.ownerName || '-').replace(/\bbyakti\b/gi, '').replace(/\b\u09ac\u09cd\u09af\u0995\u09cd\u09a4\u09bf(?:\u0997\u09a4)?\b/gi, '').trim();
+        const ownerDisplay = isBn ? transliterateToBengali(rawOwner) : rawOwner;
+        const subOwnerType = isBn ? '\u09ac\u09cd\u09af\u0995\u09cd\u09a4\u09bf\u0997\u09a4 \u09ae\u09be\u09b2\u09bf\u0995\u09be\u09a8\u09be' : 'Individual Ownership';
+        const fatherDisplay = isBn ? transliterateToBengali(h.fatherOrHusband || '-') : (h.fatherOrHusband || '-');
+        const shareDisplay = isBn ? toBengaliDigits(h.share || '-') : (h.share || '-');
+        const shareAreaDisplay = formatShareArea(h.shareArea, isBn);
+        const dakhaldarDisplay = isBn ? translateDakhaldar(h.dakhaldar, 'bn') : translateDakhaldar(h.dakhaldar, 'en');
+        const remarksDisplay = isBn ? translateRemarks(h.remarks, 'bn') : translateRemarks(h.remarks, 'en');
+
         return `
           <tr>
-            <td class="print-col-center print-sl-num">${idx + 1}</td>
-            <td class="print-col-center"><span class="print-khatian-badge">${escape(h.khatianNo || '-')}</span></td>
+            <td class="print-col-center print-sl-num">${escape(slDisplay)}</td>
+            <td class="print-col-center"><span class="print-khatian-badge">${escape(khDisplay)}</span></td>
             <td>
-              <div class="print-owner-primary">${escape(h.ownerName || '-')}</div>
-              <div class="print-owner-sub">ব্যক্তিগত মালিকানা • Private Rayat</div>
+              <div class="print-owner-primary">${escape(ownerDisplay)}</div>
+              <div class="print-owner-sub">${escape(subOwnerType)}</div>
             </td>
-            <td class="print-father-cell">${escape(h.fatherOrHusband || '-')}</td>
-            <td class="print-col-right font-mono print-share-cell">${escape(h.share || '-')}</td>
-            <td class="print-col-right font-mono print-area-cell">${escape(h.shareArea || '-')}</td>
-            <td class="print-col-center print-muted-cell">${escape(h.dakhaldar || 'Nil')}</td>
-            <td class="print-col-center print-muted-cell">${escape(h.remarks || 'Nil')}</td>
+            <td class="print-father-cell">${escape(fatherDisplay)}</td>
+            <td class="print-col-right font-mono print-share-cell">${escape(shareDisplay)}</td>
+            <td class="print-col-right font-mono print-area-cell">${escape(shareAreaDisplay)}</td>
+            <td class="print-col-center print-muted-cell">${escape(dakhaldarDisplay)}</td>
+            <td class="print-col-center print-muted-cell">${escape(remarksDisplay)}</td>
           </tr>
         `;
       }).join('');
+
+      const refText = isBn ? `\u09b8\u09c2\u09a4\u09cd\u09b0: WB-LR-PLT-${plotNo}` : `Ref: WB-LR-PLT-${plotNo}`;
+      const docBadgeText = isBn ? '\u09a6\u09be\u0997\u09c7\u09b0 \u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 (RoR)' : 'Land Records RoR';
+      const docBadgeSub = isBn ? '\u09aa\u09cd\u09b0\u09be\u09ae\u09be\u09a3\u09cd\u09af \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u09ac\u09bf\u09ac\u09b0\u09a3\u09c0' : 'Certified Digital Extract';
+      const bannerTitle = isBn ? '\u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u0993 \u09a6\u09be\u0997\u09c7\u09b0 \u09a4\u09a5\u09cd\u09af' : 'LAND OWNERSHIP SCHEDULE';
+      const totalHoldersDisplay = isBn ? `${toBengaliDigits(holdersCount)} \u099c\u09a8` : `${holdersCount} Rayats`;
+      const totalShareSumDisplay = isBn ? toBengaliDigits(totalShareSum.toFixed(4)) : (totalShareSum > 0 ? totalShareSum.toFixed(4) : '-');
+      const totalAreaSumDisplay = isBn ? (toBengaliDigits(totalAreaSum.toFixed(4)) + ' \u098f\u0995\u09b0') : (totalAreaSum > 0 ? (totalAreaSum.toFixed(4) + ' Acre') : totalArea);
 
       return `
         <div class="printable-schedule-doc">
@@ -2150,11 +3079,11 @@ let currentMouzas = [];
             </div>
             <div class="print-meta-substrip">
               <div class="print-doc-badge-col">
-                <span class="print-doc-type-pill">Land Records RoR</span>
-                <span class="print-meta-text-inline">Certified Digital Extract</span>
+                <span class="print-doc-type-pill">${docBadgeText}</span>
+                <span class="print-meta-text-inline">${docBadgeSub}</span>
               </div>
               <div class="print-meta-ref-col">
-                <span class="print-meta-text">Ref: WB-LR-PLT-${escape(plotNo)}</span>
+                <span class="print-meta-text">${refText}</span>
                 <span class="print-meta-sep">•</span>
                 <span class="print-meta-text time">${escape(formattedGenTime)}</span>
               </div>
@@ -2164,45 +3093,45 @@ let currentMouzas = [];
           <div class="print-gold-accent"></div>
 
           <div class="print-schedule-banner">
-            <div class="print-schedule-title-main"><span>LAND OWNERSHIP SCHEDULE</span><span class="print-title-sep">/</span><span class="print-bn-title">খতিয়ান ও দাগের তথ্য</span></div>
+            <div class="print-schedule-title-main"><span>${bannerTitle}</span></div>
             <div class="print-schedule-title-sub">${escape(liveInfoText)}</div>
           </div>
 
           <div class="print-summary-box">
             <div class="print-summary-grid">
               <div class="print-summary-item">
-                <span class="print-sum-label">District / জেলা</span>
-                <span class="print-sum-val">${escape(distName)}</span>
+                <span class="print-sum-label">${isBn ? '\u099c\u09c7\u09b2\u09be' : 'District'}</span>
+                <span class="print-sum-val">${escape(distDisplay)}</span>
               </div>
               <div class="print-summary-item">
-                <span class="print-sum-label">Block / ব্লক</span>
-                <span class="print-sum-val">${escape(blockName)}</span>
+                <span class="print-sum-label">${isBn ? '\u09ac\u09cd\u09b2\u0995' : 'Block'}</span>
+                <span class="print-sum-val">${escape(blockDisplay)}</span>
               </div>
               <div class="print-summary-item">
-                <span class="print-sum-label">Mouza &amp; J.L. No / মৌজা ও জে.এল</span>
-                <span class="print-sum-val">${escape(cleanMouzaName)} (J.L. ${escape(jlNo)})</span>
+                <span class="print-sum-label">${isBn ? '\u09ae\u09cb\u099c\u09be \u0993 \u099c\u09c7.\u098f\u09b2' : 'Mouza & J.L. No'}</span>
+                <span class="print-sum-val">${escape(mouzaDisplay)}</span>
               </div>
               <div class="print-summary-item">
-                <span class="print-sum-label">Thana / থানা</span>
-                <span class="print-sum-val">${escape(thanaName)}</span>
+                <span class="print-sum-label">${isBn ? '\u09a5\u09be\u09a8\u09be' : 'Thana'}</span>
+                <span class="print-sum-val">${escape(thanaDisplay)}</span>
               </div>
             </div>
             <div class="print-summary-grid">
               <div class="print-summary-item">
-                <span class="print-sum-label">Dag / Plot No (দাগ নম্বর)</span>
+                <span class="print-sum-label">${isBn ? '\u09a6\u09be\u0997 \u09a8\u09ae\u09cd\u09ac\u09b0' : 'Plot / Dag No'}</span>
                 <span class="print-sum-val highlight"><span class="print-badge-plot">${escape(plotNo)}</span></span>
               </div>
               <div class="print-summary-item">
-                <span class="print-sum-label">Classification (শ্রেণি)</span>
+                <span class="print-sum-label">${isBn ? '\u099c\u09ae\u09bf\u09b0 \u09b6\u09cd\u09b0\u09c7\u09a3\u09bf' : 'Classification'}</span>
                 <span class="print-sum-val">${escape(classification)}</span>
               </div>
               <div class="print-summary-item">
-                <span class="print-sum-label">Total Plot Area / মোট পরিমাণ</span>
-                <span class="print-sum-val">${escape(totalArea)} Acre</span>
+                <span class="print-sum-label">${isBn ? '\u09ae\u09cb\u099f \u099c\u09ae\u09bf\u09b0 \u09aa\u09b0\u09bf\u09ae\u09be\u09a3' : 'Total Area'}</span>
+                <span class="print-sum-val">${escape(totalArea)}</span>
               </div>
               <div class="print-summary-item">
-                <span class="print-sum-label">Total Rayats / মোট অংশীদার</span>
-                <span class="print-sum-val highlight">${holdersCount} Holders</span>
+                <span class="print-sum-label">${isBn ? '\u09ae\u09cb\u099f \u0985\u0982\u09b6\u09c0\u09a6\u09be\u09b0' : 'Total Rayats'}</span>
+                <span class="print-sum-val highlight">${totalHoldersDisplay}</span>
               </div>
             </div>
           </div>
@@ -2211,25 +3140,25 @@ let currentMouzas = [];
             <table class="print-ledger-table">
               <thead>
                 <tr>
-                  <th style="width:5%;"><span class="print-th-en">Sl</span><span class="print-th-bn">নং</span></th>
-                  <th style="width:12%;"><span class="print-th-en">Khatian No</span><span class="print-th-bn">(খতিয়ান)</span></th>
-                  <th style="width:25%;"><span class="print-th-en">Rayat / Owner Name</span><span class="print-th-bn">(রায়তের নাম)</span></th>
-                  <th style="width:20%;"><span class="print-th-en">Father / Husband</span><span class="print-th-bn">(পিতা/স্বামী)</span></th>
-                  <th style="width:10%;"><span class="print-th-en">Share</span><span class="print-th-bn">(অংশ)</span></th>
-                  <th style="width:14%;"><span class="print-th-en">Share Area</span><span class="print-th-bn">(অংশ একর)</span></th>
-                  <th style="width:7%;"><span class="print-th-en">Dakhaldar</span><span class="print-th-bn">(দখলদার)</span></th>
-                  <th style="width:7%;"><span class="print-th-en">Remarks</span><span class="print-th-bn">(মন্তব্য)</span></th>
+                  <th style="width:5%;">${isBn ? '\u0995\u09cd\u09b0.\u09a8\u0982' : 'Sl No'}</th>
+                  <th style="width:12%;">${isBn ? '\u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u09a8\u09ae\u09cd\u09ac\u09b0' : 'Khatian No'}</th>
+                  <th style="width:25%;">${isBn ? '\u09b0\u09be\u09af\u09bc\u09a4\u09c7\u09b0 \u09a8\u09be\u09ae' : 'Rayat / Owner Name'}</th>
+                  <th style="width:20%;">${isBn ? '\u09aa\u09bf\u09a4\u09be/\u09b8\u09cd\u09ac\u09be\u09ae\u09c0\u09b0 \u09a8\u09be\u09ae' : 'Father / Husband'}</th>
+                  <th style="width:10%;">${isBn ? '\u0985\u0982\u09b6' : 'Share'}</th>
+                  <th style="width:14%;">${isBn ? '\u0985\u0982\u09b6 \u09aa\u09b0\u09bf\u09ae\u09be\u09a3 (\u098f\u0995\u09b0)' : 'Share Area (Acre)'}</th>
+                  <th style="width:7%;">${isBn ? '\u09a6\u0996\u09b2\u09a6\u09be\u09b0' : 'Dakhaldar'}</th>
+                  <th style="width:7%;">${isBn ? '\u09ae\u09a8\u09cd\u09a4\u09ac\u09cd\u09af' : 'Remarks'}</th>
                 </tr>
               </thead>
               <tbody>
-                ${rowsHtml || '<tr><td colspan="8" class="print-col-center" style="padding:18px;">No owner records found.</td></tr>'}
+                ${rowsHtml || `<tr><td colspan="8" class="print-col-center" style="padding:18px;">${isBn ? '\u098f\u0987 \u09a6\u09be\u0997\u09c7\u09b0 \u0985\u09a7\u09c0\u09a8\u09c7 \u0995\u09cb\u09a8\u09cb \u09b0\u09be\u09af\u09bc\u09a4\u09c7\u09b0 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 \u09aa\u09be\u0993\u09af\u09bc\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0987' : 'No owner records found.'}</td></tr>`}
               </tbody>
               <tfoot>
                 <tr>
-                  <td colspan="4" style="text-align:right;">Total Share &amp; Calculated Area:</td>
-                  <td class="print-col-right font-mono" style="color:#047857; font-weight:700;">${totalShareSum > 0 ? totalShareSum.toFixed(4) : '-'}</td>
-                  <td class="print-col-right font-mono" style="color:#064e3b; font-weight:700;">${totalAreaSum > 0 ? (totalAreaSum.toFixed(4) + ' Acre') : (totalArea + ' Acre')}</td>
-                  <td colspan="2" class="print-col-center" style="color:#059669; font-weight:700;">Verified (যাচাইকৃত)</td>
+                  <td colspan="4" style="text-align:right;">${isBn ? '\u09ae\u09cb\u099f \u0985\u0982\u09b6 \u0993 \u09aa\u09b0\u09bf\u09ae\u09be\u09aa:' : 'Total Share & Calculated Area:'}</td>
+                  <td class="print-col-right font-mono" style="color:#0f172a; font-weight:700;">${totalShareSumDisplay}</td>
+                  <td class="print-col-right font-mono" style="color:#0f172a; font-weight:700;">${totalAreaSumDisplay}</td>
+                  <td colspan="2" class="print-col-center" style="color:#1e3a8a; font-weight:700;">${isBn ? '\u09af\u09be\u099a\u09be\u0987\u0995\u09c3\u09a4 \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1' : 'Verified Digital Record'}</td>
                 </tr>
               </tfoot>
             </table>
@@ -2237,17 +3166,17 @@ let currentMouzas = [];
 
           <div class="print-footer-notice">
             <div class="print-disclaimer">
-              <strong>Official Revenue Disclaimer:</strong> This document represents a certified computer-generated Land Ownership Schedule extracted directly from the Directorate of Land Records &amp; Surveys central database (Banglarbhumi), Government of West Bengal. Any clerical disputes or corrections must be registered with the jurisdictional B.L. &amp; L.R.O. office.
+              ${isBn ? '<strong>\u0985\u09ab\u09bf\u09b8\u09bf\u09af\u09bc\u09be\u09b2 \u09a4\u09a5\u09cd\u09af \u09ac\u09bf\u09ac\u09b0\u09a3\u09c0:</strong> \u098f\u0987 \u09a8\u09a5\u09bf\u099f\u09bf \u09aa\u09b6\u09cd\u099a\u09bf\u09ae\u09ac\u0999\u09cd\u0997 \u09b8\u09b0\u0995\u09be\u09b0\u09c7\u09b0 \u09ad\u09c2\u09ae\u09bf \u0993 \u09ad\u09c2\u09ae\u09bf \u09b8\u0982\u09b8\u09cd\u0995\u09be\u09b0 \u098f\u09ac\u0982 \u0989\u09a6\u09cd\u09ac\u09be\u09b8\u09cd\u09a4\u09c1 \u09a4\u09cd\u09b0\u09be\u09a3 \u0993 \u09aa\u09c1\u09a8\u09b0\u09cd\u09ac\u09be\u09b8\u09a8 \u09a6\u09aa\u09cd\u09a4\u09b0\u09c7\u09b0 \u09b8\u09c7\u09a8\u09cd\u099f\u09cd\u09b0\u09be\u09b2 \u09a1\u09be\u099f\u09be\u09ac\u09c7\u09b8 (\u09ac\u09be\u0982\u09b2\u09be\u09b0\u09ad\u09c2\u09ae\u09bf) \u09a5\u09c7\u0995\u09c7 \u09b8\u09b0\u09be\u09b8\u09b0\u09bf \u09b8\u0982\u0997\u09c3\u09b9\u09c0\u09a4 \u098f\u0995\u099f\u09bf \u09aa\u09cd\u09b0\u09be\u09ae\u09be\u09a3\u09cd\u09af \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u0996\u09a4\u09bf\u09af\u09bc\u09be\u09a8 \u0993 \u09ae\u09be\u09b2\u09bf\u0995\u09be\u09a8\u09be \u09a4\u09ab\u09b8\u09bf\u09b2\u0987 \u09af\u09c7\u0995\u09cb\u09a8\u09cb \u09a4\u09a5\u09cd\u09af \u09b8\u0982\u09b6\u09cb\u09a7\u09a8 \u09ac\u09be \u09ac\u09bf\u09b7\u09af\u09bc\u09c7\u09b0 \u099c\u09a8\u09cd\u09af \u09b8\u09cd\u09a5\u09be\u09a8\u09c0\u09af\u09bc \u09ac\u09bf.\u098f\u09b2. \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1 \u098f\u09b2.\u0986\u09b0.\u0993. \u0985\u09ab\u09bf\u09b8\u09c7 \u09af\u09cb\u0997\u09be\u09af\u09cb\u0997 \u0995\u09b0\u09c1\u09a8\u0987' : '<strong>Official Revenue Disclaimer:</strong> This document represents a certified computer-generated Land Ownership Schedule extracted directly from the Directorate of Land Records & Surveys central database (Banglarbhumi), Government of West Bengal. Any clerical disputes or corrections must be registered with the jurisdictional B.L. & L.R.O. office.'}
             </div>
             <div class="print-seal-block">
               <div class="print-seal-stamp">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
-                <span>Certified Digital Extract</span>
+                <span>${isBn ? '\u09aa\u09cd\u09b0\u09be\u09ae\u09be\u09a3\u09cd\u09af \u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2 \u09ac\u09bf\u09ac\u09b0\u09a3\u09c0' : 'Certified Digital Extract'}</span>
               </div>
-              <div class="print-seal-sub">Directorate of Land Records &amp; Surveys</div>
-              <div class="print-seal-sub">Government of West Bengal</div>
+              <div class="print-seal-sub">${isBn ? '\u09ad\u09c2\u09ae\u09bf \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 \u0993 \u099c\u09b0\u09bf\u09aa \u0985\u09a7\u09bf\u0995\u09be\u09b0' : 'Directorate of Land Records & Surveys'}</div>
+              <div class="print-seal-sub">${isBn ? '\u09aa\u09b6\u09cd\u099a\u09bf\u09ae\u09ac\u0999\u09cd\u0997 \u09b8\u09b0\u0995\u09be\u09b0' : 'Government of West Bengal'}</div>
             </div>
           </div>
         </div>
@@ -2255,8 +3184,9 @@ let currentMouzas = [];
     }
 
     async function exportOwnershipSchedulePdf() {
+      const isBn = (currentScheduleLang === 'bn');
       if (!activeData || (!activeData.holders?.length && !activeData.plots?.length)) {
-        toast.error('Please search and view a plot or khatian record before downloading PDF.');
+        toast.error(isBn ? 'PDF ডাউনলোড করার আগে অনুগ্রহ করে একটি খতিয়ান বা দাগের তথ্য অনুসন্ধান করুন।' : 'Please search and view a plot or khatian record before downloading PDF.');
         return;
       }
 
@@ -2279,7 +3209,7 @@ let currentMouzas = [];
         } catch (e) {}
       }
 
-      const toastId = toast.loading('Generating Revenue Schedule PDF...');
+      const toastId = toast.loading(isBn ? 'রাজস্ব তফসিল PDF তৈরি করা হচ্ছে...' : 'Generating Revenue Schedule PDF...');
       const isKh = (activeData.searchType === 'khatian');
       const recordVal = isKh
         ? `Khatian_${(activeData.khatianDetails && activeData.khatianDetails.khatianNo) || 'record'}`
@@ -2337,9 +3267,9 @@ let currentMouzas = [];
 
       try {
         await html2pdf().set(opt).from(targetDoc).save();
-        toast.success('Revenue Schedule PDF downloaded successfully!', { id: toastId });
+        toast.success(isBn ? 'রাজস্ব তফসিল PDF সফলভাবে ডাউনলোড হয়েছে!' : 'Revenue Schedule PDF downloaded successfully!', { id: toastId });
       } catch (err) {
-        toast.error('Failed to export PDF: ' + (err.message || 'Unknown error'), { id: toastId });
+        toast.error((isBn ? 'PDF ডাউনলোড ব্যর্থ হয়েছে: ' : 'Failed to export PDF: ') + (err.message || 'Unknown error'), { id: toastId });
       } finally {
         container.remove();
         window.scrollTo(0, oldScroll);
@@ -2347,8 +3277,9 @@ let currentMouzas = [];
     }
 
     async function printOwnershipSchedule() {
+      const isBn = (currentScheduleLang === 'bn');
       if (!activeData || (!activeData.holders?.length && !activeData.plots?.length)) {
-        toast.error('Please search and view a plot or khatian record before printing.');
+        toast.error(isBn ? 'প্রিন্ট করার আগে অনুগ্রহ করে একটি খতিয়ান বা দাগের তথ্য অনুসন্ধান করুন।' : 'Please search and view a plot or khatian record before printing.');
         return;
       }
       const root = document.getElementById('printableScheduleRoot');

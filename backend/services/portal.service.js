@@ -122,15 +122,16 @@ async function fetchKhatianDetails(distCode, blockCode, mouzaCode, khatianNo, pa
   }, cookieStr)
 }
 
-async function fetchPossessorDetails(ktsr, plotNo, moucode, code, type, cookieStr) {
-  return await requestAction('poseserDetailsAction_LandInfo.action', {
-    ktsr: String(ktsr),
-    plotNo: String(plotNo),
-    moucode: String(moucode),
-    code: String(code || '02'),
-    type: String(type || 'NEW'),
+async function fetchPossessorDetails(ktsr, ptsr, idn, poc, dataType, cookieStr) {
+  const fields = {
+    ktsr: String(ktsr || '').padStart(7, ' '),
+    ptsr: String(ptsr || '').padStart(5, ' '),
+    idn: String(idn || ''),
+    poc: String(poc || '02'),
+    dataType: String(dataType || 'NEW'),
     ajax: 'true'
-  }, cookieStr)
+  }
+  return await requestAction('poseserDetailsAction_LandInfo.action', fields, cookieStr)
 }
 
 module.exports = {

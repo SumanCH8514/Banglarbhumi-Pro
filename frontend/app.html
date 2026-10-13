@@ -31,22 +31,6 @@
       <span class="top-gov-sub">A SumanOnline Website</span>
     </div>
     <div class="top-gov-right">
-      <a href="/" class="btn-top-landing" title="Project Overview & Landing Page">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 16v-4" />
-          <path d="M12 8h.01" />
-        </svg>
-        <span>Landing Page</span>
-      </a>
-      <a href="/about_project" class="btn-top-landing" title="About BanglarBhumi Pro v1.1.0">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="16" x2="12" y2="12" />
-          <line x1="12" y1="8" x2="12.01" y2="8" />
-        </svg>
-        <span>About (v1.1.0)</span>
-      </a>
       <button type="button" id="btnCitizenAuth" class="btn-citizen-auth" onclick="openCitizenLoginModal()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
@@ -147,29 +131,29 @@
                 </div>
                 <select id="lstDistrictCode1" class="visually-hidden-select" onchange="onDistrictChange()" required>
                   <option value="-1">--- Select District ---</option>
-                  <option value="20">[ 20 ] ALIPURDUAR</option>
                   <option value="01">[ 01 ] BANKURA</option>
+                  <option value="02">[ 02 ] PURBA BARDHAMAN</option>
                   <option value="03">[ 03 ] BIRBHUM</option>
-                  <option value="08">[ 08 ] Cooch Behar</option>
-                  <option value="17">[ 17 ] DAKSHIN DINAJPUR</option>
                   <option value="04">[ 04 ] DARJEELING</option>
-                  <option value="06">[ 06 ] HOOGHLY</option>
                   <option value="05">[ 05 ] HOWRAH</option>
+                  <option value="06">[ 06 ] HOOGHLY</option>
                   <option value="07">[ 07 ] JALPAIGURI</option>
-                  <option value="22">[ 22 ] JHARGRAM</option>
-                  <option value="21">[ 21 ] KALIMPONG</option>
-                  <option value="19">[ 19 ] Kolkata</option>
+                  <option value="08">[ 08 ] Cooch Behar</option>
                   <option value="09">[ 09 ] MALDA</option>
+                  <option value="10">[ 10 ] PASCHIM MEDINIPUR</option>
+                  <option value="11">[ 11 ] PURBA MEDINIPUR</option>
                   <option value="12">[ 12 ] MURSHIDABAD</option>
                   <option value="13">[ 13 ] NADIA</option>
-                  <option value="15">[ 15 ] NORTH 24 PARGANAS</option>
-                  <option value="23">[ 23 ] PASCHIM BARDHAMAN</option>
-                  <option value="10">[ 10 ] PASCHIM MEDINIPUR</option>
-                  <option value="02">[ 02 ] PURBA BARDHAMAN</option>
-                  <option value="11">[ 11 ] PURBA MEDINIPUR</option>
                   <option value="14">[ 14 ] PURULIA</option>
+                  <option value="15">[ 15 ] NORTH 24 PARGANAS</option>
                   <option value="16">[ 16 ] SOUTH 24 PARGANAS</option>
+                  <option value="17">[ 17 ] DAKSHIN DINAJPUR</option>
                   <option value="18">[ 18 ] UTTAR DINAJPUR</option>
+                  <option value="19">[ 19 ] Kolkata</option>
+                  <option value="20">[ 20 ] ALIPURDUAR</option>
+                  <option value="21">[ 21 ] KALIMPONG</option>
+                  <option value="22">[ 22 ] JHARGRAM</option>
+                  <option value="23">[ 23 ] PASCHIM BARDHAMAN</option>
                 </select>
               </div>
             </div>
@@ -320,22 +304,22 @@
     <div id="resultsCard" class="results-wrapper">
       <div class="ledger-stats-grid">
         <div class="stat-card">
-          <span class="stat-label" id="lblStat1">Dag / Plot No (দাগ নম্বর)</span>
+          <span class="stat-label" id="lblStat1">Plot / Dag No</span>
           <span class="stat-value mono" id="resDagNo">-</span>
         </div>
         <div class="stat-card accent">
-          <span class="stat-label" id="lblStat2">Classification (শ্রেণি)</span>
+          <span class="stat-label" id="lblStat2">Classification</span>
           <span class="stat-value bn" id="resClassification">-</span>
         </div>
         <div class="stat-card green">
-          <span class="stat-label" id="lblStat3">Total Area (মোট পরিমাণ)</span>
+          <span class="stat-label" id="lblStat3">Total Area</span>
           <div class="stat-value mono">
             <span id="resTotalArea">-</span>
             <span class="stat-unit" id="resAreaUnit">Acre</span>
           </div>
         </div>
         <div class="stat-card">
-          <span class="stat-label" id="lblStat4">Total Rayats / অংশীদার</span>
+          <span class="stat-label" id="lblStat4">Total Rayats</span>
           <span class="stat-value mono" id="resHoldersCount">0</span>
         </div>
       </div>
@@ -343,37 +327,40 @@
       <div class="ledger-table-card">
         <div class="ledger-table-header">
           <div class="ledger-title">
-            <span id="resLedgerTitle">Land Ownership Schedule (খতিয়ান ও দাগের তথ্য)</span>
+            <span id="resLedgerTitle">Land Ownership Schedule</span>
           </div>
           <span id="resLiveBadge" class="as-on-timestamp">Live Record</span>
         </div>
 
         <div class="view-switcher-bar">
           <div class="view-tabs-group">
-            <button type="button" id="btnModernView" class="btn-view-tab active" onclick="switchView('modern')">Standard
-              Tabular View</button>
-            <button type="button" id="btnOfficialView" class="btn-view-tab" onclick="switchView('official')">Original
-              Portal Format</button>
+            <button type="button" id="btnModernView" class="btn-view-tab active" onclick="switchView('modern')">Standard Tabular View</button>
+            <button type="button" id="btnOfficialView" class="btn-view-tab" onclick="switchView('official')">Original Portal Format</button>
+          </div>
+
+          <div class="schedule-lang-group" id="scheduleLangGroup">
+            <button type="button" id="btnSchedLangEn" class="btn-sched-lang active" onclick="setScheduleLanguage('en')">English</button>
+            <button type="button" id="btnSchedLangBn" class="btn-sched-lang" onclick="setScheduleLanguage('bn')">বাংলা</button>
           </div>
 
           <div class="table-tool-actions">
-            <button type="button" class="btn-tool" onclick="toggleRawJson()">Raw Data</button>
-            <button type="button" class="btn-tool" onclick="downloadCsv()">Download CSV</button>
-            <button type="button" class="btn-tool" onclick="printOwnershipSchedule()">
+            <button type="button" id="btnToolRaw" class="btn-tool" onclick="toggleRawJson()">Raw Data</button>
+            <button type="button" id="btnToolCsv" class="btn-tool" onclick="downloadCsv()">Download CSV</button>
+            <button type="button" id="btnToolPrint" class="btn-tool" onclick="printOwnershipSchedule()">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="6 9 6 2 18 2 18 9" />
                 <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
                 <rect width="12" height="8" x="6" y="14" />
               </svg>
-              <span>Print Schedule</span>
+              <span id="btnToolPrintText">Print Schedule</span>
             </button>
-            <button type="button" class="btn-tool btn-pdf-export" onclick="exportOwnershipSchedulePdf()">
+            <button type="button" id="btnToolPdf" class="btn-tool btn-pdf-export" onclick="exportOwnershipSchedulePdf()">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
-              <span>Download PDF</span>
+              <span id="btnToolPdfText">Download PDF</span>
             </button>
             <button type="button" class="btn-tool btn-map-tool" id="btnOpenPlotMap" onclick="triggerDagerMapClick()">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -381,7 +368,7 @@
                 <line x1="8" y1="2" x2="8" y2="18" />
                 <line x1="16" y1="6" x2="16" y2="22" />
               </svg>
-              <span>Map</span>
+              <span id="btnToolMapText">Map</span>
             </button>
           </div>
         </div>
@@ -395,48 +382,32 @@
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.35-4.35" />
               </svg>
-              <input type="text" id="holderTableSearch" placeholder="Search owner name, khatian, father..."
+              <input type="text" id="holderTableSearch" placeholder="Search by owner, khatian, or father..."
                 oninput="filterHoldersTable()">
             </div>
             <div style="font-size:12px; color:#64748b;" id="filterCountDisplay">Showing all records</div>
           </div>
 
           <div class="mobile-table-swipe-hint">
-            <span>↔ সম্পূর্ণ তফসিল দেখতে পাশে স্ক্রোল করুন (Swipe to view full schedule)</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display:inline-block; vertical-align:middle; flex-shrink:0;">
+              <polyline points="7 8 3 12 7 16" />
+              <polyline points="17 8 21 12 17 16" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+            </svg>
+            <span id="swipeHintText">Swipe horizontally to view full schedule</span>
           </div>
 
           <div class="records-table-container">
             <table class="gov-record-table">
               <thead>
                 <tr id="recordsTableHeadRow">
-                  <th>
-                    <span class="th-title-en">Khatian No</span>
-                    <span class="th-title-bn bn">(খতিয়ান নম্বর)</span>
-                  </th>
-                  <th>
-                    <span class="th-title-en">Rayat / Owner Name</span>
-                    <span class="th-title-bn bn">(রায়তের নাম)</span>
-                  </th>
-                  <th>
-                    <span class="th-title-en">Father / Husband</span>
-                    <span class="th-title-bn bn">(পিতা/স্বামী)</span>
-                  </th>
-                  <th>
-                    <span class="th-title-en">Share</span>
-                    <span class="th-title-bn bn">(অংশ)</span>
-                  </th>
-                  <th>
-                    <span class="th-title-en">Share Area</span>
-                    <span class="th-title-bn bn">(অংশ পরিমাণ)</span>
-                  </th>
-                  <th>
-                    <span class="th-title-en">Dakhaldar</span>
-                    <span class="th-title-bn bn">(দখলদার)</span>
-                  </th>
-                  <th>
-                    <span class="th-title-en">Remarks</span>
-                    <span class="th-title-bn bn">(মন্তব্য)</span>
-                  </th>
+                  <th>Khatian No</th>
+                  <th>Rayat / Owner Name</th>
+                  <th>Father / Husband</th>
+                  <th>Share</th>
+                  <th>Share Area (Acre)</th>
+                  <th>Dakhaldar</th>
+                  <th>Remarks</th>
                 </tr>
               </thead>
               <tbody id="holdersTbody">

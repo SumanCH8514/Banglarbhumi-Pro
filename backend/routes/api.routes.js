@@ -43,6 +43,9 @@ async function apiRoutes(fastify, options) {
   }, portalController.getKhatianInfo)
 
   fastify.post('/api/v1/get-possessor-info', portalController.getPossessorInfo)
+  fastify.post('/api/v1/get-map-info', portalController.getMapInfo)
+  fastify.get('/api/v1/get-map-info', portalController.getMapInfo)
+  fastify.get('/api/v1/get-map-frame', portalController.getMapFrame)
 
   fastify.get('/api/v1/scraper-status', browserController.getScraperStatus)
   fastify.post('/api/v1/open-browser', browserController.openBrowser)

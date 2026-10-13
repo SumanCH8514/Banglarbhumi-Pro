@@ -624,18 +624,6 @@ button {
   background: #f8fafc;
 }
 
-.badge-barga-human-red {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: #dc2626 !important;
-  color: #ffffff !important;
-  font-weight: 700;
-  font-size: 11px;
-  padding: 2px 7px;
-  border-radius: 3px;
-  border: 1px solid #b91c1c;
-}
 
 .badge-map-btn-clean {
   display: inline-flex;
@@ -973,46 +961,6 @@ button {
   background: #f8fafc;
 }
 
-.barga-statutory-card {
-  background: #ffffff;
-  border: 1px solid #fca5a5;
-  border-left: 6px solid #dc2626;
-  border-radius: 4px;
-  padding: 20px 24px;
-  box-shadow: var(--shadow-card);
-  margin-bottom: 24px;
-}
-
-.barga-statutory-inner {
-  display: flex;
-  gap: 18px;
-  align-items: flex-start;
-}
-
-.barga-icon-large {
-  width: 44px;
-  height: 44px;
-  background: #fee2e2;
-  color: #dc2626;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.barga-text-block h3 {
-  font-size: 16px;
-  font-weight: 800;
-  color: #991b1b;
-  margin-bottom: 6px;
-}
-
-.barga-text-block p {
-  font-size: 13.5px;
-  color: #450a0a;
-  line-height: 1.6;
-}
 
 .preset-mouzas-grid {
   display: grid;
@@ -1894,30 +1842,6 @@ button {
     margin-bottom: 14px;
   }
 
-  .barga-statutory-card {
-    padding: 14px;
-    margin-bottom: 14px;
-  }
-
-  .barga-statutory-inner {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .barga-icon-large {
-    width: 32px;
-    height: 32px;
-  }
-
-  .barga-text-block h3 {
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
-
-  .barga-text-block p {
-    font-size: 12px;
-    line-height: 1.5;
-  }
 
   .preset-mouzas-grid {
     grid-template-columns: repeat(2, 1fr);
